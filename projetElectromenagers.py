@@ -303,36 +303,36 @@ def clean_data(raw_data):
     df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$| - White| - Matte White|, Starlight|- Starlight| Starlight|, Space|, Black|, Blue|, Gold|, Gray|, Green|, Purple|, Pink|, Silver| - Space | - Space| - Black | - Blue| - Gold| - Gray| - Green| - Purple| - Pink| - Silver| Space| Black| Blue| Gold| Gray| Green| Purple| Pink| Silver|Space |Black |Blue |Gold |Gray |Green |Purple |Pink |Silver ", "", regex=True)
     
     # Drop duplicates based on selected columns
-    df = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
+    df_cleaned = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
     
     # Continue with finding similar titles and further processing...
-    groups = []
-    seen = set()
-
-    for idx, row in df.iterrows():
-        if idx in seen:
-            continue
-        title = row["nom"]
-        matches = find_similar_titles(title, df["nom"].tolist())
-        
-        if not matches:
-            continue
-        
-        match_indices = [
-            idx for idx, match in enumerate(df["nom"]) if (title, match, fuzz.ratio(title, match)) in matches
-        ]
-        
-        if match_indices:
-            groups.append(match_indices)
-            seen.update(match_indices)
-
-    rows_to_keep = set()
-    for group in groups:
-        if group:
-            min_prix_index = df.loc[group, "prix"].idxmin()
-            rows_to_keep.add(min_prix_index)
-
-    df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
+    #groups = []
+    #seen = set()
+    #
+    #for idx, row in df.iterrows():
+    #    if idx in seen:
+    #        continue
+    #    title = row["nom"]
+    #    matches = find_similar_titles(title, df["nom"].tolist())
+    #    
+    #    if not matches:
+    #        continue
+    #    
+    #    match_indices = [
+    #        idx for idx, match in enumerate(df["nom"]) if (title, match, fuzz.ratio(title, match)) in matches
+    #    ]
+    #    
+    #    if match_indices:
+    #        groups.append(match_indices)
+    #        seen.update(match_indices)
+    #
+    #rows_to_keep = set()
+    #for group in groups:
+    #    if group:
+    #        min_prix_index = df.loc[group, "prix"].idxmin()
+    #        rows_to_keep.add(min_prix_index)
+    #
+    #df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
     
     return df_cleaned
 
