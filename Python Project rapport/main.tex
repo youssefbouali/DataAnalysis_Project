@@ -1,0 +1,148 @@
+\documentclass[a4paper, 12pt, twoside]{report}
+\usepackage[margin=1in]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[toc,page]{appendix}
+\usepackage[numbers]{natbib}
+\usepackage{chemformula}
+\usepackage{fancyhdr}
+\usepackage{lipsum}
+\usepackage{float}
+\usepackage{booktabs}
+\PassOptionsToPackage{hyphens}{url}\usepackage[hidelinks]{hyperref}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{titletoc}
+\usepackage{enumerate}
+\usepackage{mathptmx}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setlength{\headheight}{15pt}
+\setstretch{1.20}
+
+%important styles ====================================>
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\titlecontents{chapter}
+[0pt]
+{\bfseries}
+{\chaptername\ \thecontentslabel:\quad}
+{}
+{\hfill\contentspage}
+
+\fancypagestyle{styletoc}{% 
+\fancyhf{}
+\fancyhead[LE,RO]{\textbf{\thepage}}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.5pt}}
+
+\fancypagestyle{stylenor}{% 
+	\fancyhead[RE,LO]{\textbf{\leftmark}}
+	\fancyhead[LE,RO]{\textbf{\thepage}}
+    \fancyfoot{}
+	\renewcommand{\headrulewidth}{0.5pt}}
+\fancypagestyle{plain}{\pagestyle{fancy}}{}
+%=================================================>
+
+\begin{document}
+%your title page ==================================>
+\begin{titlepage}
+\newgeometry{top=0.5in,left=0.5in,right=0.5in}
+\includegraphics[width = 0.16 \textwidth]{fig/Image2.png} \hfill
+\begin{minipage}[b][3.26 \baselineskip][t]{20 em}
+\centering
+Université Ibn Zohr  \\
+Faculté des sciences \\
+Centre d'exellence IT\\
+\end{minipage} \hfill  
+\includegraphics[width = 52mm]{fig/logo1.png}
+
+\hrule
+
+\vspace{3 cm}
+\begin{center}
+\LARGE{\textbf{Rapport}}
+\end{center}
+
+\vspace{1.3 cm}
+\hrule
+\begin{center}
+\huge{\textbf{Rapport de Projet Webscraping Python}}
+\end{center}
+\hrule
+
+\vspace{1.5 cm}
+\begin{center}
+\LARGE{\textbf{Réaliser par :}}
+\end{center}
+
+\vspace{0.1 cm}
+\begin{center}
+\Large{Bouali Youssef
+}
+\end{center}
+
+\vspace{1.9 cm}
+\hrule
+\begin{center}
+\Large{\textbf{Sous la direction de :} \ \ \  
+Prof. Rajae Bensoltane} 
+\end{center}
+
+	\hrule
+	\vspace{ 1 cm}
+	\begin{center}
+	\Large{\textbf{Année universaitaire :} 2024/2025}
+	\end{center}
+\end{titlepage}
+%====================================================>
+
+\shipout\null %empty page after title page if don't remove this line 
+
+\pagenumbering{Roman} 
+\pagestyle{styletoc}
+
+%table of contents styles ============================>
+\begin{doublespace}
+\renewcommand*{\contentsname}{Table des matières}
+\tableofcontents
+\renewcommand*{\listfigurename}{Liste des figures}
+\clearpage
+\addcontentsline{toc}{chapter}{Liste des figures}
+\listoffigures
+\end{doublespace}
+
+
+%your contents shows here:============================>
+
+\chapter*{Introduction}
+\label{chap:general_intorduction}
+\markboth{\MakeUppercase{Introduction}}{}%
+\input{contents/Introduction}
+\pagenumbering{arabic}
+\pagestyle{stylenor}
+
+%chapters
+
+\input{contents/chapitre one }
+\input{contents/chapitre two }
+\input{contents/chapitre tree}
+\input{contents/chapitre for}
+\input{contents/chapitre five}
+\chapter*{Conclusion}
+\label{chap:conclusion}
+\markboth{\MakeUppercase{Conclusion}}{}%
+\addcontentsline{toc}{chapter}{Conclusion}
+\input{contents/Conculsion}
+%your appendix shows here:===========================>
+
+
+%your references show here:=========================>
+
+
+\end{document}
