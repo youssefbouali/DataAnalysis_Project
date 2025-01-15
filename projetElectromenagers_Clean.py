@@ -186,7 +186,7 @@ def collect_data_from_scraping(site, products=None):
     
     if site.get("next_page"):
         next_page = soup.select_one(site["next_page"] + ' a:last-child')
-        if 'href' in next_page.attrs
+        if 'href' in next_page.attrs:
             next_page_url = next_page['href']
             site["url"] = next_page_url
             collect_data_from_scraping(site, products)
