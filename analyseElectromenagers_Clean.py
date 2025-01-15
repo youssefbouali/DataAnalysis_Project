@@ -97,9 +97,9 @@ def analyze_data_in_same_site(df):
     #same product in month
     avg_prices = df.groupby(["nom", "website"])["prix"].agg(["mean", "min", "max", "count"])
     
-    avg_prices_filtered = avg_prices[avg_prices["min"] != avg_prices["max"]]
+    #avg_prices = avg_prices[avg_prices["min"] != avg_prices["max"]]
 
-    return avg_prices_filtered
+    return avg_prices
 
 
 # Analyze data
