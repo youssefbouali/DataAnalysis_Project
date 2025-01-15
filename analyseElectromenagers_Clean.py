@@ -22,16 +22,6 @@ def find_similar_titles(title, title_list, threshold=70):
     return similar_titles
 
 
-def clean_data(raw_data):
-    df = pd.DataFrame(raw_data)
-
-    df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$| - White| - Matte White|, Starlight|- Starlight| Starlight|, Space|, Black|, Blue|, Gold|, Gray|, Green|, Purple|, Pink|, Silver| - Space | - Space| - Black | - Blue| - Gold| - Gray| - Green| - Purple| - Pink| - Silver| Space| Black| Blue| Gold| Gray| Green| Purple| Pink| Silver|Space |Black |Blue |Gold |Gray |Green |Purple |Pink |Silver ", "", regex=True)
-
-    df = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
-    
-    return df
-
-
 # Analyze data
 def analyze_data_by_diff_sites(df):
 
@@ -167,9 +157,6 @@ if __name__ == "__main__":
     old_data = pd.read_csv("Electromenagerscleaned_data.csv")  # Read the existing data from the file
     # Concatenate the cleaned data to the old data
     df_cleaned = old_data
-    
-    df_cleaned = clean_data(old_data)
-    #export_data(df_cleaned)
 
     # Analyze, visualize
     print("\r\nAverage prices in defferents websites by product:")
