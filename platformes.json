@@ -1,129 +1,75 @@
 [
   {
-      "url": "https://www.bestbuy.com/site/refrigerators/all-refrigerators/pcmcat367400050001.c?id=pcmcat367400050001",
+      "url": "https://www.bestbuy.com/site/refrigerators/all-refrigerators/pcmcat367400050001.c?id=pcmcat367400050001&intl=nosplash",
       "website": "bestbuy.com",
       "type": "scraping",
       "product_selector": ".sku-item",
       "nom_selector": ".sku-title a",
+      "description": ".zebra-list-item",
       "prix_selector": ".priceView-hero-price span",
       "category": "refrigerators",
       "promotion_selector": ".pricing-price__savings",
       "next_page": ".sku-list-page-next"
   },
   {
-      "url": "https://www.bestbuy.com/site/home-appliances/freezers-ice-makers/abcat0902000.c?id=abcat0902000",
+      "url": "https://www.bestbuy.com/site/home-appliances/freezers-ice-makers/abcat0902000.c?id=abcat0902000&intl=nosplash",
       "website": "bestbuy.com",
       "type": "scraping",
       "product_selector": ".sku-item",
       "nom_selector": ".sku-title a",
+      "description": ".zebra-list-item",
       "prix_selector": ".priceView-hero-price span",
       "category": "freezers",
       "promotion_selector": ".pricing-price__savings",
       "next_page": ".sku-list-page-next"
   },
   {
-      "url": "https://www.bestbuy.com/site/ranges/all-ranges/pcmcat1710865851607.c?id=pcmcat1710865851607",
+      "url": "https://www.bestbuy.com/site/ranges/all-ranges/pcmcat1710865851607.c?id=pcmcat1710865851607&intl=nosplash",
       "website": "bestbuy.com",
       "type": "scraping",
       "product_selector": ".sku-item",
       "nom_selector": ".sku-title a",
+      "description": ".zebra-list-item",
       "prix_selector": ".priceView-hero-price span",
       "category": "ranges",
       "promotion_selector": ".pricing-price__savings",
       "next_page": ".sku-list-page-next"
   },
   {
-      "url": "https://www.bestbuy.com/site/range-hoods/wall-mount-range-hoods/pcmcat207200050007.c?id=pcmcat207200050007",
+      "url": "https://www.bestbuy.com/site/range-hoods/wall-mount-range-hoods/pcmcat207200050007.c?id=pcmcat207200050007&intl=nosplash",
       "website": "bestbuy.com",
       "type": "scraping",
       "product_selector": ".sku-item",
       "nom_selector": ".sku-title a",
+      "description": ".zebra-list-item",
       "prix_selector": ".priceView-hero-price span",
       "category": "range-hoods",
       "promotion_selector": ".pricing-price__savings",
       "next_page": ".sku-list-page-next"
   },
   {
-      "url": "https://www.bestbuy.com/site/dishwashers/built-in-dishwashers/abcat0905001.c?id=abcat0905001&qp=hiddencontrols_facet%3DControl%20Location~Hidden%20Controls",
+      "url": "https://www.bestbuy.com/site/dishwashers/built-in-dishwashers/abcat0905001.c?id=abcat0905001&qp=hiddencontrols_facet%3DControl%20Location~Hidden%20Controls&intl=nosplash",
       "website": "bestbuy.com",
       "type": "scraping",
       "product_selector": ".sku-item",
       "nom_selector": ".sku-title a",
+      "description": ".zebra-list-item",
       "prix_selector": ".priceView-hero-price span",
       "category": "dishwashers",
       "promotion_selector": ".pricing-price__savings",
       "next_page": ".sku-list-page-next"
   },
   {
-      "url": "https://www.bestbuy.com/site/microwaves/all-microwaves/pcmcat748301803023.c?id=pcmcat748301803023",
+      "url": "https://www.bestbuy.com/site/microwaves/all-microwaves/pcmcat748301803023.c?id=pcmcat748301803023&intl=nosplash",
       "website": "bestbuy.com",
       "type": "scraping",
       "product_selector": ".sku-item",
       "nom_selector": ".sku-title a",
+      "description": ".zebra-list-item",
       "prix_selector": ".priceView-hero-price span",
       "category": "microwaves",
       "promotion_selector": ".pricing-price__savings",
       "next_page": ".sku-list-page-next"
-  },
-  {
-      "url": "https://shop.sharpusa.com/products/microwave-ovens/",
-      "website": "sharpusa.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".card-title a",
-      "prix_selector": ".price--withoutTax",
-      "category": "microwave-ovens",
-      "next_page": ".pagination-item--next"
-  },
-  {
-      "url": "https://shop.sharpusa.com/products/steam-ovens/",
-      "website": "sharpusa.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".card-title a",
-      "prix_selector": ".price--withoutTax",
-      "category": "steam-ovens",
-      "next_page": ".pagination-item--next"
-  },
-  {
-      "url": "https://shop.sharpusa.com/products/traditional-convection-wall-ovens/",
-      "website": "sharpusa.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".card-title a",
-      "prix_selector": ".price--withoutTax",
-      "category": "traditional-convection-wall-ovens",
-      "next_page": ".pagination-item--next"
-  },
-  {
-      "url": "https://shop.sharpusa.com/products/induction-cooktops/",
-      "website": "sharpusa.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".card-title a",
-      "prix_selector": ".price--withoutTax",
-      "category": "induction-cooktops",
-      "next_page": ".pagination-item--next"
-  },
-  {
-      "url": "https://shop.sharpusa.com/products/air-purifiers/",
-      "website": "sharpusa.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".card-title a",
-      "prix_selector": ".price--withoutTax",
-      "category": "air-purifiers",
-      "next_page": ".pagination-item--next"
-  },
-  {
-      "url": "https://shop.sharpusa.com/products/dishwashers/",
-      "website": "sharpusa.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".card-title a",
-      "prix_selector": ".price--withoutTax",
-      "category": "dishwashers",
-      "next_page": ".pagination-item--next"
   },
   {
       "url": "https://shop.sharpusa.com/products/refrigerator/",
@@ -131,9 +77,78 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".card-title a",
+      "description": "#tab-description",
       "prix_selector": ".price--withoutTax",
       "category": "refrigerators",
-      "next_page": ".pagination-item--next"
+      "next_page": ".pagination-item--next a"
+  },
+  {
+      "url": "https://shop.sharpusa.com/products/dishwashers/",
+      "website": "sharpusa.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".card-title a",
+      "description": "#tab-description",
+      "prix_selector": ".price--withoutTax",
+      "category": "dishwashers",
+      "next_page": ".pagination-item--next a"
+  },
+  {
+      "url": "https://shop.sharpusa.com/products/microwave-ovens/",
+      "website": "sharpusa.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".card-title a",
+      "description": "#tab-description",
+      "prix_selector": ".price--withoutTax",
+      "category": "microwave-ovens",
+      "next_page": ".pagination-item--next a",
+      "product_url": ".card-title a",
+      "description": ".description"
+  },
+  {
+      "url": "https://shop.sharpusa.com/products/steam-ovens/",
+      "website": "sharpusa.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".card-title a",
+      "description": "#tab-description",
+      "prix_selector": ".price--withoutTax",
+      "category": "steam-ovens",
+      "next_page": ".pagination-item--next a"
+  },
+  {
+      "url": "https://shop.sharpusa.com/products/traditional-convection-wall-ovens/",
+      "website": "sharpusa.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".card-title a",
+      "description": "#tab-description",
+      "prix_selector": ".price--withoutTax",
+      "category": "wall-ovens",
+      "next_page": ".pagination-item--next a"
+  },
+  {
+      "url": "https://shop.sharpusa.com/products/induction-cooktops/",
+      "website": "sharpusa.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".card-title a",
+      "description": "#tab-description",
+      "prix_selector": ".price--withoutTax",
+      "category": "induction-cooktops",
+      "next_page": ".pagination-item--next a"
+  },
+  {
+      "url": "https://shop.sharpusa.com/products/air-purifiers/",
+      "website": "sharpusa.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".card-title a",
+      "description": "#tab-description",
+      "prix_selector": ".price--withoutTax",
+      "category": "air-purifiers",
+      "next_page": ".pagination-item--next a"
   },
   {
       "url": "https://www.costco.com/refrigerators.html",
@@ -141,76 +156,11 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".description a",
+      "description": ".product-info-description",
       "prix_selector": ".price",
       "category": "refrigerators",
       "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
-  },
-  {
-      "url": "https://www.costco.com/laundry-appliances.html",
-      "website": "costco.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".description a",
-      "prix_selector": ".price",
-      "category": "laundry",
-      "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
-  },
-  {
-      "url": "https://www.costco.com/cooking-appliances.html",
-      "website": "costco.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".description a",
-      "prix_selector": ".price",
-      "category": "cooking-appliances",
-      "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
-  },
-  {
-      "url": "https://www.costco.com/kitchen-suites.html",
-      "website": "costco.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".description a",
-      "prix_selector": ".price",
-      "category": "kitchen-suites",
-      "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
-  },
-  {
-      "url": "https://www.costco.com/dishwashers.html",
-      "website": "costco.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".description a",
-      "prix_selector": ".price",
-      "category": "dishwashers",
-      "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
-  },
-  {
-      "url": "https://www.costco.com/microwaves.html",
-      "website": "costco.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".description a",
-      "prix_selector": ".price",
-      "category": "microwaves",
-      "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
-  },
-  {
-      "url": "https://www.costco.com/small-space-appliances.html",
-      "website": "costco.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".description a",
-      "prix_selector": ".price",
-      "category": "small-appliances",
-      "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
+      "next_page": ".forward a"
   },
   {
       "url": "https://www.costco.com/freezers-ice-makers.html",
@@ -218,10 +168,83 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".description a",
+      "description": ".product-info-description",
       "prix_selector": ".price",
-      "category": "freezers-ice-makers",
+      "category": "freezers",
       "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
+      "next_page": ".forward a"
+  },
+  {
+      "url": "https://www.costco.com/dishwashers.html",
+      "website": "costco.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".description a",
+      "description": ".product-info-description",
+      "prix_selector": ".price",
+      "category": "dishwashers",
+      "promotion_selector": ".pill-style-january-savings",
+      "next_page": ".forward a"
+  },
+  {
+      "url": "https://www.costco.com/microwaves.html",
+      "website": "costco.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".description a",
+      "description": ".product-info-description",
+      "prix_selector": ".price",
+      "category": "microwaves",
+      "promotion_selector": ".pill-style-january-savings",
+      "next_page": ".forward a"
+  },
+  {
+      "url": "https://www.costco.com/laundry-appliances.html",
+      "website": "costco.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".description a",
+      "description": ".product-info-description",
+      "prix_selector": ".price",
+      "category": "laundry",
+      "promotion_selector": ".pill-style-january-savings",
+      "next_page": ".forward a"
+  },
+  {
+      "url": "https://www.costco.com/cooking-appliances.html",
+      "website": "costco.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".description a",
+      "description": ".product-info-description",
+      "prix_selector": ".price",
+      "category": "cooking-appliances",
+      "promotion_selector": ".pill-style-january-savings",
+      "next_page": ".forward a"
+  },
+  {
+      "url": "https://www.costco.com/kitchen-suites.html",
+      "website": "costco.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".description a",
+      "description": ".product-info-description",
+      "prix_selector": ".price",
+      "category": "kitchen-suites",
+      "promotion_selector": ".pill-style-january-savings",
+      "next_page": ".forward a"
+  },
+  {
+      "url": "https://www.costco.com/small-space-appliances.html",
+      "website": "costco.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".description a",
+      "description": ".product-info-description",
+      "prix_selector": ".price",
+      "category": "small-appliances",
+      "promotion_selector": ".pill-style-january-savings",
+      "next_page": ".forward a"
   },
   {
       "url": "https://www.costco.com/cooling-air-treatment-heating.html",
@@ -229,10 +252,11 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".description a",
+      "description": ".product-info-description",
       "prix_selector": ".price",
       "category": "cooling-air-treatment-heating",
       "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
+      "next_page": ".forward a"
   },
   {
       "url": "https://www.costco.com/commercial-restaurant.html",
@@ -240,10 +264,11 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".description a",
+      "description": ".product-info-description",
       "prix_selector": ".price",
       "category": "commercial-restaurant",
       "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
+      "next_page": ".forward a"
   },
   {
       "url": "https://www.costco.com/small-kitchen-appliances.html",
@@ -251,21 +276,11 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".description a",
+      "description": ".product-info-description",
       "prix_selector": ".price",
       "category": "small-appliances",
       "promotion_selector": ".pill-style-january-savings",
-      "next_page": ".forward"
-  },
-  {
-      "url": "https://www.us-appliance.com/ovens.html",
-      "website": "us-appliance.com",
-      "type": "scraping",
-      "product_selector": ".item-box",
-      "nom_selector": ".name a",
-      "prix_selector": ".sale-price",
-      "category": "ovens",
-      "promotion_selector": ".promo",
-      "typehtml": "non_html"
+      "next_page": ".forward a"
   },
   {
       "url": "https://www.us-appliance.com/refrigeration.html",
@@ -273,6 +288,8 @@
       "type": "scraping",
       "product_selector": ".item-box",
       "nom_selector": ".name a",
+      "description": ".st-fragment",
+      "nom_regex": "^\\S+\\s(.+)",
       "prix_selector": ".sale-price",
       "category": "refrigerators",
       "promotion_selector": ".promo",
@@ -284,8 +301,23 @@
       "type": "scraping",
       "product_selector": ".item-box",
       "nom_selector": ".name a",
+      "description": ".st-fragment",
+      "nom_regex": "^\\S+\\s(.+)",
       "prix_selector": ".sale-price",
       "category": "ranges",
+      "promotion_selector": ".promo",
+      "typehtml": "non_html"
+  },
+  {
+      "url": "https://www.us-appliance.com/ovens.html",
+      "website": "us-appliance.com",
+      "type": "scraping",
+      "product_selector": ".item-box",
+      "nom_selector": ".name a",
+      "description": ".st-fragment",
+      "nom_regex": "^\\S+\\s(.+)",
+      "prix_selector": ".sale-price",
+      "category": "ovens",
       "promotion_selector": ".promo",
       "typehtml": "non_html"
   },
@@ -295,6 +327,8 @@
       "type": "scraping",
       "product_selector": ".item-box",
       "nom_selector": ".name a",
+      "description": ".st-fragment",
+      "nom_regex": "^\\S+\\s(.+)",
       "prix_selector": ".sale-price",
       "category": "appliance-packages",
       "promotion_selector": ".promo",
@@ -306,8 +340,10 @@
       "type": "scraping",
       "product_selector": ".item-box",
       "nom_selector": ".name a",
+      "description": ".st-fragment",
+      "nom_regex": "^\\S+\\s(.+)",
       "prix_selector": ".sale-price",
-      "category": "dishwasher",
+      "category": "dishwashers",
       "promotion_selector": ".promo",
       "typehtml": "non_html"
   },
@@ -317,6 +353,8 @@
       "type": "scraping",
       "product_selector": ".item-box",
       "nom_selector": ".name a",
+      "description": ".st-fragment",
+      "nom_regex": "^\\S+\\s(.+)",
       "prix_selector": ".sale-price",
       "category": "laundry",
       "promotion_selector": ".promo",
@@ -327,70 +365,77 @@
       "website": "geappliances.com",
       "type": "scraping",
       "product_selector": ".product",
+      "description": "#specDetailsContent",
       "nom_selector": ".description a",
       "prix_selector": ".price",
       "category": "refrigerators",
-      "promotion_selector": ".non_exist_selector"
+      "promotion_selector": ".sale-text"
   },
   {
       "url": "https://www.geappliances.com/ge-appliances/kitchen/ranges/",
       "website": "geappliances.com",
       "type": "scraping",
       "product_selector": ".product",
+      "description": "#specDetailsContent",
       "nom_selector": ".description a",
       "prix_selector": ".price",
-      "category": "range-stove",
-      "promotion_selector": ".non_exist_selector"
-  },
-  {
-      "url": "https://www.geappliances.com/ge-appliances/kitchen/microwaves/",
-      "website": "geappliances.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".description a",
-      "prix_selector": ".price",
-      "category": "microwave-oven",
-      "promotion_selector": ".non_exist_selector"
+      "category": "ranges",
+      "promotion_selector": ".sale-text"
   },
   {
       "url": "https://www.geappliances.com/ge-appliances/kitchen/dishwashers/",
       "website": "geappliances.com",
       "type": "scraping",
       "product_selector": ".product",
+      "description": "#specDetailsContent",
       "nom_selector": ".description a",
       "prix_selector": ".price",
       "category": "dishwashers",
-      "promotion_selector": ".non_exist_selector"
+      "promotion_selector": ".sale-text"
+  },
+  {
+      "url": "https://www.geappliances.com/ge-appliances/kitchen/microwaves/",
+      "website": "geappliances.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "description": "#specDetailsContent",
+      "nom_selector": ".description a",
+      "prix_selector": ".price",
+      "category": "microwave-ovens",
+      "promotion_selector": ".sale-text"
   },
   {
       "url": "https://www.geappliances.com/ge-appliances/laundry-home/washers/",
       "website": "geappliances.com",
       "type": "scraping",
       "product_selector": ".product",
+      "description": "#specDetailsContent",
       "nom_selector": ".description a",
       "prix_selector": ".price",
-      "category": "washer",
-      "promotion_selector": ".non_exist_selector"
+      "category": "washers",
+      "promotion_selector": ".sale-text"
   },
   {
       "url": "https://www.geappliances.com/ge-appliances/small-appliances/",
       "website": "geappliances.com",
       "type": "scraping",
       "product_selector": ".product",
+      "description": "#specDetailsContent",
       "nom_selector": ".description a",
       "prix_selector": ".price",
       "category": "small-appliances",
-      "promotion_selector": ".non_exist_selector"
+      "promotion_selector": ".sale-text"
   },
   {
       "url": "https://www.geappliances.com/ge-appliances/kitchen/wall-ovens/",
       "website": "geappliances.com",
       "type": "scraping",
       "product_selector": ".product",
+      "description": "#specDetailsContent",
       "nom_selector": ".description a",
       "prix_selector": ".price",
-      "category": "wall-oven",
-      "promotion_selector": ".non_exist_selector"
+      "category": "wall-ovens",
+      "promotion_selector": ".sale-text"
   },
   {
       "url": "https://www.sears.com/appliances-refrigerators/b-1020022?adcell=hp_S1c_fridges",
@@ -398,29 +443,11 @@
       "type": "scraping",
       "product_selector": ".col-grid-box",
       "nom_selector": ".product-name",
+      "description": "#specifications",
       "prix_selector": ".final-price-display",
-      "category": "appliances",
-      "promotion_selector": ".best-promo"
-  },
-  {
-      "url": "https://www.sears.com/appliances-washers-dryers/b-1320301405?subCatView=true&adcell=hp_S1c_laundry",
-      "website": "sears.com",
-      "type": "scraping",
-      "product_selector": ".col-grid-box",
-      "nom_selector": ".product-name",
-      "prix_selector": ".final-price-display",
-      "category": "appliances",
-      "promotion_selector": ".best-promo"
-  },
-  {
-      "url": "https://www.sears.com/appliances-kitchen-appliances-cooking-appliances/b-1323665151?adcell=hp_S1c_Cooking",
-      "website": "sears.com",
-      "type": "scraping",
-      "product_selector": ".col-grid-box",
-      "nom_selector": ".product-name",
-      "prix_selector": ".final-price-display",
-      "category": "appliances",
-      "promotion_selector": ".best-promo"
+      "category": "refrigerators",
+      "promotion_selector": ".saving-percentage span",
+      "promotion_selector2": ".best-promo"
   },
   {
       "url": "https://www.sears.com/appliances-dishwashers/b-1020017?adcell=hp_S1c_dishwashers",
@@ -428,9 +455,35 @@
       "type": "scraping",
       "product_selector": ".col-grid-box",
       "nom_selector": ".product-name",
+      "description": "#specifications",
       "prix_selector": ".final-price-display",
-      "category": "appliances",
-      "promotion_selector": ".best-promo"
+      "category": "dishwashers",
+      "promotion_selector": ".saving-percentage span",
+      "promotion_selector2": ".best-promo"
+  },
+  {
+      "url": "https://www.sears.com/appliances-washers-dryers/b-1320301405?subCatView=true&adcell=hp_S1c_laundry",
+      "website": "sears.com",
+      "type": "scraping",
+      "product_selector": ".col-grid-box",
+      "nom_selector": ".product-name",
+      "description": "#specifications",
+      "prix_selector": ".final-price-display",
+      "category": "washers",
+      "promotion_selector": ".saving-percentage span",
+      "promotion_selector2": ".best-promo"
+  },
+  {
+      "url": "https://www.sears.com/appliances-kitchen-appliances-cooking-appliances/b-1323665151?adcell=hp_S1c_Cooking",
+      "website": "sears.com",
+      "type": "scraping",
+      "product_selector": ".col-grid-box",
+      "nom_selector": ".product-name",
+      "description": "#specifications",
+      "prix_selector": ".final-price-display",
+      "category": "cooking-appliances",
+      "promotion_selector": ".saving-percentage span",
+      "promotion_selector2": ".best-promo"
   },
   {
       "url": "https://www.sears.com/appliances-freezers-ice-makers/b-1020019?subCatView=true&adcell=hp_S1c_freezers",
@@ -438,9 +491,11 @@
       "type": "scraping",
       "product_selector": ".col-grid-box",
       "nom_selector": ".product-name",
+      "description": "#specifications",
       "prix_selector": ".final-price-display",
-      "category": "appliances",
-      "promotion_selector": ".best-promo"
+      "category": "freezers",
+      "promotion_selector": ".saving-percentage span",
+      "promotion_selector2": ".best-promo"
   },
   {
       "url": "https://www.samsung.com/us/home-appliances/refrigerators/all-refrigerators/?shop=Buy+Online",
@@ -464,13 +519,13 @@
   },
   {
       "url": "https://www.samsung.com/us/home-appliances/dishwashers/all-dishwashers/?shop=Buy+Online",
-      "website": "sears.com",
+      "website": "samsung.com",
       "type": "scraping",
-      "product_selector": ".col-grid-box",
-      "nom_selector": ".product-name",
-      "prix_selector": ".final-price-display",
+      "product_selector": ".ProductCard-root-2251189860",
+      "nom_selector": ".ProductName-common-518700986",
+      "prix_selector": ".Product-card__price-currentHa",
       "category": "dishwashers",
-      "promotion_selector": ".best-promo"
+      "promotion_selector": ".Product-card__offer-row"
   },
   {
       "url": "https://www.samsung.com/us/home-appliances/microwaves/all-microwaves/?type=Over+the+range&shop=Buy+Online",
@@ -493,33 +548,14 @@
       "promotion_selector": ".Product-card__offer-row"
   },
   {
-      "url": "https://www.samsung.com/us/home-appliances/dishwashers/all-dishwashers/?shop=Buy+Online",
-      "website": "samsung.com",
-      "type": "scraping",
-      "product_selector": ".ProductCard-root-2251189860",
-      "nom_selector": ".ProductName-common-518700986",
-      "prix_selector": ".Product-card__price-currentHa",
-      "category": "dishwashers",
-      "promotion_selector": ".Product-card__offer-row"
-  },
-  {
       "url": "https://www.lg.com/us/refrigerators",
       "website": "lg.com",
       "type": "scraping",
       "product_selector": ".MuiGrid-item",
       "nom_selector": ".MuiTypography-subtitle2",
+      "description": ".css-1he9hsx",
       "prix_selector": ".price-wrapper .MuiTypography-subtitle1",
       "category": "refrigerators",
-      "promotion_selector": ".price-wrapper .MuiTypography-caption"
-  },
-  {
-      "url": "https://www.lg.com/us/washers",
-      "website": "lg.com",
-      "type": "scraping",
-      "product_selector": ".MuiGrid-item",
-      "nom_selector": ".MuiTypography-subtitle2",
-      "prix_selector": ".price-wrapper .MuiTypography-subtitle1",
-      "category": "washers",
       "promotion_selector": ".price-wrapper .MuiTypography-caption"
   },
   {
@@ -530,6 +566,18 @@
       "nom_selector": ".MuiTypography-subtitle2",
       "prix_selector": ".price-wrapper .MuiTypography-subtitle1",
       "category": "dishwashers",
+      "promotion_selector": ".price-wrapper .MuiTyp",
+      "description": ".css-1he9hsx"
+  },
+  {
+      "url": "https://www.lg.com/us/washers",
+      "website": "lg.com",
+      "type": "scraping",
+      "product_selector": ".MuiGrid-item",
+      "nom_selector": ".MuiTypography-subtitle2",
+      "description": ".css-1he9hsx",
+      "prix_selector": ".price-wrapper .MuiTypography-subtitle1",
+      "category": "washers",
       "promotion_selector": ".price-wrapper .MuiTypography-caption"
   },
   {
@@ -538,6 +586,7 @@
       "type": "scraping",
       "product_selector": ".MuiGrid-item",
       "nom_selector": ".MuiTypography-subtitle2",
+      "description": ".css-1he9hsx",
       "prix_selector": ".price-wrapper .MuiTypography-subtitle1",
       "category": "cooking-appliances",
       "promotion_selector": ".price-wrapper .MuiTypography-caption"
@@ -548,21 +597,11 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".product-item-name a",
+      "description": ".inline_sd_table",
       "prix_selector": ".price",
-      "category": "microwaves",
+      "category": "refrigerators",
       "promotion_selector": ".ef_saving-amount",
-      "next_page": ".pages-item-next"
-  },
-  {
-      "url": "https://www.airportappliance.com/products/laundry/all-laundry",
-      "website": "airportappliance.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".product-item-name a",
-      "prix_selector": ".price",
-      "category": "microwaves",
-      "promotion_selector": ".ef_saving-amount",
-      "next_page": ".pages-item-next"
+      "next_page": ".pages-item-next a"
   },
   {
       "url": "https://www.airportappliance.com/dishwashers/all-dishwashers",
@@ -570,19 +609,9 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".product-item-name a",
+      "description": ".inline_sd_table",
       "prix_selector": ".price",
-      "category": "microwaves",
-      "promotion_selector": ".ef_saving-amount",
-      "next_page": ".pages-item-next"
-  },
-  {
-      "url": "https://www.airportappliance.com/products/wall-ovens/all-wall-ovens",
-      "website": "airportappliance.com",
-      "type": "scraping",
-      "product_selector": ".product",
-      "nom_selector": ".product-item-name a",
-      "prix_selector": ".price",
-      "category": "microwaves",
+      "category": "dishwashers",
       "promotion_selector": ".ef_saving-amount",
       "next_page": ".pages-item-next"
   },
@@ -592,10 +621,35 @@
       "type": "scraping",
       "product_selector": ".product",
       "nom_selector": ".product-item-name a",
+      "description": ".inline_sd_table",
       "prix_selector": ".price",
       "category": "microwaves",
       "promotion_selector": ".ef_saving-amount",
-      "next_page": ".pages-item-next"
+      "next_page": ".pages-item-next a"
+  },
+  {
+      "url": "https://www.airportappliance.com/products/laundry/all-laundry",
+      "website": "airportappliance.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".product-item-name a",
+      "description": ".inline_sd_table",
+      "prix_selector": ".price",
+      "category": "laundry",
+      "promotion_selector": ".ef_saving-amount",
+      "next_page": ".pages-item-next a"
+  },
+  {
+      "url": "https://www.airportappliance.com/products/wall-ovens/all-wall-ovens",
+      "website": "airportappliance.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".product-item-name a",
+      "description": ".inline_sd_table",
+      "prix_selector": ".price",
+      "category": "wall-ovens",
+      "promotion_selector": ".ef_saving-amount",
+      "next_page": ".pages-item-next a"
   },
   {
       "url": "https://www.whirlpool.com/kitchen/refrigeration/refrigerators.html?plp=%3ABest%20Seller%3Acategory%3AKitchenRefrigerationRefrigerators%3AinStock%3Atrue&plpView=grid&currentPage=0",

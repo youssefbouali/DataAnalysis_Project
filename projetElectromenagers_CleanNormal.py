@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-#import sys
-#import os
-
-# Ensure user-specific site-packages are included
-#sys.path.append('/home/youssef/.local/lib/python3.8/site-packages')
-
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -19,10 +12,10 @@ from selenium.webdriver.common.by import By
 import time
 
 from selenium.webdriver.chrome.options import Options
-from seleniumwire import webdriver
 
 import re
-from rapidfuzz import fuzz, process
+from rapidfuzz import fuzz
+from urllib.parse import urljoin
 
 # Function to normalize text
 def normalize_title(title):
@@ -41,13 +34,8 @@ def find_similar_titles(title, title_list, threshold=75):
     return similar_titles
 
 # Configure caching options
-seleniumwire_options = {
-    #'request_storage': 'selenium_cache',  # Directory to save cached requests
-    'port': 4444,  # Specify a custom port
-    'timeout': 240  # Increase timeout value
-    #'request_storage_limit': 1000         # Limit to 1000 requests
-}
 options = Options()
+#options.add_argument("--headless")  # Run in headless mode (without opening a window)
 #options.add_argument("--headless")  # Run in headless mode (without opening a window)
 options.page_load_strategy = 'eager'
 
@@ -69,18 +57,7 @@ options.add_experimental_option("prefs", {
 })
 
 #Initialize the WebDriver with the options
-#driver = webdriver.Chrome(options=options)
-#seleniumwire_options=seleniumwire_options, 
 driver = webdriver.Chrome(options=options)
-
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-
-#from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
-#capabilities = DesiredCapabilities.CHROME
-#capabilities['acceptInsecureCerts'] = True
-#driver = webdriver.Chrome(desired_capabilities=capabilities)
 
 with open('platformes.json', 'r') as file:
     sites = json.load(file)
@@ -142,42 +119,48 @@ def convert_prix(the_prix, detected_currency="UNKNOWN"):
         print(f"Currency detection or conversion error: {e}")
 
 
-# Function to collect data via scraping
-def collect_data_from_scraping(site, products=None):
-
-    if site.get("typehtml") or not site.get("typehtml"):
-        
+def get_description(site):
+    try:
+        # Navigate to the product page
         driver.get(site["url"])
-        # Allow time for the page to load
-        #time.sleep(2)
-        
-        # WebDriverWait(driver, 10).until(
-            # EC.presence_of_element_located((By.ID, site["product_selector"]))
-        # )
 
-        # Extract the fully rendered HTML
         html_content = driver.page_source
 
-        print ("Opened : ",site["url"])
+        # Parse the HTML with BeautifulSoup
+        soup = BeautifulSoup(html_content, "html.parser")
+
+        # Extract the description using the provided CSS selector
+        description_element = soup.select_one(site["description"])
+        description = description_element.get_text(separator=' ', strip=True) if description_element else "Description not found"
+
+        return description
+    except Exception as e:
+        print(f"Error fetching description for {site['url']}: {e}")
+        return "Error fetching description"
+
+# Function to collect data via scraping
+def collect_data_from_scraping(site, products=None):
         
-    else:
-        
-        response = requests.get(site["url"], headers=headers)  # Adding headers to the request
-        html_content = response.content
+    driver.get(site["url"])
+    # Allow time for the page to load
+    #time.sleep(2)
+
+    # Extract the fully rendered HTML
+    html_content = driver.page_source
+
+    print ("Opened : ",site["url"])
     
     soup = BeautifulSoup(html_content, "html.parser")
-
     
     if products is None:
         products = []
     for item in soup.select(site["product_selector"]):
         nom =  item.select_one(site["nom_selector"])
         prix = item.select_one(site["prix_selector"])
-        if site.get("promotion_selector"):
-            promotion = item.select_one(site["promotion_selector"])
+        #cleaned_prix = convert_prix(the_prix, detected_currency)
+        promotion = item.select_one(site["promotion_selector"]) if site.get("promotion_selector") else None
         
         if nom and prix:
-            
             # Convert prix to USD if necessary
             the_prix = prix.text.strip()
             try:
@@ -229,28 +212,44 @@ def collect_data_from_scraping(site, products=None):
             else:
                 promotion_text = ""
             
+            
+            nomt = nom.text.strip()
+            if site.get("nom_regex"):
+                nomt = nomt.str.extract(site["nom_regex"])
+
+            product_url = ""
+            if 'href' in nom.attrs:
+                product_url = nom['href']
+                if product_url.startswith('/'):
+                    product_url = urljoin(site["url"], product_url)  # Combine domain with path
+
+            # Run description fetching concurrently
+            description = get_description({"url": product_url, "description": site["description"]})
+            
             products.append({
-                "nom": nom.text.strip(),
+                "nom": nomt,
                 "prix": cleaned_prix,
                 "website": site["website"],
                 "source": site["url"],
                 "date_scraped": date_now,
                 "category": site["category"],
-                "promotion": promotion_text
+                "promotion": promotion_text,
+                "url": product_url,
+                "description": description,
             })
-            print ("append : ",site["url"])
-    
+            print ("append product : ",site["url"])
     
     if site.get("next_page"):
-        next_page = soup.select_one(site["next_page"] + ' a:last-child')
-        if next_page.attrs:
-            if 'href' in next_page.attrs:
-                next_page_url = next_page['href']
-                if next_page_url.startswith('/'):
-                    from urllib.parse import urljoin
-                    next_page_url = urljoin(site["url"], next_page_url)  # Automatically combines domain with path
-                site["url"] = next_page_url
-                collect_data_from_scraping(site, products)
+        print ("next_page")
+        next_page = soup.select_one(site["next_page"])
+        if next_page and 'href' in next_page.attrs:
+            next_page_url = next_page['href']
+            if next_page_url.startswith('/'):
+                from urllib.parse import urljoin
+                next_page_url = urljoin(site["url"], next_page_url)  # Automatically combines domain with path
+            print(next_page_url)
+            site["url"] = next_page_url
+            collect_data_from_scraping(site, products)
     
     return products
 
@@ -262,7 +261,6 @@ def collect_data_from_api(site):
     if response.status_code == 200:
         data = response.json()
     
-        date_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         products = []
         items = data.get(*site["selectors"]["product_key"].split('.'))
         
@@ -285,6 +283,7 @@ def collect_data_from_api(site):
                     "category": category,
                     "promotion": promotion
                 })
+                print ("append : ",site["url"])
         
         return products
     else:
@@ -321,17 +320,16 @@ def clean_data(raw_data):
         print("Error: 'nom' column is missing!")
         return df  # or return an empty dataframe
     
-    print(df.columns)  # To inspect the columns in the data
+    #print(df.columns)  # To inspect the columns in the data
     
     # Safeguard the 'nom' column to ensure it contains strings
-    #df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(White|Matte White|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Matte Black with Brushed Stainless Steel Handles and Knobs)", "", regex=True)
-    df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(Matte Black|Copper|Slate|Brown|biscuit|Champagne|Tuscan stainless steel|Brushed Black|Brushed Navy|Carbon Graphite|Chrome|Forest Green|Graphite Steel|Ivory|Alpine White|Grey|Sapphire Blue|Specialty|Dark Steel|Essence White|Midnight Steel|Mirror|Satin Green|Silver Steel|Titanium|Beige & Bisque|Metallic|Red|Specialty|Black Slate|Black slate|Black Stainless|Multi-color|Black steel|Bronze|Nickel|Diamond Gray|Platinum Glass|Platinum|Graphite Steel|Graphite steel|Green|Orange|Yellow|Stainless steel look|Black stainless steel|Bisque|CleanSteel|Black Glass|Graphite|Slate|Matte Black|Matte black|Custom Panel Ready|Custom Panel Required|Custom Panel|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Stainless Steel|Stainless steel|Stainless Look|Matte Black with Brushed Stainless Steel Handles and Knobs|High Gloss White|White|Matte White|Matte white|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Fingerprint Resistant Black Stainless Steel|Fingerprint Resistant Stainless Steel)", "", regex=True)
-    
+    df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(Matte Black Steel|Copper|Slate|Brown|biscuit|Champagne|Tuscan stainless steel|Brushed Black|Brushed Navy|Carbon Graphite|Chrome|Forest Green|Graphite Steel|Ivory|Alpine White|Grey|Sapphire Blue|Specialty|Dark Steel|Essence White|Midnight Steel|Mirror|Satin Green|Silver Steel|Titanium|Beige & Bisque|Metallic|Red|Specialty|Black Slate|Black slate|Black Stainless|Multi-color|Black steel|Bronze|Nickel|Diamond Gray|Platinum Glass|Platinum|Graphite Steel|Graphite steel|Green|Orange|Yellow|Stainless steel look|Black stainless steel|Bisque|CleanSteel|Black Glass|Graphite|Slate|Matte Black|Matte black|Custom Panel Ready|Custom Panel Required|Custom Panel|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Stainless Steel|Stainless steel|Stainless Look|Matte Black with Brushed Stainless Steel Handles and Knobs|High Gloss White|White|Matte White|Matte white|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Fingerprint Resistant Black Stainless Steel|Fingerprint Resistant Stainless Steel)", "", regex=True)
+
+
+
+
     # Drop duplicates based on selected columns
     df_cleaned = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
-    
-    if site.get("nom_regex"):
-        df["nom"] = df['nom'].astype(str).str.extract(site["nom_regex"])
     
     # Continue with finding similar titles and further processing...
     #groups = []
@@ -386,16 +384,4 @@ if __name__ == "__main__":
     # Concatenate the cleaned data to the old data
     export_data(data_now)
     
-    # Analyze, visualize, and export data
-    
-    #print("Average prices in same website by product:")
-    #print(analyze_data_in_same_site(data_now))
-    #print("\r\nAverage prices in defferents websites by product:")
-    #print(analyze_data_by_diff_sites(data_now))
-    #plot_data(data_now)
-    
     driver.quit()
-    
-    # Analyze, visualize, and export data
-    #analyze_data(df_cleaned)
-    #plot_data(df_cleaned)

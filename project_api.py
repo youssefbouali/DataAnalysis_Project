@@ -3,65 +3,66 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from io import BytesIO
 from rapidfuzz import fuzz
+    
+from difflib import SequenceMatcher
 
 from flask_cors import CORS  # <-- Import CORS
-
 
 app = Flask(__name__)
 CORS(app)
 
 # Function to normalize text
-def normalize_title(title):
-    return title.lower()
+def normalize_text(text):
+    return text.lower()
 
-# Function to find similar titles using RapidFuzz
-def find_similar_titles(title, title_list, threshold=70):
-    similar_titles = []
-    for other_title in title_list:
-        score = fuzz.ratio(title, other_title)
+# Function to find similar noms using RapidFuzz
+def find_similar_noms(nom, nom_list, threshold=70):
+    similar_noms = []
+    for other_nom in nom_list:
+        score = fuzz.ratio(nom, other_nom)
         if score >= threshold:
-            similar_titles.append((title, other_title, score))
-    return similar_titles
+            similar_noms.append((nom, other_nom, score))
+    return similar_noms
 
 # Perform analysis by different sites
 def analyze_data_by_diff_sites(df):
-    df['normalized_title'] = df['nom'].apply(normalize_title)
-    unique_titles = df['normalized_title'].unique()
-    title_groups = {}
-    for title in unique_titles:
-        group = find_similar_titles(title, unique_titles)
-        for _, other_title, _ in group:
-            title_groups[other_title] = title
-    df['grouped_title'] = df['normalized_title'].map(lambda x: title_groups.get(x, x))
+    df['normalized_nom'] = df['nom'].apply(normalize_text)
+    unique_noms = df['normalized_nom'].unique()
+    nom_groups = {}
+    for nom in unique_noms:
+        group = find_similar_noms(nom, unique_noms)
+        for _, other_nom, _ in group:
+            nom_groups[other_nom] = nom
+    df['grouped_nom'] = df['normalized_nom'].map(lambda x: nom_groups.get(x, x))
     
     grouped_by_name_and_website = (
-        df.groupby(["grouped_title", "website"])["prix"]
+        df.groupby(["grouped_nom", "website"])["prix"]
         .agg(mean_samesite="mean", min_samesite="min", max_samesite="max")
         .reset_index()
     )
 
     site_counts = (
-        grouped_by_name_and_website.groupby("grouped_title")["website"]
+        grouped_by_name_and_website.groupby("grouped_nom")["website"]
         .nunique()
         .reset_index(name="site_count")
     )
 
     extreme_sites = (
         grouped_by_name_and_website.loc[
-            grouped_by_name_and_website.groupby("grouped_title")["max_samesite"].idxmax(),
-            ["grouped_title", "website"]
+            grouped_by_name_and_website.groupby("grouped_nom")["max_samesite"].idxmax(),
+            ["grouped_nom", "website"]
         ]
         .rename(columns={"website": "most_expensive_site"})
     )
     extreme_sites["cheapest_site"] = (
         grouped_by_name_and_website.loc[
-            grouped_by_name_and_website.groupby("grouped_title")["min_samesite"].idxmin(),
+            grouped_by_name_and_website.groupby("grouped_nom")["min_samesite"].idxmin(),
             "website"
         ].values
     )
 
     final_grouped = (
-        grouped_by_name_and_website.groupby("grouped_title")[["mean_samesite", "min_samesite", "max_samesite"]]
+        grouped_by_name_and_website.groupby("grouped_nom")[["mean_samesite", "min_samesite", "max_samesite"]]
         .agg(
             mean_all_sites=("mean_samesite", "mean"),
             min_all_sites=("min_samesite", "min"),
@@ -70,8 +71,8 @@ def analyze_data_by_diff_sites(df):
         .reset_index()
     )
 
-    final_grouped = final_grouped.merge(site_counts, on="grouped_title", how="left")
-    final_grouped = final_grouped.merge(extreme_sites, on="grouped_title", how="left")
+    final_grouped = final_grouped.merge(site_counts, on="grouped_nom", how="left")
+    final_grouped = final_grouped.merge(extreme_sites, on="grouped_nom", how="left")
     final_grouped = final_grouped[final_grouped["site_count"] > 1]
 
     return final_grouped.to_dict(orient='records')
@@ -118,10 +119,6 @@ def analyze_data_in_all_days(df, nom=None, website=None):
         return grouped_by_date.to_dict(orient='records')
 
     return grouped.to_dict(orient='records')
- 
- 
- 
- 
 
 def analyze_data_in_same_site_grouped_sites(df, nom=None, website=None):
     # Grouping by 'nom' and 'website' and calculating aggregated values
@@ -141,35 +138,24 @@ def analyze_data_in_same_site_grouped_sites(df, nom=None, website=None):
     grouped_by_date.columns = ['mean_mean', 'min_mean', 'max_mean']
     
     return grouped_by_date.reset_index().to_dict(orient='records')
-
-@app.route('/analyze_data_in_same_site_grouped_sites')
-def analyze7():
-    df = pd.read_csv("Electromenagerscleaned_data.csv")
-    # Call the analysis function
-    grouped_data = analyze_data_in_same_site_grouped_sites(df)
     
-    # Return the data as JSON
-    return jsonify(grouped_data)
-
-
-
-@app.route('/plot_grouped_sites', methods=['GET'])
-def plot_grouped_sites():
-    df = pd.read_csv("Electromenagerscleaned_data.csv")
-    analysis_results = analyze_data_in_same_site_grouped_sites(df)
-    plot_data = pd.DataFrame(analysis_results)
-    img_stream = generate_plot(plot_data)
-    return send_file(img_stream, mimetype='image/png')
+# Function to find similar noms using difflib
+def find_similar_noms_difflib(nom, nom_list, threshold=0.42):
+    similar_noms = []
+    for other_nom in nom_list:
+        score = SequenceMatcher(None, nom, other_nom).ratio()
+        if score >= threshold:
+            similar_noms.append((nom, other_nom, score))
+    return similar_noms
  
-
 # Generate plot
-def generate_plot(data, title="Average Prices by Product", grouped_title="Product"):
+def generate_plot(data, nom="Average Prices by Product", grouped_nom="Product"):
     plt.figure(figsize=(10, 6))
-    #plt.bar(data['grouped_title'], data['mean_all_sites'], color='skyblue')
+    #plt.bar(data['grouped_nom'], data['mean_all_sites'], color='skyblue')
     
-    data.plot(kind="bar", title=title, xlabel=grouped_title, ylabel="Price (USD)")
+    data.plot(kind="bar", title=nom, xlabel=grouped_nom, ylabel="Price (USD)")
     
-    # Set x-tick labels to the index of avg_prices, assuming it's the grouped title
+    # Set x-tick labels to the index of avg_prices, assuming it's the grouped nom
     plt.xticks(ticks=range(len(data)), labels=data.index, rotation=45, ha="right")
     
     plt.xlabel('Product')
@@ -181,9 +167,27 @@ def generate_plot(data, title="Average Prices by Product", grouped_title="Produc
     img_stream.seek(0)
     return img_stream
 
+
+@app.route('/analyze_data_in_same_site_grouped_sites')
+def analyze_data_in_same_site_grouped_sites_app():
+    df = pd.read_csv("Electromenagerscleaned_data.csv")
+    # Call the analysis function
+    grouped_data = analyze_data_in_same_site_grouped_sites(df)
+    
+    # Return the data as JSON
+    return jsonify(grouped_data)
+
+@app.route('/plot_grouped_sites', methods=['GET'])
+def plot_grouped_sites():
+    df = pd.read_csv("Electromenagerscleaned_data.csv")
+    analysis_results = analyze_data_in_same_site_grouped_sites(df)
+    plot_data = pd.DataFrame(analysis_results)
+    img_stream = generate_plot(plot_data)
+    return send_file(img_stream, mimetype='image/png')
+
 # Flask routes
 @app.route('/analyze_data_by_diff_sites', methods=['GET'])
-def analyze():
+def analyze_data_by_diff_sites_app():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
     analysis_results = analyze_data_by_diff_sites(df)
     return jsonify(analysis_results)
@@ -205,17 +209,6 @@ def analyze_all_days():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
     analysis_results = analyze_data_in_all_days(df)
     return jsonify(analysis_results)
-    
-from difflib import SequenceMatcher
-
-# Function to find similar titles using difflib
-def find_similar_titles_difflib(title, title_list, threshold=0.42):
-    similar_titles = []
-    for other_title in title_list:
-        score = SequenceMatcher(None, title, other_title).ratio()
-        if score >= threshold:
-            similar_titles.append((title, other_title, score))
-    return similar_titles
 
 @app.route('/search_similar_products', methods=['GET'])
 def search_similar_products():
@@ -231,20 +224,20 @@ def search_similar_products():
     except FileNotFoundError:
         return jsonify({"error": "Dataset not found"}), 500
 
-    # Normalize titles in the dataset
-    df['normalized_title'] = df['nom'].apply(normalize_title)
+    # Normalize noms in the dataset
+    df['normalized_nom'] = df['nom'].apply(normalize_text)
 
-    # Find similar titles using difflib
-    similar_titles = find_similar_titles_difflib(product_name, df['normalized_title'].unique())
+    # Find similar noms using difflib
+    similar_noms = find_similar_noms_difflib(product_name, df['normalized_nom'].unique())
 
-    if not similar_titles:
+    if not similar_noms:
         return jsonify({"message": "No similar products found"}), 404
 
-    # Filter the dataframe for matching titles
-    matching_titles = [title[1] for title in similar_titles]
-    filtered_df = df[df['normalized_title'].isin(matching_titles)]
+    # Filter the dataframe for matching noms
+    matching_noms = [nom[1] for nom in similar_noms]
+    filtered_df = df[df['normalized_nom'].isin(matching_noms)]
 
-    # Group results by title and website, preserving original indexes
+    # Group results by nom and website, preserving original indexes
     grouped_results = (
         filtered_df.groupby(["nom", "website"], as_index=False)
         .agg(
@@ -252,7 +245,7 @@ def search_similar_products():
             min_price=("prix", "min"),
             max_price=("prix", "max"),
             count=("prix", "count"),
-            original_indexes=("normalized_title", lambda x: (filtered_df.loc[x.index].index + 2).tolist())
+            original_indexes=("normalized_nom", lambda x: (filtered_df.loc[x.index].index + 2).tolist())
         )
     ).sort_values(by="mean_price")
 
@@ -442,8 +435,6 @@ def home():
         </body>
         </html>
     """)
-
-
 
 
 @app.route('/plot', methods=['GET'])

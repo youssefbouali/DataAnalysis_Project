@@ -29,11 +29,13 @@ def find_similar_titles(title, title_list, threshold=70):
 def clean_data(raw_data):
     df = pd.DataFrame(raw_data)
 
-    df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$| - White| - Matte White|, Starlight|- Starlight| Starlight|, Space|, Black|, Blue|, Gold|, Gray|, Green|, Purple|, Pink|, Silver| - Space | - Space| - Black | - Blue| - Gold| - Gray| - Green| - Purple| - Pink| - Silver| Space| Black| Blue| Gold| Gray| Green| Purple| Pink| Silver|Space |Black |Blue |Gold |Gray |Green |Purple |Pink |Silver ", "", regex=True)
-    # df["nom"] = df["nom"].astype(str).str.replace(r"WIFI|Wifi|wifi|WI-FI|with Wi-Fi|Wi-Fi|wi-fi", "Wifi", regex=True)
-    # df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|, Starlight|- Starlight| Starlight|, Space|, Black|, Blue|, Gold|, Gray|, Green|, Purple|, Pink|, Silver| - Space | - Space| - Black | - Blue| - Gold| - Gray| - Green| - Purple| - Pink| - Silver| Space| Black| Blue| Gold| Gray| Green| Purple| Pink| Silver|Space |Black |Blue |Gold |Gray |Green |Purple |Pink |Silver |Refurbished |Apple - |APPLE - |APPLE | - Excellent Condition| - Excellent| - \(Excellent\)| \(Late\)| - Good| - \(Good\)| \(Good\)| - Good Condition| - Very Good Condition|, Choose Color|20[1-2][0-9] | \(Latest Model 20[1-2][0-9] Choose Color and Size\)| \(Choose Color\)|, Sky|- Sky| Sky|, \(20[1-2][0-9]\)| \(20[1-2][0-9]\)|- \(20[1-2][0-9]\)|, 20[1-2][0-9]|- 20[1-2][0-9]| \(Choose Color\)| \(Latest Model 20[1-2][0-9] and Size\)| \(Latest Model and Size\)|- \(Latest Model\)| \(Latest Model\)|\(Renewed\)| Built For Intelligence", "", regex=True)
+    if 'nom' not in df.columns:
+        print("Error: 'nom' column is missing!")
+        return df
 
-    df = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
+    df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(Matte Black|Copper|Slate|Brown|biscuit|Champagne|Tuscan stainless steel|Brushed Black|Brushed Navy|Carbon Graphite|Chrome|Forest Green|Graphite Steel|Ivory|Alpine White|Grey|Sapphire Blue|Specialty|Dark Steel|Essence White|Midnight Steel|Mirror|Satin Green|Silver Steel|Titanium|Beige & Bisque|Metallic|Red|Specialty|Black Slate|Black slate|Black Stainless|Multi-color|Black steel|Bronze|Nickel|Diamond Gray|Platinum Glass|Platinum|Graphite Steel|Graphite steel|Green|Orange|Yellow|Stainless steel look|Black stainless steel|Bisque|CleanSteel|Black Glass|Graphite|Slate|Matte Black|Matte black|Custom Panel Ready|Custom Panel Required|Custom Panel|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Stainless Steel|Stainless steel|Stainless Look|Matte Black with Brushed Stainless Steel Handles and Knobs|High Gloss White|White|Matte White|Matte white|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Fingerprint Resistant Black Stainless Steel|Fingerprint Resistant Stainless Steel)", "", regex=True)
+    
+    df_cleaned = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
     
     return df
 

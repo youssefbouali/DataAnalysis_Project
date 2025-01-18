@@ -1,0 +1,27 @@
+[
+  {
+      "url": "https://www.costco.com/cooling-air-treatment-heating.html",
+      "website": "costco.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".description a",
+      "description": ".product-info-description",
+      "prix_selector": ".price",
+      "category": "cooling-air-treatment-heating",
+      "promotion_selector": ".pill-style-january-savings",
+      "next_page": ".forward a"
+  },
+  {
+      "url": "https://www.costco.com/commercial-restaurant.html",
+      "website": "costco.com",
+      "type": "scraping",
+      "product_selector": ".product",
+      "nom_selector": ".description a",
+      "description": ".product-info-description",
+      "prix_selector": ".price",
+      "category": "commercial-restaurant",
+      "promotion_selector": ".pill-style-january-savings",
+      "next_page": ".forward a"
+  }
+  
+]
