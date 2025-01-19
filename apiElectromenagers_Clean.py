@@ -1,4 +1,3 @@
-```python
 from flask import Flask, jsonify, request, send_file, render_template_string
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,25 +6,12 @@ from rapidfuzz import fuzz
 import seaborn as sns
     
 from difflib import SequenceMatcher
-```
 
-
-```python
 from flask_cors import CORS  # <-- Import CORS
 
 app = Flask(__name__)
 CORS(app)
-```
 
-
-
-
-    <flask_cors.extension.CORS at 0x179d1324320>
-
-
-
-
-```python
 # Function to normalize text
 def normalize_text(text):
     if isinstance(text, str):
@@ -35,10 +21,7 @@ def normalize_text(text):
     else:
         # Convert non-string inputs to a string or handle them appropriately
         return str(text) if text is not None else ""
-```
 
-
-```python
 # Function to find similar noms using RapidFuzz
 def find_similar_noms(nom, nom_list, threshold=70):
     similar_noms = []
@@ -47,10 +30,7 @@ def find_similar_noms(nom, nom_list, threshold=70):
         if score >= threshold:
             similar_noms.append((nom, other_nom, score))
     return similar_noms
-```
 
-
-```python
 # Function to find similar noms using difflib
 def find_similar_noms_difflib(nom, nom_list, threshold=0.7):
     similar_noms = []
@@ -59,10 +39,8 @@ def find_similar_noms_difflib(nom, nom_list, threshold=0.7):
         if score >= threshold:
             similar_noms.append((nom, other_nom, score))
     return similar_noms
-```
+ 
 
-
-```python
 # Analyze promotions by category
 def promotions_par_categorie(df):
     promotion_df = df[df['promotion'] != ""]
@@ -72,10 +50,8 @@ def promotions_par_categorie(df):
         .reset_index(name="count")
     )
     return promotions.to_dict(orient='records')
-```
 
 
-```python
 def analyse_get_top_product_price_variation(df):
     # Normalize product names
     df['normalized_nom'] = df['nom'].apply(normalize_text)
@@ -112,10 +88,8 @@ def analyse_get_top_product_price_variation(df):
     price_variations = df[df['grouped_nom'] == top_product].drop_duplicates(subset=['website'])[['website', 'prix']]
 
     return top_product, price_variations.sort_values(by='prix', ascending=True)
-```
 
 
-```python
 def visualisation_plot_price_variations(price_variations, product_name):
     # Visualize price variations by website
     plt.figure(figsize=(10, 6))
@@ -129,10 +103,8 @@ def visualisation_plot_price_variations(price_variations, product_name):
     plt.savefig(img_stream, format='png')
     img_stream.seek(0)
     return img_stream
-```
 
 
-```python
 # Analyze data
 def analyse_promotions_par_categorie(df):
     # Filter products on promotion
@@ -141,14 +113,12 @@ def analyse_promotions_par_categorie(df):
     # Count promotions by category
     promotions_par_categorie = promotion_df.groupby(['category', 'promotion'])['promotion'].size().reset_index(name="count")
 
-    # Sort by 'count' in descending order and get the top
+    # Sort by 'count' in descending order and get the top 5
     top_promotions = promotions_par_categorie.sort_values(by='count', ascending=False).head(10)
 
     return top_promotions
-```
 
 
-```python
 def visualisation_plot_promotions(promotions_par_categorie, title="Promotion Count by Category and Promotion Type", xlabel="Category", ylabel="Promotion Count"):
     # Create a Seaborn barplot for better visual representation
     plt.figure(figsize=(12, 6))
@@ -168,10 +138,8 @@ def visualisation_plot_promotions(promotions_par_categorie, title="Promotion Cou
     plt.savefig(img_stream, format='png')
     img_stream.seek(0)
     return img_stream
-```
 
 
-```python
 # Function to group by 'nom', 'website', and 'date_scraped', and sort by count
 def analyse_group_by_nom_website_date(df):
     # Group by 'nom' and 'website' and calculate min, mean, max, and count of 'prix'
@@ -183,20 +151,18 @@ def analyse_group_by_nom_website_date(df):
     # Sort by 'count' in descending order to get the top products
     grouped_sorted = grouped.sort_values(by='count', ascending=False)
 
-    # Get the top products with the most occurrences
+    # Get the top 5 products with the most occurrences
     products_by_date = grouped_sorted.groupby('nom').head(1).sort_values(by='count', ascending=False).head(10)
 
     # Reset the index so 'nom' becomes a column again
     products_by_date = products_by_date.reset_index()
 
     return products_by_date
-```
 
 
-```python
-# Function to plot price variations by 'date_scraped' for the top products
+# Function to plot price variations by 'date_scraped' for the top 5 products
 def visualisation_plot_price_variations_by_date(df, products_by_date):
-    # Filter the original dataframe to include only the top products
+    # Filter the original dataframe to include only the top 5 products
     filtered_df = df[df['nom'].isin(products_by_date['nom'])].copy()
 
     # Replace NaN values in the 'promotion' column with 'No promo' using .loc
@@ -216,14 +182,13 @@ def visualisation_plot_price_variations_by_date(df, products_by_date):
     plt.xlabel("Date Scraped")
     plt.ylabel("Price (USD)")
     plt.xticks(rotation=45, ha="right")
+
     img_stream = BytesIO()
     plt.savefig(img_stream, format='png')
     img_stream.seek(0)
     return img_stream
-```
 
 
-```python
 # Analyze data
 def analyse_data_in_same_site_grouped_sites(df, nom=None, website=None):
     # Group by 'nom' and 'website' to get the average prices and count
@@ -241,10 +206,8 @@ def analyse_data_in_same_site_grouped_sites(df, nom=None, website=None):
 
     # Return the result sorted by 'min' in ascending order
     return grouped_by_date.sort_values(by='min', ascending=True)
-```
 
 
-```python
 # Plot data
 def visualisation_plot_data(avg_prices, nom="Average Prices by Product", xlabel="Product", ylabel="Price (USD)", x=None, y=None):
     # Ensure the DataFrame is indexed properly for plotting
@@ -260,10 +223,9 @@ def visualisation_plot_data(avg_prices, nom="Average Prices by Product", xlabel=
     plt.savefig(img_stream, format='png')
     img_stream.seek(0)
     return img_stream
-```
 
 
-```python
+
 @app.route('/search_similar_products', methods=['GET'])
 def search_similar_products():
     # Parse input JSON
@@ -312,19 +274,17 @@ def search_similar_products():
     #})
 
     return jsonify(result_data)
-```
 
 
-```python
 @app.route('/all_promotions_par_categorie', methods=['GET'])
 def analyze_promotions():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
     analysis_results = promotions_par_categorie(df)
     return jsonify(analysis_results)
-```
 
 
-```python
+
+
 @app.route('/analyse_top_product', methods=['GET'])
 def api_analyse_top_product():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
@@ -340,10 +300,8 @@ def plot_analyse_top_product():
     top_product, price_variations = analyse_get_top_product_price_variation(df)
     img_stream = visualisation_plot_price_variations(price_variations, top_product)
     return send_file(img_stream, mimetype='image/png')
-```
+    
 
-
-```python
 @app.route('/analyse_promotions', methods=['GET'])
 def api_analyse_promotions():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
@@ -358,10 +316,8 @@ def plot_analyse_promotions():
         xlabel="Category", 
         ylabel="Promotion Count")
     return send_file(img_stream, mimetype='image/png')
-```
 
 
-```python
 @app.route('/products_by_date', methods=['GET'])
 def products_by_date():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
@@ -373,10 +329,8 @@ def plot_products_by_date():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
     img_stream = visualisation_plot_price_variations_by_date(df, analyse_group_by_nom_website_date(df))
     return send_file(img_stream, mimetype='image/png')
-```
 
 
-```python
 @app.route('/site_grouped_sites', methods=['GET'])
 def site_grouped_sites():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
@@ -388,10 +342,8 @@ def plot_site_grouped_sites():
     df = pd.read_csv("Electromenagerscleaned_data.csv")
     img_stream = visualisation_plot_data(analyse_data_in_same_site_grouped_sites(df), "Prices by sites", "Product", "Price (USD)", "website", ["min", "mean", "max"])
     return send_file(img_stream, mimetype='image/png')
-```
 
 
-```python
 @app.route('/')
 def home():
     return render_template_string("""
@@ -562,29 +514,7 @@ def home():
         </body>
         </html>
     """)
-```
 
 
-```python
 if __name__ == "__main__":
-    #app.run(debug=True)
-    app.run(use_reloader=False)
-```
-
-     * Serving Flask app '__main__'
-     * Debug mode: off
-    
-
-    WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
-     * Running on http://127.0.0.1:5000
-    Press CTRL+C to quit
-    127.0.0.1 - - [19/Jan/2025 00:48:40] "GET / HTTP/1.1" 200 -
-    127.0.0.1 - - [19/Jan/2025 00:48:47] "GET /analyse_promotions HTTP/1.1" 200 -
-    127.0.0.1 - - [19/Jan/2025 00:49:00] "GET /plot_products_by_date HTTP/1.1" 200 -
-    
-
-
-    
-![png](output_21_2.png)
-    
-
+    app.run(debug=True)

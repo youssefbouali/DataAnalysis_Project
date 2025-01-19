@@ -402,15 +402,17 @@
 \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
 \PY{k+kn}{from} \PY{n+nn}{io} \PY{k+kn}{import} \PY{n}{BytesIO}
 \PY{k+kn}{from} \PY{n+nn}{rapidfuzz} \PY{k+kn}{import} \PY{n}{fuzz}
+\PY{k+kn}{import} \PY{n+nn}{seaborn} \PY{k}{as} \PY{n+nn}{sns}
+    
 \PY{k+kn}{from} \PY{n+nn}{difflib} \PY{k+kn}{import} \PY{n}{SequenceMatcher}
-
-\PY{k+kn}{from} \PY{n+nn}{flask\PYZus{}cors} \PY{k+kn}{import} \PY{n}{CORS}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{} Import CORS}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{2}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{flask\PYZus{}cors} \PY{k+kn}{import} \PY{n}{CORS}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{} Import CORS}
+
 \PY{n}{app} \PY{o}{=} \PY{n}{Flask}\PY{p}{(}\PY{n+nv+vm}{\PYZus{}\PYZus{}name\PYZus{}\PYZus{}}\PY{p}{)}
 \PY{n}{CORS}\PY{p}{(}\PY{n}{app}\PY{p}{)}
 \end{Verbatim}
@@ -419,7 +421,7 @@
             \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
 \prompt{Out}{outcolor}{2}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-<flask\_cors.extension.CORS at 0x1e293b43650>
+<flask\_cors.extension.CORS at 0x179d1324320>
 \end{Verbatim}
 \end{tcolorbox}
         
@@ -427,80 +429,42 @@
 \prompt{In}{incolor}{3}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c+c1}{\PYZsh{} Function to normalize text}
-\PY{k}{def} \PY{n+nf}{normalize\PYZus{}title}\PY{p}{(}\PY{n}{title}\PY{p}{)}\PY{p}{:}
-    \PY{k}{return} \PY{n}{title}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{normalize\PYZus{}text}\PY{p}{(}\PY{n}{text}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n+nb}{isinstance}\PY{p}{(}\PY{n}{text}\PY{p}{,} \PY{n+nb}{str}\PY{p}{)}\PY{p}{:}
+        \PY{n}{text} \PY{o}{=} \PY{n}{text}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Convert to lowercase}
+        \PY{c+c1}{\PYZsh{} nom = re.sub(r\PYZsq{}[\PYZca{}a\PYZhy{}z\PYZbs{}s]\PYZsq{}, \PYZsq{}\PYZsq{}, text)  \PYZsh{} Uncomment if needed for special character removal}
+        \PY{k}{return} \PY{n}{text}
+    \PY{k}{else}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Convert non\PYZhy{}string inputs to a string or handle them appropriately}
+        \PY{k}{return} \PY{n+nb}{str}\PY{p}{(}\PY{n}{text}\PY{p}{)} \PY{k}{if} \PY{n}{text} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{4}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} Function to find similar titles using RapidFuzz}
-\PY{k}{def} \PY{n+nf}{find\PYZus{}similar\PYZus{}titles}\PY{p}{(}\PY{n}{title}\PY{p}{,} \PY{n}{title\PYZus{}list}\PY{p}{,} \PY{n}{threshold}\PY{o}{=}\PY{l+m+mi}{70}\PY{p}{)}\PY{p}{:}
-    \PY{n}{similar\PYZus{}titles} \PY{o}{=} \PY{p}{[}\PY{p}{]}
-    \PY{k}{for} \PY{n}{other\PYZus{}title} \PY{o+ow}{in} \PY{n}{title\PYZus{}list}\PY{p}{:}
-        \PY{n}{score} \PY{o}{=} \PY{n}{fuzz}\PY{o}{.}\PY{n}{ratio}\PY{p}{(}\PY{n}{title}\PY{p}{,} \PY{n}{other\PYZus{}title}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Function to find similar noms using RapidFuzz}
+\PY{k}{def} \PY{n+nf}{find\PYZus{}similar\PYZus{}noms}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{nom\PYZus{}list}\PY{p}{,} \PY{n}{threshold}\PY{o}{=}\PY{l+m+mi}{70}\PY{p}{)}\PY{p}{:}
+    \PY{n}{similar\PYZus{}noms} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{other\PYZus{}nom} \PY{o+ow}{in} \PY{n}{nom\PYZus{}list}\PY{p}{:}
+        \PY{n}{score} \PY{o}{=} \PY{n}{fuzz}\PY{o}{.}\PY{n}{ratio}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{)}
         \PY{k}{if} \PY{n}{score} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{threshold}\PY{p}{:}
-            \PY{n}{similar\PYZus{}titles}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{title}\PY{p}{,} \PY{n}{other\PYZus{}title}\PY{p}{,} \PY{n}{score}\PY{p}{)}\PY{p}{)}
-    \PY{k}{return} \PY{n}{similar\PYZus{}titles}
+            \PY{n}{similar\PYZus{}noms}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{,} \PY{n}{score}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{similar\PYZus{}noms}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{5}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} Perform analysis by different sites}
-\PY{k}{def} \PY{n+nf}{analyze\PYZus{}data\PYZus{}by\PYZus{}diff\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
-    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{n}{normalize\PYZus{}title}\PY{p}{)}
-    \PY{n}{unique\PYZus{}titles} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}
-    \PY{n}{title\PYZus{}groups} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
-    \PY{k}{for} \PY{n}{title} \PY{o+ow}{in} \PY{n}{unique\PYZus{}titles}\PY{p}{:}
-        \PY{n}{group} \PY{o}{=} \PY{n}{find\PYZus{}similar\PYZus{}titles}\PY{p}{(}\PY{n}{title}\PY{p}{,} \PY{n}{unique\PYZus{}titles}\PY{p}{)}
-        \PY{k}{for} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{other\PYZus{}title}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n}{group}\PY{p}{:}
-            \PY{n}{title\PYZus{}groups}\PY{p}{[}\PY{n}{other\PYZus{}title}\PY{p}{]} \PY{o}{=} \PY{n}{title}
-    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{map}\PY{p}{(}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n}{title\PYZus{}groups}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{)}\PY{p}{)}
-    
-    \PY{n}{grouped\PYZus{}by\PYZus{}name\PYZus{}and\PYZus{}website} \PY{o}{=} \PY{p}{(}
-        \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
-        \PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{n}{mean\PYZus{}samesite}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{min\PYZus{}samesite}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{max\PYZus{}samesite}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-        \PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
-    \PY{p}{)}
-
-    \PY{n}{site\PYZus{}counts} \PY{o}{=} \PY{p}{(}
-        \PY{n}{grouped\PYZus{}by\PYZus{}name\PYZus{}and\PYZus{}website}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
-        \PY{o}{.}\PY{n}{nunique}\PY{p}{(}\PY{p}{)}
-        \PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{name}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{site\PYZus{}count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{p}{)}
-
-    \PY{n}{extreme\PYZus{}sites} \PY{o}{=} \PY{p}{(}
-        \PY{n}{grouped\PYZus{}by\PYZus{}name\PYZus{}and\PYZus{}website}\PY{o}{.}\PY{n}{loc}\PY{p}{[}
-            \PY{n}{grouped\PYZus{}by\PYZus{}name\PYZus{}and\PYZus{}website}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max\PYZus{}samesite}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{idxmax}\PY{p}{(}\PY{p}{)}\PY{p}{,}
-            \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
-        \PY{p}{]}
-        \PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{most\PYZus{}expensive\PYZus{}site}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}
-    \PY{p}{)}
-    \PY{n}{extreme\PYZus{}sites}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{cheapest\PYZus{}site}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}
-        \PY{n}{grouped\PYZus{}by\PYZus{}name\PYZus{}and\PYZus{}website}\PY{o}{.}\PY{n}{loc}\PY{p}{[}
-            \PY{n}{grouped\PYZus{}by\PYZus{}name\PYZus{}and\PYZus{}website}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min\PYZus{}samesite}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{idxmin}\PY{p}{(}\PY{p}{)}\PY{p}{,}
-            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}
-        \PY{p}{]}\PY{o}{.}\PY{n}{values}
-    \PY{p}{)}
-
-    \PY{n}{final\PYZus{}grouped} \PY{o}{=} \PY{p}{(}
-        \PY{n}{grouped\PYZus{}by\PYZus{}name\PYZus{}and\PYZus{}website}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}samesite}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min\PYZus{}samesite}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max\PYZus{}samesite}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
-        \PY{o}{.}\PY{n}{agg}\PY{p}{(}
-            \PY{n}{mean\PYZus{}all\PYZus{}sites}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}samesite}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
-            \PY{n}{min\PYZus{}all\PYZus{}sites}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min\PYZus{}samesite}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
-            \PY{n}{max\PYZus{}all\PYZus{}sites}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max\PYZus{}samesite}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-        \PY{p}{)}
-        \PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
-    \PY{p}{)}
-
-    \PY{n}{final\PYZus{}grouped} \PY{o}{=} \PY{n}{final\PYZus{}grouped}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{site\PYZus{}counts}\PY{p}{,} \PY{n}{on}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{how}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{left}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{n}{final\PYZus{}grouped} \PY{o}{=} \PY{n}{final\PYZus{}grouped}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{extreme\PYZus{}sites}\PY{p}{,} \PY{n}{on}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{how}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{left}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{n}{final\PYZus{}grouped} \PY{o}{=} \PY{n}{final\PYZus{}grouped}\PY{p}{[}\PY{n}{final\PYZus{}grouped}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{site\PYZus{}count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{l+m+mi}{1}\PY{p}{]}
-
-    \PY{k}{return} \PY{n}{final\PYZus{}grouped}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Function to find similar noms using difflib}
+\PY{k}{def} \PY{n+nf}{find\PYZus{}similar\PYZus{}noms\PYZus{}difflib}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{nom\PYZus{}list}\PY{p}{,} \PY{n}{threshold}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{)}\PY{p}{:}
+    \PY{n}{similar\PYZus{}noms} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{other\PYZus{}nom} \PY{o+ow}{in} \PY{n}{nom\PYZus{}list}\PY{p}{:}
+        \PY{n}{score} \PY{o}{=} \PY{n}{SequenceMatcher}\PY{p}{(}\PY{k+kc}{None}\PY{p}{,} \PY{n}{nom}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{)}\PY{o}{.}\PY{n}{ratio}\PY{p}{(}\PY{p}{)}
+        \PY{k}{if} \PY{n}{score} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{threshold}\PY{p}{:}
+            \PY{n}{similar\PYZus{}noms}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{,} \PY{n}{score}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{similar\PYZus{}noms}
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -522,86 +486,99 @@
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{7}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} Analyze data in the same site}
-\PY{k}{def} \PY{n+nf}{analyze\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
-    \PY{n}{avg\PYZus{}prices} \PY{o}{=} \PY{p}{(}
-        \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
-        \PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
-    \PY{p}{)}
-    \PY{n}{avg\PYZus{}prices\PYZus{}filtered} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{!=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
-    \PY{k}{return} \PY{n}{avg\PYZus{}prices\PYZus{}filtered}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{analyse\PYZus{}get\PYZus{}top\PYZus{}product\PYZus{}price\PYZus{}variation}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Normalize product names}
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{n}{normalize\PYZus{}text}\PY{p}{)}
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n}{normalize\PYZus{}text}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{k}{if} \PY{n}{pd}\PY{o}{.}\PY{n}{notna}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom\PYZus{}and\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{+}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ }\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{}df[\PYZsq{}nom\PYZus{}and\PYZus{}description\PYZsq{}] = df[\PYZsq{}normalized\PYZus{}nom\PYZsq{}]}
+    
+    \PY{c+c1}{\PYZsh{} Apply fuzzy matching to group similar product names}
+    \PY{n}{unique\PYZus{}noms} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom\PYZus{}and\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}
+    \PY{n}{nom\PYZus{}groups} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+
+    \PY{k}{for} \PY{n}{nom} \PY{o+ow}{in} \PY{n}{unique\PYZus{}noms}\PY{p}{:}
+        \PY{n}{group} \PY{o}{=} \PY{n}{find\PYZus{}similar\PYZus{}noms}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{unique\PYZus{}noms}\PY{p}{)}
+        \PY{k}{for} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n}{group}\PY{p}{:}
+            \PY{n}{nom\PYZus{}groups}\PY{p}{[}\PY{n}{other\PYZus{}nom}\PY{p}{]} \PY{o}{=} \PY{n}{nom}  \PY{c+c1}{\PYZsh{} Group similar product names}
+
+    \PY{c+c1}{\PYZsh{} Map the grouped noms back to the DataFrame}
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom\PYZus{}and\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{map}\PY{p}{(}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n}{nom\PYZus{}groups}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{)}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Remove duplicates based on product name and website before counting occurrences}
+    \PY{n}{df\PYZus{}unique} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{drop\PYZus{}duplicates}\PY{p}{(}\PY{n}{subset}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Count the occurrences of each product by website}
+    \PY{n}{product\PYZus{}counts} \PY{o}{=} \PY{n}{df\PYZus{}unique}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{name}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Find the product with the maximum count across all websites}
+    \PY{n}{top\PYZus{}product} \PY{o}{=} \PY{n}{product\PYZus{}counts}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sum}\PY{l+s+s1}{\PYZsq{}}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{o}{.}\PY{n}{idxmax}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Get the details of that top product across websites}
+    \PY{n}{top\PYZus{}product\PYZus{}data} \PY{o}{=} \PY{n}{product\PYZus{}counts}\PY{p}{[}\PY{n}{product\PYZus{}counts}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{top\PYZus{}product}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} Extract price variations for that product across websites}
+    \PY{n}{price\PYZus{}variations} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{top\PYZus{}product}\PY{p}{]}\PY{o}{.}\PY{n}{drop\PYZus{}duplicates}\PY{p}{(}\PY{n}{subset}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+
+    \PY{k}{return} \PY{n}{top\PYZus{}product}\PY{p}{,} \PY{n}{price\PYZus{}variations}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{8}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} Analyze data by all days}
-\PY{k}{def} \PY{n+nf}{analyze\PYZus{}data\PYZus{}in\PYZus{}all\PYZus{}days}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{nom}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{website}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}
-    \PY{n}{grouped} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{name}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{visualisation\PYZus{}plot\PYZus{}price\PYZus{}variations}\PY{p}{(}\PY{n}{price\PYZus{}variations}\PY{p}{,} \PY{n}{product\PYZus{}name}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Visualize price variations by website}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{price\PYZus{}variations}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{price\PYZus{}variations}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{skyblue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price Variations for }\PY{l+s+si}{\PYZob{}}\PY{n}{product\PYZus{}name}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ Across Websites}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}plt.xticks(rotation=45, ha=\PYZdq{}right\PYZdq{})}
 
-    \PY{k}{if} \PY{n}{nom}\PY{p}{:}
-        \PY{n}{grouped} \PY{o}{=} \PY{n}{grouped}\PY{p}{[}\PY{n}{grouped}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{n}{nom}\PY{p}{]}
-    \PY{k}{if} \PY{n}{website}\PY{p}{:}
-        \PY{n}{grouped} \PY{o}{=} \PY{n}{grouped}\PY{p}{[}\PY{n}{grouped}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{n}{website}\PY{p}{]}
-
-    \PY{n}{grouped} \PY{o}{=} \PY{n}{grouped}\PY{p}{[}\PY{n}{grouped}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{l+m+mi}{1}\PY{p}{]}
-
-    \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{date\PYZus{}scraped}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{in} \PY{n}{df}\PY{o}{.}\PY{n}{columns}\PY{p}{:}
-        \PY{n}{grouped} \PY{o}{=} \PY{n}{grouped}\PY{o}{.}\PY{n}{merge}\PY{p}{(}
-            \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{date\PYZus{}scraped}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}\PY{p}{,}
-            \PY{n}{on}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
-        \PY{p}{)}
-        \PY{n}{grouped\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{grouped}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{date\PYZus{}scraped}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}
-            \PY{n}{total\PYZus{}products}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sum}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
-            \PY{n}{sum\PYZus{}prix}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sum}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-        \PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
-        \PY{k}{return} \PY{n}{grouped\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-
-    \PY{k}{return} \PY{n}{grouped}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream}\PY{o}{.}\PY{n}{seek}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{return} \PY{n}{img\PYZus{}stream}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{9}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{def} \PY{n+nf}{analyze\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{nom}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{website}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}
-    \PY{c+c1}{\PYZsh{} Grouping by \PYZsq{}nom\PYZsq{} and \PYZsq{}website\PYZsq{} and calculating aggregated values}
-    \PY{n}{avg\PYZus{}prices} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
-    
-    \PY{c+c1}{\PYZsh{} Filtering where min and max are not equal}
-    \PY{c+c1}{\PYZsh{}avg\PYZus{}prices\PYZus{}filtered = avg\PYZus{}prices[avg\PYZus{}prices[\PYZdq{}min\PYZdq{}] != avg\PYZus{}prices[\PYZdq{}max\PYZdq{}]]}
+\PY{c+c1}{\PYZsh{} Analyze data}
+\PY{k}{def} \PY{n+nf}{analyse\PYZus{}promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Filter products on promotion}
+    \PY{n}{promotion\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{!=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
 
-    \PY{c+c1}{\PYZsh{} Further grouping by \PYZsq{}website\PYZsq{} for the aggregated values}
-    \PY{n}{grouped\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{\PYZob{}}
-        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
-        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{min}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
-        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}
-    \PY{p}{\PYZcb{}}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} Count promotions by category}
+    \PY{n}{promotions\PYZus{}par\PYZus{}categorie} \PY{o}{=} \PY{n}{promotion\PYZus{}df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{category}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{name}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 
-    \PY{c+c1}{\PYZsh{} Flattening the multi\PYZhy{}level column index}
-    \PY{n}{grouped\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean\PYZus{}mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{min\PYZus{}mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-    
-    \PY{k}{return} \PY{n}{grouped\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} Sort by \PYZsq{}count\PYZsq{} in descending order and get the top}
+    \PY{n}{top\PYZus{}promotions} \PY{o}{=} \PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{top\PYZus{}promotions}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{10}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} Generate plot}
-\PY{k}{def} \PY{n+nf}{generate\PYZus{}plot}\PY{p}{(}\PY{n}{data}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Average Prices by Product}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{grouped\PYZus{}title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Product}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{:}
-    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
-    \PY{c+c1}{\PYZsh{}plt.bar(data[\PYZsq{}grouped\PYZus{}title\PYZsq{}], data[\PYZsq{}mean\PYZus{}all\PYZus{}sites\PYZsq{}], color=\PYZsq{}skyblue\PYZsq{})}
+\PY{k}{def} \PY{n+nf}{visualisation\PYZus{}plot\PYZus{}promotions}\PY{p}{(}\PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Promotion Count by Category and Promotion Type}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xlabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Category}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ylabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Promotion Count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Create a Seaborn barplot for better visual representation}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{sns}\PY{o}{.}\PY{n}{barplot}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{p}{,} 
+        \PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{category}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+        \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+        \PY{n}{hue}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+        \PY{n}{palette}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Set2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
     
-    \PY{n}{data}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bar}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{n}{title}\PY{p}{,} \PY{n}{xlabel}\PY{o}{=}\PY{n}{grouped\PYZus{}title}\PY{p}{,} \PY{n}{ylabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price (USD)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    
-    \PY{c+c1}{\PYZsh{} Set x\PYZhy{}tick labels to the index of avg\PYZus{}prices, assuming it\PYZsq{}s the grouped title}
-    \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{ticks}\PY{o}{=}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{data}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{labels}\PY{o}{=}\PY{n}{data}\PY{o}{.}\PY{n}{index}\PY{p}{,} \PY{n}{rotation}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{right}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    
-    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Product}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Average Price (USD)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Average Price by Product}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} Customize the plot}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{n}{title}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{n}{xlabel}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{n}{ylabel}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{rotation}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{right}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 
     \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
     \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
@@ -613,91 +590,105 @@
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{11}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/analyze\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-\PY{k}{def} \PY{n+nf}{analyze7}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{c+c1}{\PYZsh{} Call the analysis function}
-    \PY{n}{grouped\PYZus{}data} \PY{o}{=} \PY{n}{analyze\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}
-    
-    \PY{c+c1}{\PYZsh{} Return the data as JSON}
-    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{n}{grouped\PYZus{}data}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Function to group by \PYZsq{}nom\PYZsq{}, \PYZsq{}website\PYZsq{}, and \PYZsq{}date\PYZus{}scraped\PYZsq{}, and sort by count}
+\PY{k}{def} \PY{n+nf}{analyse\PYZus{}group\PYZus{}by\PYZus{}nom\PYZus{}website\PYZus{}date}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Group by \PYZsq{}nom\PYZsq{} and \PYZsq{}website\PYZsq{} and calculate min, mean, max, and count of \PYZsq{}prix\PYZsq{}}
+    \PY{n}{avg\PYZus{}prices} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Filter out rows where the min price is equal to the max price}
+    \PY{n}{grouped} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{!=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Sort by \PYZsq{}count\PYZsq{} in descending order to get the top products}
+    \PY{n}{grouped\PYZus{}sorted} \PY{o}{=} \PY{n}{grouped}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Get the top products with the most occurrences}
+    \PY{n}{products\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{grouped\PYZus{}sorted}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Reset the index so \PYZsq{}nom\PYZsq{} becomes a column again}
+    \PY{n}{products\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{products\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{products\PYZus{}by\PYZus{}date}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{12}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}grouped\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-\PY{k}{def} \PY{n+nf}{plot\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{n}{analysis\PYZus{}results} \PY{o}{=} \PY{n}{analyze\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}
-    \PY{n}{plot\PYZus{}data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{analysis\PYZus{}results}\PY{p}{)}
-    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{generate\PYZus{}plot}\PY{p}{(}\PY{n}{plot\PYZus{}data}\PY{p}{)}
-    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Function to plot price variations by \PYZsq{}date\PYZus{}scraped\PYZsq{} for the top products}
+\PY{k}{def} \PY{n+nf}{visualisation\PYZus{}plot\PYZus{}price\PYZus{}variations\PYZus{}by\PYZus{}date}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{products\PYZus{}by\PYZus{}date}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Filter the original dataframe to include only the top products}
+    \PY{n}{filtered\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{n}{products\PYZus{}by\PYZus{}date}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Replace NaN values in the \PYZsq{}promotion\PYZsq{} column with \PYZsq{}No promo\PYZsq{} using .loc}
+    \PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{filtered\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{fillna}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{No promo}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Create the Seaborn plot showing price variation by date}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{sns}\PY{o}{.}\PY{n}{lineplot}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{filtered\PYZus{}df}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{date\PYZus{}scraped}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{hue}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Add promotion names as annotations on the plot}
+    \PY{k}{for} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{row} \PY{o+ow}{in} \PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{iterrows}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{text}\PY{p}{(}\PY{n}{row}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{date\PYZus{}scraped}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{row}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{row}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} 
+                 \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{9}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{va}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bottom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Customize the plot}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price Variation by Date for Top Products}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Date Scraped}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price (USD)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{rotation}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{right}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream}\PY{o}{.}\PY{n}{seek}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{return} \PY{n}{img\PYZus{}stream}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{13}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} Flask routes}
-\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/analyze\PYZus{}data\PYZus{}by\PYZus{}diff\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-\PY{k}{def} \PY{n+nf}{analyze}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{n}{analysis\PYZus{}results} \PY{o}{=} \PY{n}{analyze\PYZus{}data\PYZus{}by\PYZus{}diff\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}
-    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{n}{analysis\PYZus{}results}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Analyze data}
+\PY{k}{def} \PY{n+nf}{analyse\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{nom}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{website}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Group by \PYZsq{}nom\PYZsq{} and \PYZsq{}website\PYZsq{} to get the average prices and count}
+    \PY{n}{avg\PYZus{}prices} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Filter out rows where min equals max}
+    \PY{n}{avg\PYZus{}prices\PYZus{}filtered} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{!=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Group by \PYZsq{}website\PYZsq{} and calculate mean of \PYZsq{}min\PYZsq{}, \PYZsq{}mean\PYZsq{}, and \PYZsq{}max\PYZsq{}}
+    \PY{n}{grouped\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{min}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}
+    \PY{p}{\PYZcb{}}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Return the result sorted by \PYZsq{}min\PYZsq{} in ascending order}
+    \PY{k}{return} \PY{n}{grouped\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{min}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{14}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/promotions\PYZus{}par\PYZus{}categorie}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-\PY{k}{def} \PY{n+nf}{analyze\PYZus{}promotions}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{n}{analysis\PYZus{}results} \PY{o}{=} \PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}
-    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{n}{analysis\PYZus{}results}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Plot data}
+\PY{k}{def} \PY{n+nf}{visualisation\PYZus{}plot\PYZus{}data}\PY{p}{(}\PY{n}{avg\PYZus{}prices}\PY{p}{,} \PY{n}{nom}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Average Prices by Product}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xlabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Product}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ylabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price (USD)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Ensure the DataFrame is indexed properly for plotting}
+    \PY{n}{avg\PYZus{}prices} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Reset index for clean plotting}
+    
+    \PY{c+c1}{\PYZsh{} Plot the data}
+    \PY{n}{avg\PYZus{}prices}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bar}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{n}{nom}\PY{p}{,} \PY{n}{xlabel}\PY{o}{=}\PY{n}{xlabel}\PY{p}{,} \PY{n}{ylabel}\PY{o}{=}\PY{n}{ylabel}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{n}{y}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Adjust layout for better display}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{rotation}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{right}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream}\PY{o}{.}\PY{n}{seek}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{return} \PY{n}{img\PYZus{}stream}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{15}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/analyze\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-\PY{k}{def} \PY{n+nf}{analyze\PYZus{}same\PYZus{}site}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{n}{analysis\PYZus{}results} \PY{o}{=} \PY{n}{analyze\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site}\PY{p}{(}\PY{n}{df}\PY{p}{)}
-    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{n}{analysis\PYZus{}results}\PY{p}{)}
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{16}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/analyze\PYZus{}data\PYZus{}in\PYZus{}all\PYZus{}days}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-\PY{k}{def} \PY{n+nf}{analyze\PYZus{}all\PYZus{}days}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{n}{analysis\PYZus{}results} \PY{o}{=} \PY{n}{analyze\PYZus{}data\PYZus{}in\PYZus{}all\PYZus{}days}\PY{p}{(}\PY{n}{df}\PY{p}{)}
-    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{n}{analysis\PYZus{}results}\PY{p}{)}
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{17}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} Function to find similar titles using difflib}
-\PY{k}{def} \PY{n+nf}{find\PYZus{}similar\PYZus{}titles\PYZus{}difflib}\PY{p}{(}\PY{n}{title}\PY{p}{,} \PY{n}{title\PYZus{}list}\PY{p}{,} \PY{n}{threshold}\PY{o}{=}\PY{l+m+mf}{0.42}\PY{p}{)}\PY{p}{:}
-    \PY{n}{similar\PYZus{}titles} \PY{o}{=} \PY{p}{[}\PY{p}{]}
-    \PY{k}{for} \PY{n}{other\PYZus{}title} \PY{o+ow}{in} \PY{n}{title\PYZus{}list}\PY{p}{:}
-        \PY{n}{score} \PY{o}{=} \PY{n}{SequenceMatcher}\PY{p}{(}\PY{k+kc}{None}\PY{p}{,} \PY{n}{title}\PY{p}{,} \PY{n}{other\PYZus{}title}\PY{p}{)}\PY{o}{.}\PY{n}{ratio}\PY{p}{(}\PY{p}{)}
-        \PY{k}{if} \PY{n}{score} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{threshold}\PY{p}{:}
-            \PY{n}{similar\PYZus{}titles}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{title}\PY{p}{,} \PY{n}{other\PYZus{}title}\PY{p}{,} \PY{n}{score}\PY{p}{)}\PY{p}{)}
-    \PY{k}{return} \PY{n}{similar\PYZus{}titles}
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{18}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/search\PYZus{}similar\PYZus{}products}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
 \PY{k}{def} \PY{n+nf}{search\PYZus{}similar\PYZus{}products}\PY{p}{(}\PY{p}{)}\PY{p}{:}
@@ -713,20 +704,20 @@
     \PY{k}{except} \PY{n+ne}{FileNotFoundError}\PY{p}{:}
         \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{error}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Dataset not found}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{500}
 
-    \PY{c+c1}{\PYZsh{} Normalize titles in the dataset}
-    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{n}{normalize\PYZus{}title}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} Normalize noms in the dataset}
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{n}{normalize\PYZus{}text}\PY{p}{)}
 
-    \PY{c+c1}{\PYZsh{} Find similar titles using difflib}
-    \PY{n}{similar\PYZus{}titles} \PY{o}{=} \PY{n}{find\PYZus{}similar\PYZus{}titles\PYZus{}difflib}\PY{p}{(}\PY{n}{product\PYZus{}name}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} Find similar noms using difflib}
+    \PY{n}{similar\PYZus{}noms} \PY{o}{=} \PY{n}{find\PYZus{}similar\PYZus{}noms\PYZus{}difflib}\PY{p}{(}\PY{n}{product\PYZus{}name}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}\PY{p}{)}
 
-    \PY{k}{if} \PY{o+ow}{not} \PY{n}{similar\PYZus{}titles}\PY{p}{:}
+    \PY{k}{if} \PY{o+ow}{not} \PY{n}{similar\PYZus{}noms}\PY{p}{:}
         \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{message}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{No similar products found}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{404}
 
-    \PY{c+c1}{\PYZsh{} Filter the dataframe for matching titles}
-    \PY{n}{matching\PYZus{}titles} \PY{o}{=} \PY{p}{[}\PY{n}{title}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{for} \PY{n}{title} \PY{o+ow}{in} \PY{n}{similar\PYZus{}titles}\PY{p}{]}
-    \PY{n}{filtered\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{n}{matching\PYZus{}titles}\PY{p}{)}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{} Filter the dataframe for matching noms}
+    \PY{n}{matching\PYZus{}noms} \PY{o}{=} \PY{p}{[}\PY{n}{nom}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{for} \PY{n}{nom} \PY{o+ow}{in} \PY{n}{similar\PYZus{}noms}\PY{p}{]}
+    \PY{n}{filtered\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{n}{matching\PYZus{}noms}\PY{p}{)}\PY{p}{]}
 
-    \PY{c+c1}{\PYZsh{} Group results by title and website, preserving original indexes}
+    \PY{c+c1}{\PYZsh{} Group results by nom and website, preserving original indexes}
     \PY{n}{grouped\PYZus{}results} \PY{o}{=} \PY{p}{(}
         \PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
         \PY{o}{.}\PY{n}{agg}\PY{p}{(}
@@ -734,9 +725,9 @@
             \PY{n}{min\PYZus{}price}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
             \PY{n}{max\PYZus{}price}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
             \PY{n}{count}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
-            \PY{n}{original\PYZus{}indexes}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{normalized\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{p}{(}\PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{x}\PY{o}{.}\PY{n}{index}\PY{p}{]}\PY{o}{.}\PY{n}{index} \PY{o}{+} \PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+            \PY{n}{original\PYZus{}indexes}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{normalized\PYZus{}nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{p}{(}\PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{x}\PY{o}{.}\PY{n}{index}\PY{p}{]}\PY{o}{.}\PY{n}{index} \PY{o}{+} \PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)}
         \PY{p}{)}
-    \PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min\PYZus{}price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 
     \PY{c+c1}{\PYZsh{} Convert results to dictionary}
     \PY{n}{result\PYZus{}data} \PY{o}{=} \PY{n}{grouped\PYZus{}results}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
@@ -751,7 +742,93 @@
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/all\PYZus{}promotions\PYZus{}par\PYZus{}categorie}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{analyze\PYZus{}promotions}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{analysis\PYZus{}results} \PY{o}{=} \PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{n}{analysis\PYZus{}results}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/analyse\PYZus{}top\PYZus{}product}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{api\PYZus{}analyse\PYZus{}top\PYZus{}product}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{top\PYZus{}product}\PY{p}{,} \PY{n}{price\PYZus{}variations} \PY{o}{=} \PY{n}{analyse\PYZus{}get\PYZus{}top\PYZus{}product\PYZus{}price\PYZus{}variation}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{top\PYZus{}product}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{top\PYZus{}product}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price\PYZus{}variations}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{price\PYZus{}variations}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}analyse\PYZus{}top\PYZus{}product}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}analyse\PYZus{}top\PYZus{}product}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{top\PYZus{}product}\PY{p}{,} \PY{n}{price\PYZus{}variations} \PY{o}{=} \PY{n}{analyse\PYZus{}get\PYZus{}top\PYZus{}product\PYZus{}price\PYZus{}variation}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{visualisation\PYZus{}plot\PYZus{}price\PYZus{}variations}\PY{p}{(}\PY{n}{price\PYZus{}variations}\PY{p}{,} \PY{n}{top\PYZus{}product}\PY{p}{)}
+    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/analyse\PYZus{}promotions}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{api\PYZus{}analyse\PYZus{}promotions}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{top\PYZus{}promotions} \PY{o}{=} \PY{n}{analyse\PYZus{}promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{top\PYZus{}promotions}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{top\PYZus{}promotions}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}analyse\PYZus{}promotions}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}analyse\PYZus{}promotions}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{visualisation\PYZus{}plot\PYZus{}promotions}\PY{p}{(}\PY{n}{analyse\PYZus{}promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{,} 
+        \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Promotion Count by Category and Promotion Type}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+        \PY{n}{xlabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Category}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+        \PY{n}{ylabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Promotion Count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/products\PYZus{}by\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{products\PYZus{}by\PYZus{}date}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{products\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{analyse\PYZus{}group\PYZus{}by\PYZus{}nom\PYZus{}website\PYZus{}date}\PY{p}{(}\PY{n}{df\PYZus{}cleaned}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{products\PYZus{}by\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{products\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}products\PYZus{}by\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}products\PYZus{}by\PYZus{}date}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{visualisation\PYZus{}plot\PYZus{}price\PYZus{}variations\PYZus{}by\PYZus{}date}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{analyse\PYZus{}group\PYZus{}by\PYZus{}nom\PYZus{}website\PYZus{}date}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{site\PYZus{}grouped\PYZus{}sites} \PY{o}{=} \PY{n}{analyse\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{site\PYZus{}grouped\PYZus{}sites}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{visualisation\PYZus{}plot\PYZus{}data}\PY{p}{(}\PY{n}{analyse\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Prices by sites}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Product}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price (USD)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
 \PY{k}{def} \PY{n+nf}{home}\PY{p}{(}\PY{p}{)}\PY{p}{:}
@@ -780,19 +857,21 @@
 \PY{l+s+s2}{        \PYZlt{}body\PYZgt{}}
 
 \PY{l+s+s2}{            \PYZlt{}div class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{container}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}}
-\PY{l+s+s2}{                \PYZlt{}h1\PYZgt{}Data Analysis Web App\PYZlt{}/h1\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}h1\PYZgt{}Products Analysis Web App\PYZlt{}/h1\PYZgt{}}
 
-\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{analyze\PYZus{}data\PYZus{}by\PYZus{}diff\PYZus{}sites}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Data by Different Sites\PYZlt{}/button\PYZgt{}}
-\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{promotions\PYZus{}par\PYZus{}categorie}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Promotions by Category\PYZlt{}/button\PYZgt{}}
-\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{analyze\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Data in Same Site\PYZlt{}/button\PYZgt{}}
-\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{analyze\PYZus{}data\PYZus{}in\PYZus{}all\PYZus{}days}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Data by All Days\PYZlt{}/button\PYZgt{}}
-\PY{l+s+s2}{                }
 \PY{l+s+s2}{                \PYZlt{}!\PYZhy{}\PYZhy{} Search Bar and Button \PYZhy{}\PYZhy{}\PYZgt{}}
 \PY{l+s+s2}{                \PYZlt{}input type=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{text}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ id=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{searchInput}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{search\PYZhy{}bar}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ placeholder=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Search Similar Products}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}}
 \PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{searchSimilarProducts()}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Search Similar Products\PYZlt{}/button\PYZgt{}}
-
-\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot()}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Generate Plot\PYZlt{}/button\PYZgt{}}
-\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot2()}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Generate Plot2\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{analyse\PYZus{}promotions}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Promotions by Category\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{analyse\PYZus{}top\PYZus{}product}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Product by Different Sites\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Products in Same Site by Date\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Prices by All Sites\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                }
+\PY{l+s+s2}{                \PYZlt{}br /\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}analyse\PYZus{}promotions}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Visualize Promotions by Category\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}analyse\PYZus{}top\PYZus{}product}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Visualize Product by Different Sites\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}products\PYZus{}by\PYZus{}date}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Visualize Products in Same Site by Date\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Visualize Prices by All Sites\PYZlt{}/button\PYZgt{}}
 
 \PY{l+s+s2}{                \PYZlt{}div id=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loader}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Loading...\PYZlt{}/div\PYZgt{}}
 \PY{l+s+s2}{                \PYZlt{}div class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{plot}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ id=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{plotContainer}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZlt{}/div\PYZgt{}}
@@ -860,41 +939,49 @@
 \PY{l+s+s2}{                    const resultDiv = document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
 \PY{l+s+s2}{                    resultDiv.innerHTML = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;  // Clear previous results}
 
-\PY{l+s+s2}{                    // Check if data is an array or an object}
-\PY{l+s+s2}{                    if (Array.isArray(data)) }\PY{l+s+s2}{\PYZob{}}
-\PY{l+s+s2}{                        data.forEach((item, index) =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
-\PY{l+s+s2}{                            const div = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
-\PY{l+s+s2}{                            div.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{result\PYZhy{}item}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
-\PY{l+s+s2}{                            div.innerHTML = `\PYZlt{}h3\PYZgt{}Item \PYZdl{}}\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{index + 1\PYZcb{}:\PYZlt{}/h3\PYZgt{}`;}
-\PY{l+s+s2}{                            // Display key\PYZhy{}value pairs for each item in the array}
-\PY{l+s+s2}{                            Object.keys(item).forEach(key =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
-\PY{l+s+s2}{                                const pairDiv = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
-\PY{l+s+s2}{                                pairDiv.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{key\PYZhy{}value\PYZhy{}pair}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
-\PY{l+s+s2}{                                pairDiv.innerHTML = `\PYZlt{}span class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{key}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZdl{}}\PY{l+s+si}{\PYZob{}key\PYZcb{}}\PY{l+s+s2}{:\PYZlt{}/span\PYZgt{}\PYZlt{}span class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{value}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZdl{}}\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{JSON.stringify(item[key], null, 2)\PYZcb{}\PYZlt{}/span\PYZgt{}`;}
-\PY{l+s+s2}{                                div.appendChild(pairDiv);}
+\PY{l+s+s2}{                    // Recursive function to display data as divs}
+\PY{l+s+s2}{                    function createDivs(item, parentDiv) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                        if (Array.isArray(item)) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            item.forEach((subItem, index) =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                                const div = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                                div.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{result\PYZhy{}item}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                                div.innerHTML = `\PYZlt{}h3\PYZgt{}Item \PYZdl{}}\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{index + 1\PYZcb{}:\PYZlt{}/h3\PYZgt{}`;}
+\PY{l+s+s2}{                                createDivs(subItem, div); // Recursively handle array elements}
+\PY{l+s+s2}{                                parentDiv.appendChild(div);}
 \PY{l+s+s2}{                            \PYZcb{});}
-\PY{l+s+s2}{                            resultDiv.appendChild(div);}
-\PY{l+s+s2}{                        \PYZcb{});}
-\PY{l+s+s2}{                    \PYZcb{} else }\PY{l+s+s2}{\PYZob{}}
-\PY{l+s+s2}{                        // If it}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{s a single object, display key\PYZhy{}value pairs}
-\PY{l+s+s2}{                        Object.keys(data).forEach(key =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                        \PYZcb{} else if (typeof item === }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{object}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ \PYZam{}\PYZam{} item !== null) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            Object.keys(item).forEach(key =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                                const div = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                                div.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{key\PYZhy{}value\PYZhy{}pair}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                                div.innerHTML = `\PYZlt{}span class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{key}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZdl{}}\PY{l+s+si}{\PYZob{}key\PYZcb{}}\PY{l+s+s2}{:\PYZlt{}/span\PYZgt{}`;}
+\PY{l+s+s2}{                                const valueDiv = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                                valueDiv.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{value}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                                }
+\PY{l+s+s2}{                                // Recursively handle nested objects or arrays}
+\PY{l+s+s2}{                                createDivs(item[key], valueDiv);}
+\PY{l+s+s2}{                                }
+\PY{l+s+s2}{                                div.appendChild(valueDiv);}
+\PY{l+s+s2}{                                parentDiv.appendChild(div);}
+\PY{l+s+s2}{                            \PYZcb{});}
+\PY{l+s+s2}{                        \PYZcb{} else }\PY{l+s+s2}{\PYZob{}}
 \PY{l+s+s2}{                            const div = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
-\PY{l+s+s2}{                            div.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{result\PYZhy{}item}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
-\PY{l+s+s2}{                            div.innerHTML = `\PYZlt{}h3\PYZgt{}\PYZdl{}}\PY{l+s+si}{\PYZob{}key\PYZcb{}}\PY{l+s+s2}{:\PYZlt{}/h3\PYZgt{}`;}
-\PY{l+s+s2}{                            const pairDiv = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
-\PY{l+s+s2}{                            pairDiv.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{key\PYZhy{}value\PYZhy{}pair}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
-\PY{l+s+s2}{                            pairDiv.innerHTML = `\PYZlt{}span class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{key}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZdl{}}\PY{l+s+si}{\PYZob{}key\PYZcb{}}\PY{l+s+s2}{:\PYZlt{}/span\PYZgt{}\PYZlt{}span class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{value}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZdl{}}\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{JSON.stringify(data[key], null, 2)\PYZcb{}\PYZlt{}/span\PYZgt{}`;}
-\PY{l+s+s2}{                            div.appendChild(pairDiv);}
-\PY{l+s+s2}{                            resultDiv.appendChild(div);}
-\PY{l+s+s2}{                        \PYZcb{});}
+\PY{l+s+s2}{                            div.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{value}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                            div.innerHTML = `\PYZdl{}}\PY{l+s+si}{\PYZob{}item\PYZcb{}}\PY{l+s+s2}{`; // Display the value if it}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{s a simple data type}
+\PY{l+s+s2}{                            parentDiv.appendChild(div);}
+\PY{l+s+s2}{                        \PYZcb{}}
 \PY{l+s+s2}{                    \PYZcb{}}
+
+\PY{l+s+s2}{                    // Call the recursive function on the data}
+\PY{l+s+s2}{                    createDivs(data, resultDiv);}
 \PY{l+s+s2}{                \PYZcb{}}
 
-\PY{l+s+s2}{                // Function to generate plot}
-\PY{l+s+s2}{                function generatePlot() }\PY{l+s+s2}{\PYZob{}}
-\PY{l+s+s2}{                    showLoader();  // Show loader before generating plot}
 
-\PY{l+s+s2}{                    fetch(apiBaseUrl + }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}
+\PY{l+s+s2}{                // Function to generate plot}
+\PY{l+s+s2}{                function generatePlot(endpoint) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                }
+\PY{l+s+s2}{                    showLoader();  // Show loader before the request}
+
+\PY{l+s+s2}{                    fetch(apiBaseUrl + endpoint)}
 \PY{l+s+s2}{                        .then(response =\PYZgt{} response.blob())}
 \PY{l+s+s2}{                        .then(imageBlob =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
 \PY{l+s+s2}{                            hideLoader();  // Hide loader once the plot is generated}
@@ -905,23 +992,8 @@
 \PY{l+s+s2}{                            hideLoader();  // Hide loader in case of an error}
 \PY{l+s+s2}{                            document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).innerHTML = `Error generating plot: \PYZdl{}}\PY{l+s+si}{\PYZob{}error\PYZcb{}}\PY{l+s+s2}{`;}
 \PY{l+s+s2}{                        \PYZcb{});}
-\PY{l+s+s2}{                \PYZcb{}}
-
-\PY{l+s+s2}{                // Function to generate plot}
-\PY{l+s+s2}{                function generatePlot2() }\PY{l+s+s2}{\PYZob{}}
-\PY{l+s+s2}{                    showLoader();  // Show loader before generating plot}
-
-\PY{l+s+s2}{                    fetch(apiBaseUrl + }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}grouped\PYZus{}sites}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}
-\PY{l+s+s2}{                        .then(response =\PYZgt{} response.blob())}
-\PY{l+s+s2}{                        .then(imageBlob =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
-\PY{l+s+s2}{                            hideLoader();  // Hide loader once the plot is generated}
-\PY{l+s+s2}{                            const imageUrl = URL.createObjectURL(imageBlob);}
-\PY{l+s+s2}{                            document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).innerHTML = `\PYZlt{}img src=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}}\PY{l+s+si}{\PYZob{}imageUrl\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ alt=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Generated Plot}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ /\PYZgt{}`;}
-\PY{l+s+s2}{                        \PYZcb{})}
-\PY{l+s+s2}{                        .catch(error =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
-\PY{l+s+s2}{                            hideLoader();  // Hide loader in case of an error}
-\PY{l+s+s2}{                            document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).innerHTML = `Error generating plot: \PYZdl{}}\PY{l+s+si}{\PYZob{}error\PYZcb{}}\PY{l+s+s2}{`;}
-\PY{l+s+s2}{                        \PYZcb{});}
+\PY{l+s+s2}{                        }
+\PY{l+s+s2}{                        }
 \PY{l+s+s2}{                \PYZcb{}}
 \PY{l+s+s2}{            \PYZlt{}/script\PYZgt{}}
 
@@ -932,24 +1004,17 @@
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{20}{\boxspacing}
+\prompt{In}{incolor}{22}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-\PY{k}{def} \PY{n+nf}{plot}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-    \PY{n}{analysis\PYZus{}results} \PY{o}{=} \PY{n}{analyze\PYZus{}data\PYZus{}by\PYZus{}diff\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}
-    \PY{n}{plot\PYZus{}data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{analysis\PYZus{}results}\PY{p}{)}
-    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{generate\PYZus{}plot}\PY{p}{(}\PY{n}{plot\PYZus{}data}\PY{p}{)}
-    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-
 \PY{k}{if} \PY{n+nv+vm}{\PYZus{}\PYZus{}name\PYZus{}\PYZus{}} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZus{}\PYZus{}main\PYZus{}\PYZus{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
-    \PY{n}{app}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{n}{debug}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}app.run(debug=True)}
+    \PY{n}{app}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{n}{use\PYZus{}reloader}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
  * Serving Flask app '\_\_main\_\_'
- * Debug mode: on
+ * Debug mode: off
     \end{Verbatim}
 
     \begin{Verbatim}[commandchars=\\\{\}]
@@ -957,23 +1022,16 @@ WARNING: This is a development server. Do not use it in a production deployment.
 Use a production WSGI server instead.
  * Running on http://127.0.0.1:5000
 Press CTRL+C to quit
- * Restarting with stat
+127.0.0.1 - - [19/Jan/2025 00:48:40] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2025 00:48:47] "GET /analyse\_promotions HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2025 00:49:00] "GET /plot\_products\_by\_date HTTP/1.1" 200 -
     \end{Verbatim}
 
-    \begin{Verbatim}[commandchars=\\\{\}, frame=single, framerule=2mm, rulecolor=\color{outerrorbackground}]
-An exception has occurred, use \%tb to see the full traceback.
-
-\textcolor{ansi-red-intense}{\textbf{SystemExit}}\textcolor{ansi-red-intense}{\textbf{:}} 1
-
-    \end{Verbatim}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-C:\textbackslash{}Users\textbackslash{}DELL\textbackslash{}AppData\textbackslash{}Roaming\textbackslash{}Python\textbackslash{}Python312\textbackslash{}site-
-packages\textbackslash{}IPython\textbackslash{}core\textbackslash{}interactiveshell.py:3585: UserWarning: To exit: use
-'exit', 'quit', or Ctrl-D.
-  warn("To exit: use 'exit', 'quit', or Ctrl-D.", stacklevel=1)
-    \end{Verbatim}
-
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_21_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
 
     % Add a bibliography block to the postdoc
     

@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+#import sys
+#import os
+
+# Ensure user-specific site-packages are included
+#sys.path.append('/home/youssef/.local/lib/python3.8/site-packages')
+
 import asyncio
 import json
 from datetime import datetime
@@ -33,9 +40,11 @@ def find_similar_noms(nom, nom_list, threshold=95):
 
 # Configure caching options
 options = Options()
-#options.add_argument("--headless")  # Run in headless mode (without opening a window)
+options.add_argument("--headless")  # Run in headless mode (without opening a window)
 
-options.page_load_strategy = 'eager'
+#options.page_load_strategy = 'eager'
+options.page_load_strategy = 'normal'
+
 
 #options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
@@ -55,7 +64,6 @@ options.add_experimental_option("prefs", {
     "profile.managed_default_content_settings.media_stream": 2,  # Block audio and video
 })
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-
 
 with open('platformes.json', 'r') as file:
     sites = json.load(file)
@@ -137,6 +145,7 @@ async def get_description(driver, site):
         description = description_element.get_text(separator=' ', strip=True) if description_element else ""
 
         return description
+        
     except Exception as e:
         print(f"Error fetching description for {site['url']}: {e}")
         return "Error fetching description"
@@ -144,11 +153,7 @@ async def get_description(driver, site):
 
 # site category
 async def collect_data_from_scraping(driver, site, products=None, page_limit=2, max_products=30, current_page=1, total_products=0):
-    try:
-        driver.get(site["url"])
-    except WebDriverException as e:
-        print(f"Error loading {site['url']}: {e}")
-        return None
+    driver.get(site["url"])
 
     # Retrieve HTML content asynchronously
     html_content = await asyncio.to_thread(lambda: driver.page_source)
@@ -188,8 +193,8 @@ async def collect_data_from_scraping(driver, site, products=None, page_limit=2, 
             await collect_data_from_scraping(driver, site, products, page_limit, max_products, current_page) #total_products if total in all pages
 
 
-    # Read old data and clean current data
     if products:
+        # Read old data and clean current data
         try:
             # Attempt to read the file
             old_data = pd.read_csv("temp2Electromenagerscleaned_data.csv")
@@ -307,9 +312,6 @@ async def collect_all_data():
     return data
 
 
-
-
-
 # Data cleaning function
 def clean_data(raw_data):
     df = pd.DataFrame(raw_data)
@@ -323,9 +325,9 @@ def clean_data(raw_data):
     df_cleaned = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
     
     df['normalized_nom'] = df['nom'].apply(normalize_text)
-    df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
+    df['normalized_description'] = df['description'].apply(normalize_text)
     
-    df['nom_and_description'] = df['nom']+" "+df['description']
+    df['nom_and_description'] = df['description']+" "+df['nom']
     
     # Continue with finding similar noms and further processing...
     groups = []
@@ -382,11 +384,8 @@ def clean_data(raw_data):
     
     # Use the list as the indexer
     df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
-    df = df.drop(columns=['nom_and_description'])
     
     return df_cleaned
-
-
 
 
 # Export cleaned data
@@ -410,4 +409,3 @@ if __name__ == "__main__":
         data_now = df_cleaned
 
     export_data(data_now)
-    print("\r\nEnd..")

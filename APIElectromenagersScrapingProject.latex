@@ -1,0 +1,721 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\hypertarget{a5ffc78d-be1a-41b0-aea8-52bfda7e7403}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ flask }\ImportTok{import}\NormalTok{ Flask, jsonify, request, send\_file, render\_template\_string}
+\ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
+\ImportTok{from}\NormalTok{ io }\ImportTok{import}\NormalTok{ BytesIO}
+\ImportTok{from}\NormalTok{ rapidfuzz }\ImportTok{import}\NormalTok{ fuzz}
+\ImportTok{import}\NormalTok{ seaborn }\ImportTok{as}\NormalTok{ sns}
+    
+\ImportTok{from}\NormalTok{ difflib }\ImportTok{import}\NormalTok{ SequenceMatcher}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{7d4ca9e6-04d3-4291-9f0e-1d5cb2b6043a}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ flask\_cors }\ImportTok{import}\NormalTok{ CORS  }\CommentTok{\# \textless{}{-}{-} Import CORS}
+
+\NormalTok{app }\OperatorTok{=}\NormalTok{ Flask(}\VariableTok{\_\_name\_\_}\NormalTok{)}
+\NormalTok{CORS(app)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+<flask_cors.extension.CORS at 0x182074c68d0>
+\end{verbatim}
+
+\hypertarget{5d7bc21e-0dca-4d21-8b24-4b06e455519b}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to normalize text}
+\KeywordTok{def}\NormalTok{ normalize\_text(text):}
+    \ControlFlowTok{if} \BuiltInTok{isinstance}\NormalTok{(text, }\BuiltInTok{str}\NormalTok{):}
+\NormalTok{        text }\OperatorTok{=}\NormalTok{ text.lower()  }\CommentTok{\# Convert to lowercase}
+        \CommentTok{\# nom = re.sub(r\textquotesingle{}[\^{}a{-}z\textbackslash{}s]\textquotesingle{}, \textquotesingle{}\textquotesingle{}, text)  \# Uncomment if needed for special character removal}
+        \ControlFlowTok{return}\NormalTok{ text}
+    \ControlFlowTok{else}\NormalTok{:}
+        \CommentTok{\# Convert non{-}string inputs to a string or handle them appropriately}
+        \ControlFlowTok{return} \BuiltInTok{str}\NormalTok{(text) }\ControlFlowTok{if}\NormalTok{ text }\KeywordTok{is} \KeywordTok{not} \VariableTok{None} \ControlFlowTok{else} \StringTok{""}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{4004148e-aa3e-4a74-a5a4-073182be22bf}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to find similar noms using RapidFuzz}
+\KeywordTok{def}\NormalTok{ find\_similar\_noms(nom, nom\_list, threshold}\OperatorTok{=}\DecValTok{70}\NormalTok{):}
+\NormalTok{    similar\_noms }\OperatorTok{=}\NormalTok{ []}
+    \ControlFlowTok{for}\NormalTok{ other\_nom }\KeywordTok{in}\NormalTok{ nom\_list:}
+\NormalTok{        score }\OperatorTok{=}\NormalTok{ fuzz.ratio(nom, other\_nom)}
+        \ControlFlowTok{if}\NormalTok{ score }\OperatorTok{\textgreater{}=}\NormalTok{ threshold:}
+\NormalTok{            similar\_noms.append((nom, other\_nom, score))}
+    \ControlFlowTok{return}\NormalTok{ similar\_noms}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{2d18f05f-ae8f-4f4a-ab41-910518dbb3da}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to find similar noms using difflib}
+\KeywordTok{def}\NormalTok{ find\_similar\_noms\_difflib(nom, nom\_list, threshold}\OperatorTok{=}\FloatTok{0.7}\NormalTok{):}
+\NormalTok{    similar\_noms }\OperatorTok{=}\NormalTok{ []}
+    \ControlFlowTok{for}\NormalTok{ other\_nom }\KeywordTok{in}\NormalTok{ nom\_list:}
+\NormalTok{        score }\OperatorTok{=}\NormalTok{ SequenceMatcher(}\VariableTok{None}\NormalTok{, nom, other\_nom).ratio()}
+        \ControlFlowTok{if}\NormalTok{ score }\OperatorTok{\textgreater{}=}\NormalTok{ threshold:}
+\NormalTok{            similar\_noms.append((nom, other\_nom, score))}
+    \ControlFlowTok{return}\NormalTok{ similar\_noms}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{a7e1b2c7-e19e-4f09-9e28-07c747154475}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Analyze promotions by category}
+\KeywordTok{def}\NormalTok{ promotions\_par\_categorie(df):}
+\NormalTok{    promotion\_df }\OperatorTok{=}\NormalTok{ df[df[}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{] }\OperatorTok{!=} \StringTok{""}\NormalTok{]}
+\NormalTok{    promotions }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{        promotion\_df.groupby([}\StringTok{\textquotesingle{}category\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{])}
+\NormalTok{        .size()}
+\NormalTok{        .reset\_index(name}\OperatorTok{=}\StringTok{"count"}\NormalTok{)}
+\NormalTok{    )}
+    \ControlFlowTok{return}\NormalTok{ promotions.to\_dict(orient}\OperatorTok{=}\StringTok{\textquotesingle{}records\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{01612184-7262-432e-bf9a-e95d08e15eb7}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ analyse\_get\_top\_product\_price\_variation(df):}
+    \CommentTok{\# Normalize product names}
+\NormalTok{    df[}\StringTok{\textquotesingle{}normalized\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{].}\BuiltInTok{apply}\NormalTok{(normalize\_text)}
+\NormalTok{    df[}\StringTok{\textquotesingle{}normalized\_description\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}description\textquotesingle{}}\NormalTok{].}\BuiltInTok{apply}\NormalTok{(normalize\_text)}
+    
+\NormalTok{    df[}\StringTok{\textquotesingle{}nom\_and\_description\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}normalized\_nom\textquotesingle{}}\NormalTok{]}\OperatorTok{+}\StringTok{" "}\OperatorTok{+}\NormalTok{df[}\StringTok{\textquotesingle{}normalized\_description\textquotesingle{}}\NormalTok{]}
+    \CommentTok{\#df[\textquotesingle{}nom\_and\_description\textquotesingle{}] = df[\textquotesingle{}normalized\_nom\textquotesingle{}]}
+    
+    \CommentTok{\# Apply fuzzy matching to group similar product names}
+\NormalTok{    unique\_noms }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}nom\_and\_description\textquotesingle{}}\NormalTok{].unique()}
+\NormalTok{    nom\_groups }\OperatorTok{=}\NormalTok{ \{\}}
+
+    \ControlFlowTok{for}\NormalTok{ nom }\KeywordTok{in}\NormalTok{ unique\_noms:}
+\NormalTok{        group }\OperatorTok{=}\NormalTok{ find\_similar\_noms(nom, unique\_noms)}
+        \ControlFlowTok{for}\NormalTok{ \_, other\_nom, \_ }\KeywordTok{in}\NormalTok{ group:}
+\NormalTok{            nom\_groups[other\_nom] }\OperatorTok{=}\NormalTok{ nom  }\CommentTok{\# Group similar product names}
+
+    \CommentTok{\# Map the grouped noms back to the DataFrame}
+\NormalTok{    df[}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}nom\_and\_description\textquotesingle{}}\NormalTok{].}\BuiltInTok{map}\NormalTok{(}\KeywordTok{lambda}\NormalTok{ x: nom\_groups.get(x, x))}
+    
+    \CommentTok{\# Remove duplicates based on product name and website before counting occurrences}
+\NormalTok{    df\_unique }\OperatorTok{=}\NormalTok{ df.drop\_duplicates(subset}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}website\textquotesingle{}}\NormalTok{])}
+    
+    \CommentTok{\# Count the occurrences of each product by website}
+\NormalTok{    product\_counts }\OperatorTok{=}\NormalTok{ df\_unique.groupby([}\StringTok{"grouped\_nom"}\NormalTok{, }\StringTok{"website"}\NormalTok{]).size().reset\_index(name}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{)}
+    
+    \CommentTok{\# Find the product with the maximum count across all websites}
+\NormalTok{    top\_product }\OperatorTok{=}\NormalTok{ product\_counts.groupby(}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{).agg(\{}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}sum\textquotesingle{}}\NormalTok{\}).idxmax().iloc[}\DecValTok{0}\NormalTok{]}
+
+    \CommentTok{\# Get the details of that top product across websites}
+\NormalTok{    top\_product\_data }\OperatorTok{=}\NormalTok{ product\_counts[product\_counts[}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{==}\NormalTok{ top\_product]}
+    
+    \CommentTok{\# Extract price variations for that product across websites}
+\NormalTok{    price\_variations }\OperatorTok{=}\NormalTok{ df[df[}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{==}\NormalTok{ top\_product].drop\_duplicates(subset}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}website\textquotesingle{}}\NormalTok{])[[}\StringTok{\textquotesingle{}website\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{]]}
+
+    \ControlFlowTok{return}\NormalTok{ top\_product, price\_variations.sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{ceaf1029-eff5-4163-9324-6999300dff91}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ visualisation\_plot\_price\_variations(price\_variations, product\_name):}
+    \CommentTok{\# Visualize price variations by website}
+\NormalTok{    plt.figure(figsize}\OperatorTok{=}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{6}\NormalTok{))}
+\NormalTok{    plt.bar(price\_variations[}\StringTok{\textquotesingle{}website\textquotesingle{}}\NormalTok{], price\_variations[}\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{], color}\OperatorTok{=}\StringTok{\textquotesingle{}skyblue\textquotesingle{}}\NormalTok{)}
+\NormalTok{    plt.title(}\SpecialStringTok{f"Price Variations for }\SpecialCharTok{\{}\NormalTok{product\_name}\SpecialCharTok{\}}\SpecialStringTok{ Across Websites"}\NormalTok{)}
+\NormalTok{    plt.xlabel(}\StringTok{\textquotesingle{}Website\textquotesingle{}}\NormalTok{)}
+\NormalTok{    plt.ylabel(}\StringTok{\textquotesingle{}Price\textquotesingle{}}\NormalTok{)}
+    \CommentTok{\#plt.xticks(rotation=45, ha="right")}
+
+\NormalTok{    img\_stream }\OperatorTok{=}\NormalTok{ BytesIO()}
+\NormalTok{    plt.savefig(img\_stream, }\BuiltInTok{format}\OperatorTok{=}\StringTok{\textquotesingle{}png\textquotesingle{}}\NormalTok{)}
+\NormalTok{    img\_stream.seek(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ img\_stream}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{43ef6a5a-d0a2-4220-97b1-993df9a3e1d2}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Analyze data}
+\KeywordTok{def}\NormalTok{ analyse\_promotions\_par\_categorie(df):}
+    \CommentTok{\# Filter products on promotion}
+\NormalTok{    promotion\_df }\OperatorTok{=}\NormalTok{ df[df[}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{] }\OperatorTok{!=} \StringTok{""}\NormalTok{]}
+
+    \CommentTok{\# Count promotions by category}
+\NormalTok{    promotions\_par\_categorie }\OperatorTok{=}\NormalTok{ promotion\_df.groupby([}\StringTok{\textquotesingle{}category\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{])[}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{].size().reset\_index(name}\OperatorTok{=}\StringTok{"count"}\NormalTok{)}
+
+    \CommentTok{\# Sort by \textquotesingle{}count\textquotesingle{} in descending order and get the top 5}
+\NormalTok{    top\_promotions }\OperatorTok{=}\NormalTok{ promotions\_par\_categorie.sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{False}\NormalTok{).head(}\DecValTok{10}\NormalTok{).sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+
+    \ControlFlowTok{return}\NormalTok{ top\_promotions}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{bb31e859-c2df-43b3-99ca-dbe76d275f4e}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ visualisation\_plot\_promotions(promotions\_par\_categorie, title}\OperatorTok{=}\StringTok{"Promotion Count by Category and Promotion Type"}\NormalTok{, xlabel}\OperatorTok{=}\StringTok{"Category"}\NormalTok{, ylabel}\OperatorTok{=}\StringTok{"Promotion Count"}\NormalTok{):}
+    \CommentTok{\# Create a Seaborn barplot for better visual representation}
+\NormalTok{    plt.figure(figsize}\OperatorTok{=}\NormalTok{(}\DecValTok{12}\NormalTok{, }\DecValTok{6}\NormalTok{))}
+\NormalTok{    sns.barplot(data}\OperatorTok{=}\NormalTok{promotions\_par\_categorie, }
+\NormalTok{        x}\OperatorTok{=}\StringTok{\textquotesingle{}category\textquotesingle{}}\NormalTok{, }
+\NormalTok{        y}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, }
+\NormalTok{        hue}\OperatorTok{=}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{, }
+\NormalTok{        palette}\OperatorTok{=}\StringTok{"Set2"}\NormalTok{)}
+    
+    \CommentTok{\# Customize the plot}
+\NormalTok{    plt.title(title)}
+\NormalTok{    plt.xlabel(xlabel)}
+\NormalTok{    plt.ylabel(ylabel)}
+\NormalTok{    plt.xticks(rotation}\OperatorTok{=}\DecValTok{45}\NormalTok{, ha}\OperatorTok{=}\StringTok{"right"}\NormalTok{)}
+
+\NormalTok{    img\_stream }\OperatorTok{=}\NormalTok{ BytesIO()}
+\NormalTok{    plt.savefig(img\_stream, }\BuiltInTok{format}\OperatorTok{=}\StringTok{\textquotesingle{}png\textquotesingle{}}\NormalTok{)}
+\NormalTok{    img\_stream.seek(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ img\_stream}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{a505fa49-f8b9-4412-8adf-305a9284b574}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to group by \textquotesingle{}nom\textquotesingle{}, \textquotesingle{}website\textquotesingle{}, and \textquotesingle{}date\_scraped\textquotesingle{}, and sort by count}
+\KeywordTok{def}\NormalTok{ analyse\_group\_by\_nom\_website\_date(df):}
+    \CommentTok{\# Group by \textquotesingle{}nom\textquotesingle{} and \textquotesingle{}website\textquotesingle{} and calculate min, mean, max, and count of \textquotesingle{}prix\textquotesingle{}}
+\NormalTok{    avg\_prices }\OperatorTok{=}\NormalTok{ df.groupby([}\StringTok{"nom"}\NormalTok{, }\StringTok{"website"}\NormalTok{])[}\StringTok{"prix"}\NormalTok{].agg([}\StringTok{"min"}\NormalTok{, }\StringTok{"mean"}\NormalTok{, }\StringTok{"max"}\NormalTok{, }\StringTok{"count"}\NormalTok{])}
+
+    \CommentTok{\# Filter out rows where the min price is equal to the max price}
+\NormalTok{    grouped }\OperatorTok{=}\NormalTok{ avg\_prices[avg\_prices[}\StringTok{"min"}\NormalTok{] }\OperatorTok{!=}\NormalTok{ avg\_prices[}\StringTok{"max"}\NormalTok{]]}
+
+    \CommentTok{\# Sort by \textquotesingle{}count\textquotesingle{} in descending order to get the top products}
+\NormalTok{    grouped\_sorted }\OperatorTok{=}\NormalTok{ grouped.sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+
+    \CommentTok{\# Get the top 5 products with the most occurrences}
+\NormalTok{    products\_by\_date }\OperatorTok{=}\NormalTok{ grouped\_sorted.groupby(}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{).head(}\DecValTok{1}\NormalTok{).sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{False}\NormalTok{).head(}\DecValTok{10}\NormalTok{)}
+
+    \CommentTok{\# Reset the index so \textquotesingle{}nom\textquotesingle{} becomes a column again}
+\NormalTok{    products\_by\_date }\OperatorTok{=}\NormalTok{ products\_by\_date.reset\_index()}
+
+    \ControlFlowTok{return}\NormalTok{ products\_by\_date}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{48841d1e-c976-4ad3-ae6b-9f69c7e24dea}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to plot price variations by \textquotesingle{}date\_scraped\textquotesingle{} for the top 5 products}
+\KeywordTok{def}\NormalTok{ visualisation\_plot\_price\_variations\_by\_date(df, products\_by\_date):}
+    \CommentTok{\# Filter the original dataframe to include only the top 5 products}
+\NormalTok{    filtered\_df }\OperatorTok{=}\NormalTok{ df[df[}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{].isin(products\_by\_date[}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{])]}
+
+    \CommentTok{\# Create the Seaborn plot showing price variation by date}
+\NormalTok{    plt.figure(figsize}\OperatorTok{=}\NormalTok{(}\DecValTok{12}\NormalTok{, }\DecValTok{6}\NormalTok{))}
+\NormalTok{    sns.lineplot(data}\OperatorTok{=}\NormalTok{filtered\_df, x}\OperatorTok{=}\StringTok{\textquotesingle{}date\_scraped\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{, hue}\OperatorTok{=}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{, marker}\OperatorTok{=}\StringTok{\textquotesingle{}o\textquotesingle{}}\NormalTok{)}
+
+    \CommentTok{\# Check if there\textquotesingle{}s a \textquotesingle{}promotion\textquotesingle{} column, and plot it if present}
+    \ControlFlowTok{if} \StringTok{\textquotesingle{}promotion\textquotesingle{}} \KeywordTok{in}\NormalTok{ filtered\_df.columns:}
+        \CommentTok{\# Filter for products with promotions}
+\NormalTok{        promotion\_df }\OperatorTok{=}\NormalTok{ filtered\_df[filtered\_df[}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{] }\OperatorTok{==} \VariableTok{True}\NormalTok{]}
+\NormalTok{        sns.scatterplot(data}\OperatorTok{=}\NormalTok{promotion\_df, x}\OperatorTok{=}\StringTok{\textquotesingle{}date\_scraped\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{, hue}\OperatorTok{=}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{, style}\OperatorTok{=}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{, markers}\OperatorTok{=}\StringTok{\textquotesingle{}D\textquotesingle{}}\NormalTok{, s}\OperatorTok{=}\DecValTok{100}\NormalTok{, label}\OperatorTok{=}\StringTok{\textquotesingle{}Promotion\textquotesingle{}}\NormalTok{, legend}\OperatorTok{=}\StringTok{\textquotesingle{}full\textquotesingle{}}\NormalTok{)}
+
+    \CommentTok{\# Customize the plot}
+\NormalTok{    plt.title(}\StringTok{"Price Variation by Date for Top 5 Products"}\NormalTok{)}
+\NormalTok{    plt.xlabel(}\StringTok{"Date Scraped"}\NormalTok{)}
+\NormalTok{    plt.ylabel(}\StringTok{"Price (USD)"}\NormalTok{)}
+\NormalTok{    plt.xticks(rotation}\OperatorTok{=}\DecValTok{45}\NormalTok{, ha}\OperatorTok{=}\StringTok{"right"}\NormalTok{)}
+\NormalTok{    plt.legend(title}\OperatorTok{=}\StringTok{"Product/Promotion"}\NormalTok{, bbox\_to\_anchor}\OperatorTok{=}\NormalTok{(}\FloatTok{1.05}\NormalTok{, }\DecValTok{1}\NormalTok{), loc}\OperatorTok{=}\StringTok{\textquotesingle{}upper left\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{    img\_stream }\OperatorTok{=}\NormalTok{ BytesIO()}
+\NormalTok{    plt.savefig(img\_stream, }\BuiltInTok{format}\OperatorTok{=}\StringTok{\textquotesingle{}png\textquotesingle{}}\NormalTok{)}
+\NormalTok{    img\_stream.seek(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ img\_stream}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{1c587546-10e7-4c14-b021-5f38f48c773a}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Analyze data}
+\KeywordTok{def}\NormalTok{ analyse\_data\_in\_same\_site\_grouped\_sites(df, nom}\OperatorTok{=}\VariableTok{None}\NormalTok{, website}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+    \CommentTok{\# Group by \textquotesingle{}nom\textquotesingle{} and \textquotesingle{}website\textquotesingle{} to get the average prices and count}
+\NormalTok{    avg\_prices }\OperatorTok{=}\NormalTok{ df.groupby([}\StringTok{"nom"}\NormalTok{, }\StringTok{"website"}\NormalTok{])[}\StringTok{"prix"}\NormalTok{].agg([}\StringTok{"min"}\NormalTok{, }\StringTok{"mean"}\NormalTok{, }\StringTok{"max"}\NormalTok{, }\StringTok{"count"}\NormalTok{])}
+
+    \CommentTok{\# Filter out rows where min equals max}
+\NormalTok{    avg\_prices\_filtered }\OperatorTok{=}\NormalTok{ avg\_prices[avg\_prices[}\StringTok{"min"}\NormalTok{] }\OperatorTok{!=}\NormalTok{ avg\_prices[}\StringTok{"max"}\NormalTok{]]}
+
+    \CommentTok{\# Group by \textquotesingle{}website\textquotesingle{} and calculate mean of \textquotesingle{}min\textquotesingle{}, \textquotesingle{}mean\textquotesingle{}, and \textquotesingle{}max\textquotesingle{}}
+\NormalTok{    grouped\_by\_date }\OperatorTok{=}\NormalTok{ avg\_prices.groupby([}\StringTok{"website"}\NormalTok{]).agg(\{}
+        \StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{,}
+        \StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{,}
+        \StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}mean\textquotesingle{}}
+\NormalTok{    \}).reset\_index()}
+
+    \CommentTok{\# Return the result sorted by \textquotesingle{}min\textquotesingle{} in ascending order}
+    \ControlFlowTok{return}\NormalTok{ grouped\_by\_date.sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{8582b88b-67db-41f7-b9b3-8c7f7a8a406f}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Plot data}
+\KeywordTok{def}\NormalTok{ visualisation\_plot\_data(avg\_prices, nom}\OperatorTok{=}\StringTok{"Average Prices by Product"}\NormalTok{, xlabel}\OperatorTok{=}\StringTok{"Product"}\NormalTok{, ylabel}\OperatorTok{=}\StringTok{"Price (USD)"}\NormalTok{, x}\OperatorTok{=}\VariableTok{None}\NormalTok{, y}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+    \CommentTok{\# Ensure the DataFrame is indexed properly for plotting}
+\NormalTok{    avg\_prices }\OperatorTok{=}\NormalTok{ avg\_prices.reset\_index()  }\CommentTok{\# Reset index for clean plotting}
+    
+    \CommentTok{\# Plot the data}
+\NormalTok{    avg\_prices.plot(kind}\OperatorTok{=}\StringTok{"bar"}\NormalTok{, title}\OperatorTok{=}\NormalTok{nom, xlabel}\OperatorTok{=}\NormalTok{xlabel, ylabel}\OperatorTok{=}\NormalTok{ylabel, x}\OperatorTok{=}\NormalTok{x, y}\OperatorTok{=}\NormalTok{y)}
+    
+    \CommentTok{\# Adjust layout for better display}
+\NormalTok{    plt.xticks(rotation}\OperatorTok{=}\DecValTok{45}\NormalTok{, ha}\OperatorTok{=}\StringTok{"right"}\NormalTok{)}
+
+\NormalTok{    img\_stream }\OperatorTok{=}\NormalTok{ BytesIO()}
+\NormalTok{    plt.savefig(img\_stream, }\BuiltInTok{format}\OperatorTok{=}\StringTok{\textquotesingle{}png\textquotesingle{}}\NormalTok{)}
+\NormalTok{    img\_stream.seek(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ img\_stream}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{dd328bde-ebc8-4a7d-9856-a6dbcef61c49}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/search\_similar\_products\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ search\_similar\_products():}
+    \CommentTok{\# Parse input JSON}
+\NormalTok{    product\_name }\OperatorTok{=}\NormalTok{ request.args.get(}\StringTok{\textquotesingle{}product\_name\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{).lower()}
+
+    \ControlFlowTok{if} \KeywordTok{not}\NormalTok{ product\_name:}
+        \ControlFlowTok{return}\NormalTok{ jsonify(\{}\StringTok{"error"}\NormalTok{: }\StringTok{"Product name is required"}\NormalTok{\}), }\DecValTok{400}
+
+    \CommentTok{\# Load dataset}
+    \ControlFlowTok{try}\NormalTok{:}
+\NormalTok{        df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+    \ControlFlowTok{except} \PreprocessorTok{FileNotFoundError}\NormalTok{:}
+        \ControlFlowTok{return}\NormalTok{ jsonify(\{}\StringTok{"error"}\NormalTok{: }\StringTok{"Dataset not found"}\NormalTok{\}), }\DecValTok{500}
+
+    \CommentTok{\# Normalize noms in the dataset}
+\NormalTok{    df[}\StringTok{\textquotesingle{}normalized\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{].}\BuiltInTok{apply}\NormalTok{(normalize\_text)}
+
+    \CommentTok{\# Find similar noms using difflib}
+\NormalTok{    similar\_noms }\OperatorTok{=}\NormalTok{ find\_similar\_noms\_difflib(product\_name, df[}\StringTok{\textquotesingle{}normalized\_nom\textquotesingle{}}\NormalTok{].unique())}
+
+    \ControlFlowTok{if} \KeywordTok{not}\NormalTok{ similar\_noms:}
+        \ControlFlowTok{return}\NormalTok{ jsonify(\{}\StringTok{"message"}\NormalTok{: }\StringTok{"No similar products found"}\NormalTok{\}), }\DecValTok{404}
+
+    \CommentTok{\# Filter the dataframe for matching noms}
+\NormalTok{    matching\_noms }\OperatorTok{=}\NormalTok{ [nom[}\DecValTok{1}\NormalTok{] }\ControlFlowTok{for}\NormalTok{ nom }\KeywordTok{in}\NormalTok{ similar\_noms]}
+\NormalTok{    filtered\_df }\OperatorTok{=}\NormalTok{ df[df[}\StringTok{\textquotesingle{}normalized\_nom\textquotesingle{}}\NormalTok{].isin(matching\_noms)]}
+
+    \CommentTok{\# Group results by nom and website, preserving original indexes}
+\NormalTok{    grouped\_results }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{        filtered\_df.groupby([}\StringTok{"nom"}\NormalTok{, }\StringTok{"website"}\NormalTok{], as\_index}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\NormalTok{        .agg(}
+\NormalTok{            mean\_price}\OperatorTok{=}\NormalTok{(}\StringTok{"prix"}\NormalTok{, }\StringTok{"mean"}\NormalTok{),}
+\NormalTok{            min\_price}\OperatorTok{=}\NormalTok{(}\StringTok{"prix"}\NormalTok{, }\StringTok{"min"}\NormalTok{),}
+\NormalTok{            max\_price}\OperatorTok{=}\NormalTok{(}\StringTok{"prix"}\NormalTok{, }\StringTok{"max"}\NormalTok{),}
+\NormalTok{            count}\OperatorTok{=}\NormalTok{(}\StringTok{"prix"}\NormalTok{, }\StringTok{"count"}\NormalTok{),}
+\NormalTok{            original\_indexes}\OperatorTok{=}\NormalTok{(}\StringTok{"normalized\_nom"}\NormalTok{, }\KeywordTok{lambda}\NormalTok{ x: (filtered\_df.loc[x.index].index }\OperatorTok{+} \DecValTok{2}\NormalTok{).tolist())}
+\NormalTok{        )}
+\NormalTok{    ).sort\_values(by}\OperatorTok{=}\StringTok{"min\_price"}\NormalTok{)}
+
+    \CommentTok{\# Convert results to dictionary}
+\NormalTok{    result\_data }\OperatorTok{=}\NormalTok{ grouped\_results.to\_dict(orient}\OperatorTok{=}\StringTok{\textquotesingle{}records\textquotesingle{}}\NormalTok{)}
+
+    \CommentTok{\#return jsonify(\{}
+    \CommentTok{\#    "input\_product": product\_name,}
+    \CommentTok{\#    "similar\_products": result\_data}
+    \CommentTok{\#\})}
+
+    \ControlFlowTok{return}\NormalTok{ jsonify(result\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{a56ed75a-0160-42bd-836d-fc305648b0cd}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/all\_promotions\_par\_categorie\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ analyze\_promotions():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    analysis\_results }\OperatorTok{=}\NormalTok{ promotions\_par\_categorie(df)}
+    \ControlFlowTok{return}\NormalTok{ jsonify(analysis\_results)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{cd79e30d-b97f-494d-8578-1ee7e1611afc}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/analyse\_top\_product\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ api\_analyse\_top\_product():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    top\_product, price\_variations }\OperatorTok{=}\NormalTok{ analyse\_get\_top\_product\_price\_variation(df)}
+    \ControlFlowTok{return}\NormalTok{ jsonify(\{}
+        \StringTok{\textquotesingle{}top\_product\textquotesingle{}}\NormalTok{: top\_product,}
+        \StringTok{\textquotesingle{}price\_variations\textquotesingle{}}\NormalTok{: price\_variations.to\_dict(orient}\OperatorTok{=}\StringTok{\textquotesingle{}records\textquotesingle{}}\NormalTok{)}
+\NormalTok{    \})}
+
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/plot\_analyse\_top\_product\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ plot\_analyse\_top\_product():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    top\_product, price\_variations }\OperatorTok{=}\NormalTok{ analyse\_get\_top\_product\_price\_variation(df)}
+\NormalTok{    img\_stream }\OperatorTok{=}\NormalTok{ visualisation\_plot\_price\_variations(price\_variations, top\_product)}
+    \ControlFlowTok{return}\NormalTok{ send\_file(img\_stream, mimetype}\OperatorTok{=}\StringTok{\textquotesingle{}image/png\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{58ffc927-6e64-44cc-81b1-3d94ecb68936}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/analyse\_promotions\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ api\_analyse\_promotions():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    top\_promotions }\OperatorTok{=}\NormalTok{ analyse\_promotions\_par\_categorie(df)}
+    \ControlFlowTok{return}\NormalTok{ jsonify(\{}\StringTok{\textquotesingle{}top\_promotions\textquotesingle{}}\NormalTok{: top\_promotions.to\_dict(orient}\OperatorTok{=}\StringTok{\textquotesingle{}records\textquotesingle{}}\NormalTok{)\})}
+
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/plot\_analyse\_promotions\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ plot\_analyse\_promotions():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    img\_stream }\OperatorTok{=}\NormalTok{ visualisation\_plot\_promotions(analyse\_promotions\_par\_categorie(df), }
+\NormalTok{        title}\OperatorTok{=}\StringTok{"Promotion Count by Category and Promotion Type"}\NormalTok{, }
+\NormalTok{        xlabel}\OperatorTok{=}\StringTok{"Category"}\NormalTok{, }
+\NormalTok{        ylabel}\OperatorTok{=}\StringTok{"Promotion Count"}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ send\_file(img\_stream, mimetype}\OperatorTok{=}\StringTok{\textquotesingle{}image/png\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{8adfcb0b-12b4-493a-8506-d30547ef6cca}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/products\_by\_date\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ products\_by\_date():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    products\_by\_date }\OperatorTok{=}\NormalTok{ analyse\_group\_by\_nom\_website\_date(df\_cleaned)}
+    \ControlFlowTok{return}\NormalTok{ jsonify(\{}\StringTok{\textquotesingle{}products\_by\_date\textquotesingle{}}\NormalTok{: products\_by\_date.to\_dict(orient}\OperatorTok{=}\StringTok{\textquotesingle{}records\textquotesingle{}}\NormalTok{)\})}
+
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/plot\_products\_by\_date\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ plot\_products\_by\_date():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    img\_stream }\OperatorTok{=}\NormalTok{ visualisation\_plot\_price\_variations\_by\_date(df, analyse\_group\_by\_nom\_website\_date(df))}
+    \ControlFlowTok{return}\NormalTok{ send\_file(img\_stream, mimetype}\OperatorTok{=}\StringTok{\textquotesingle{}image/png\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{0f087220-181b-4db1-87ee-8c5206dda3da}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/site\_grouped\_sites\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ site\_grouped\_sites():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    site\_grouped\_sites }\OperatorTok{=}\NormalTok{ analyse\_data\_in\_same\_site\_grouped\_sites(df)}
+    \ControlFlowTok{return}\NormalTok{ jsonify(\{}\StringTok{\textquotesingle{}site\_grouped\_sites\textquotesingle{}}\NormalTok{: site\_grouped\_sites.to\_dict(orient}\OperatorTok{=}\StringTok{\textquotesingle{}records\textquotesingle{}}\NormalTok{)\})}
+
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/plot\_site\_grouped\_sites\textquotesingle{}}\NormalTok{, methods}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}GET\textquotesingle{}}\NormalTok{])}
+\KeywordTok{def}\NormalTok{ plot\_site\_grouped\_sites():}
+\NormalTok{    df }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)}
+\NormalTok{    img\_stream }\OperatorTok{=}\NormalTok{ visualisation\_plot\_data(analyse\_data\_in\_same\_site\_grouped\_sites(df), }\StringTok{"Prices by sites"}\NormalTok{, }\StringTok{"Product"}\NormalTok{, }\StringTok{"Price (USD)"}\NormalTok{, }\StringTok{"website"}\NormalTok{, [}\StringTok{"min"}\NormalTok{, }\StringTok{"mean"}\NormalTok{, }\StringTok{"max"}\NormalTok{])}
+    \ControlFlowTok{return}\NormalTok{ send\_file(img\_stream, mimetype}\OperatorTok{=}\StringTok{\textquotesingle{}image/png\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{c351a66a-eda2-4b92-a2b7-76a90ca2ab6b}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@app.route}\NormalTok{(}\StringTok{\textquotesingle{}/\textquotesingle{}}\NormalTok{)}
+\KeywordTok{def}\NormalTok{ home():}
+    \ControlFlowTok{return}\NormalTok{ render\_template\_string(}\StringTok{"""}
+\StringTok{        \textless{}!DOCTYPE html\textgreater{}}
+\StringTok{        \textless{}html lang="en"\textgreater{}}
+\StringTok{        \textless{}head\textgreater{}}
+\StringTok{            \textless{}meta charset="UTF{-}8"\textgreater{}}
+\StringTok{            \textless{}meta name="viewport" content="width=device{-}width, initial{-}scale=1.0"\textgreater{}}
+\StringTok{            \textless{}title\textgreater{}Data Analysis Web App\textless{}/title\textgreater{}}
+\StringTok{            \textless{}style\textgreater{}}
+\StringTok{                body \{ font{-}family: Arial, sans{-}serif; \}}
+\StringTok{                .container \{ width: 80\%; margin: 0 auto; padding: 20px; \}}
+\StringTok{                .button \{ margin: 10px 0; padding: 10px 20px; background{-}color: \#4CAF50; color: white; border: none; cursor: pointer; \}}
+\StringTok{                .results \{ margin{-}top: 20px; \}}
+\StringTok{                pre \{ background{-}color: \#f4f4f4; padding: 10px; \}}
+\StringTok{                .plot \{ margin{-}top: 20px; text{-}align: center; \}}
+\StringTok{                \#loader \{ display: none; \}}
+\StringTok{                .result{-}item \{ margin: 10px 0; padding: 10px; border: 1px solid \#ddd; background{-}color: \#f9f9f9; \}}
+\StringTok{                .result{-}item h3 \{ margin: 0; \}}
+\StringTok{                .result{-}item .key \{ font{-}weight: bold; \}}
+\StringTok{                .result{-}item .value \{ margin{-}left: 10px; \}}
+\StringTok{                .search{-}bar \{ margin{-}right: 10px; \}}
+\StringTok{            \textless{}/style\textgreater{}}
+\StringTok{        \textless{}/head\textgreater{}}
+\StringTok{        \textless{}body\textgreater{}}
+
+\StringTok{            \textless{}div class="container"\textgreater{}}
+\StringTok{                \textless{}h1\textgreater{}Products Analysis Web App\textless{}/h1\textgreater{}}
+
+\StringTok{                \textless{}!{-}{-} Search Bar and Button {-}{-}\textgreater{}}
+\StringTok{                \textless{}input type="text" id="searchInput" class="search{-}bar" placeholder="Search Similar Products"\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="searchSimilarProducts()"\textgreater{}Search Similar Products\textless{}/button\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="getData(\textquotesingle{}analyse\_promotions\textquotesingle{})"\textgreater{}Analyze Promotions by Category\textless{}/button\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="getData(\textquotesingle{}analyse\_top\_product\textquotesingle{})"\textgreater{}Analyze Products by Different Sites\textless{}/button\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="getData(\textquotesingle{}site\_grouped\_sites\textquotesingle{})"\textgreater{}Analyze Products in Same Site\textless{}/button\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="getData(\textquotesingle{}site\_grouped\_sites\textquotesingle{})"\textgreater{}Analyze Products by All Sites\textless{}/button\textgreater{}}
+\StringTok{                }
+\StringTok{                \textless{}br /\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="generatePlot(\textquotesingle{}plot\_analyse\_promotions\textquotesingle{})"\textgreater{}Visualize Promotions by Category\textless{}/button\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="generatePlot(\textquotesingle{}plot\_analyse\_top\_product\textquotesingle{})"\textgreater{}Visualize Products by Different Sites\textless{}/button\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="generatePlot(\textquotesingle{}plot\_products\_by\_date\textquotesingle{})"\textgreater{}Visualize Products in Same Site\textless{}/button\textgreater{}}
+\StringTok{                \textless{}button class="button" onclick="generatePlot(\textquotesingle{}plot\_site\_grouped\_sites\textquotesingle{})"\textgreater{}Visualize Products by All Sites\textless{}/button\textgreater{}}
+
+\StringTok{                \textless{}div id="loader"\textgreater{}Loading...\textless{}/div\textgreater{}}
+\StringTok{                \textless{}div class="plot" id="plotContainer"\textgreater{}\textless{}/div\textgreater{}}
+
+\StringTok{                \textless{}div class="results"\textgreater{}}
+\StringTok{                    \textless{}h2\textgreater{}Results\textless{}/h2\textgreater{}}
+\StringTok{                    \textless{}div id="resultOutput"\textgreater{}\textless{}/div\textgreater{}}
+\StringTok{                \textless{}/div\textgreater{}}
+
+\StringTok{            \textless{}/div\textgreater{}}
+
+\StringTok{            \textless{}script\textgreater{}}
+\StringTok{                const apiBaseUrl = \textquotesingle{}http://localhost:5000/\textquotesingle{};  // Assuming your Flask server is running locally}
+
+\StringTok{                // Function to show loader}
+\StringTok{                function showLoader() \{}
+\StringTok{                    document.getElementById(\textquotesingle{}loader\textquotesingle{}).style.display = \textquotesingle{}block\textquotesingle{};}
+\StringTok{                \}}
+
+\StringTok{                // Function to hide loader}
+\StringTok{                function hideLoader() \{}
+\StringTok{                    document.getElementById(\textquotesingle{}loader\textquotesingle{}).style.display = \textquotesingle{}none\textquotesingle{};}
+\StringTok{                \}}
+
+\StringTok{                // Function to call Flask API and display results}
+\StringTok{                function getData(endpoint) \{}
+\StringTok{                    showLoader();  // Show loader before the request}
+
+\StringTok{                    fetch(apiBaseUrl + endpoint)}
+\StringTok{                        .then(response =\textgreater{} response.json())}
+\StringTok{                        .then(data =\textgreater{} \{}
+\StringTok{                            hideLoader();  // Hide loader once data is fetched}
+\StringTok{                            displayData(data);  // Function to display data in divs}
+\StringTok{                        \})}
+\StringTok{                        .catch(error =\textgreater{} \{}
+\StringTok{                            hideLoader();  // Hide loader in case of an error}
+\StringTok{                            document.getElementById(\textquotesingle{}resultOutput\textquotesingle{}).innerHTML = \textasciigrave{}Error: $}\SpecialCharTok{\{error\}}\StringTok{\textasciigrave{};}
+\StringTok{                        \});}
+\StringTok{                \}}
+
+\StringTok{                // Function to handle Search Similar Products request with search query}
+\StringTok{                function searchSimilarProducts() \{}
+\StringTok{                    const query = document.getElementById(\textquotesingle{}searchInput\textquotesingle{}).value;  // Get the search query}
+
+\StringTok{                    if (query) \{}
+\StringTok{                        showLoader();  // Show loader before the request}
+
+\StringTok{                        fetch(apiBaseUrl + \textquotesingle{}search\_similar\_products?product\_name=\textquotesingle{} + encodeURIComponent(query))}
+\StringTok{                            .then(response =\textgreater{} response.json())}
+\StringTok{                            .then(data =\textgreater{} \{}
+\StringTok{                                hideLoader();  // Hide loader once data is fetched}
+\StringTok{                                displayData(data);  // Function to display data in divs}
+\StringTok{                            \})}
+\StringTok{                            .catch(error =\textgreater{} \{}
+\StringTok{                                hideLoader();  // Hide loader in case of an error}
+\StringTok{                                document.getElementById(\textquotesingle{}resultOutput\textquotesingle{}).innerHTML = \textasciigrave{}Error: $}\SpecialCharTok{\{error\}}\StringTok{\textasciigrave{};}
+\StringTok{                            \});}
+\StringTok{                    \} else \{}
+\StringTok{                        alert(\textquotesingle{}Please enter a search term.\textquotesingle{});}
+\StringTok{                    \}}
+\StringTok{                \}}
+
+\StringTok{                // Function to display JSON data in divs}
+\StringTok{                function displayData(data) \{}
+\StringTok{                    const resultDiv = document.getElementById(\textquotesingle{}resultOutput\textquotesingle{});}
+\StringTok{                    resultDiv.innerHTML = \textquotesingle{}\textquotesingle{};  // Clear previous results}
+
+\StringTok{                    // Recursive function to display data as divs}
+\StringTok{                    function createDivs(item, parentDiv) \{}
+\StringTok{                        if (Array.isArray(item)) \{}
+\StringTok{                            item.forEach((subItem, index) =\textgreater{} \{}
+\StringTok{                                const div = document.createElement(\textquotesingle{}div\textquotesingle{});}
+\StringTok{                                div.className = \textquotesingle{}result{-}item\textquotesingle{};}
+\StringTok{                                div.innerHTML = \textasciigrave{}\textless{}h3\textgreater{}Item $\{index + 1\}:\textless{}/h3\textgreater{}\textasciigrave{};}
+\StringTok{                                createDivs(subItem, div); // Recursively handle array elements}
+\StringTok{                                parentDiv.appendChild(div);}
+\StringTok{                            \});}
+\StringTok{                        \} else if (typeof item === \textquotesingle{}object\textquotesingle{} \&\& item !== null) \{}
+\StringTok{                            Object.keys(item).forEach(key =\textgreater{} \{}
+\StringTok{                                const div = document.createElement(\textquotesingle{}div\textquotesingle{});}
+\StringTok{                                div.className = \textquotesingle{}key{-}value{-}pair\textquotesingle{};}
+\StringTok{                                div.innerHTML = \textasciigrave{}\textless{}span class="key"\textgreater{}$}\SpecialCharTok{\{key\}}\StringTok{:\textless{}/span\textgreater{}\textasciigrave{};}
+\StringTok{                                const valueDiv = document.createElement(\textquotesingle{}div\textquotesingle{});}
+\StringTok{                                valueDiv.className = \textquotesingle{}value\textquotesingle{};}
+\StringTok{                                }
+\StringTok{                                // Recursively handle nested objects or arrays}
+\StringTok{                                createDivs(item[key], valueDiv);}
+\StringTok{                                }
+\StringTok{                                div.appendChild(valueDiv);}
+\StringTok{                                parentDiv.appendChild(div);}
+\StringTok{                            \});}
+\StringTok{                        \} else \{}
+\StringTok{                            const div = document.createElement(\textquotesingle{}div\textquotesingle{});}
+\StringTok{                            div.className = \textquotesingle{}value\textquotesingle{};}
+\StringTok{                            div.innerHTML = \textasciigrave{}$}\SpecialCharTok{\{item\}}\StringTok{\textasciigrave{}; // Display the value if it\textquotesingle{}s a simple data type}
+\StringTok{                            parentDiv.appendChild(div);}
+\StringTok{                        \}}
+\StringTok{                    \}}
+
+\StringTok{                    // Call the recursive function on the data}
+\StringTok{                    createDivs(data, resultDiv);}
+\StringTok{                \}}
+
+
+\StringTok{                // Function to generate plot}
+\StringTok{                function generatePlot(endpoint) \{}
+\StringTok{                }
+\StringTok{                    showLoader();  // Show loader before the request}
+
+\StringTok{                    fetch(apiBaseUrl + endpoint)}
+\StringTok{                        .then(response =\textgreater{} response.blob())}
+\StringTok{                        .then(imageBlob =\textgreater{} \{}
+\StringTok{                            hideLoader();  // Hide loader once the plot is generated}
+\StringTok{                            const imageUrl = URL.createObjectURL(imageBlob);}
+\StringTok{                            document.getElementById(\textquotesingle{}resultOutput\textquotesingle{}).innerHTML = \textasciigrave{}\textless{}img src="$}\SpecialCharTok{\{imageUrl\}}\StringTok{" alt="Generated Plot" /\textgreater{}\textasciigrave{};}
+\StringTok{                        \})}
+\StringTok{                        .catch(error =\textgreater{} \{}
+\StringTok{                            hideLoader();  // Hide loader in case of an error}
+\StringTok{                            document.getElementById(\textquotesingle{}resultOutput\textquotesingle{}).innerHTML = \textasciigrave{}Error generating plot: $}\SpecialCharTok{\{error\}}\StringTok{\textasciigrave{};}
+\StringTok{                        \});}
+\StringTok{                        }
+\StringTok{                        }
+\StringTok{                \}}
+\StringTok{            \textless{}/script\textgreater{}}
+
+\StringTok{        \textless{}/body\textgreater{}}
+\StringTok{        \textless{}/html\textgreater{}}
+\StringTok{    """}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{663f35b3-5331-4d53-83e9-4fb609e1c55f}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if} \VariableTok{\_\_name\_\_} \OperatorTok{==} \StringTok{"\_\_main\_\_"}\NormalTok{:}
+    \CommentTok{\#app.run(debug=True)}
+\NormalTok{    app.run(use\_reloader}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ * Serving Flask app '__main__'
+ * Debug mode: off
+\end{verbatim}
+
+\begin{verbatim}
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+127.0.0.1 - - [18/Jan/2025 18:26:57] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jan/2025 18:27:02] "GET /analyse_promotions HTTP/1.1" 200 -
+\end{verbatim}
+
+\end{document}

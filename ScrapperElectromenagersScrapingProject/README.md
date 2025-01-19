@@ -172,7 +172,11 @@ async def get_description(driver, site):
 ```python
 # site category
 async def collect_data_from_scraping(driver, site, products=None, page_limit=2, max_products=30, current_page=1, total_products=0):
-    driver.get(site["url"])
+    try:
+        driver.get(site["url"])
+    except WebDriverException as e:
+        print(f"Error loading {site['url']}: {e}")
+        return None
 
     # Retrieve HTML content asynchronously
     html_content = await asyncio.to_thread(lambda: driver.page_source)
@@ -352,7 +356,7 @@ def clean_data(raw_data):
     df_cleaned = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
     
     df['normalized_nom'] = df['nom'].apply(normalize_text)
-    df['normalized_description'] = df['description'].apply(normalize_text)
+    df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
     
     df['nom_and_description'] = df['nom']+" "+df['description']
     
@@ -411,6 +415,7 @@ def clean_data(raw_data):
     
     # Use the list as the indexer
     df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
+    df = df.drop(columns=['nom_and_description'])
     
     return df_cleaned
 ```

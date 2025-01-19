@@ -2,7 +2,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
-from rapidfuzz import fuzz, process
+from rapidfuzz import fuzz
 import seaborn as sns
 ```
 
@@ -38,12 +38,13 @@ def find_similar_noms(nom, nom_list, threshold=75):
 
 
 ```python
-def get_top_product_price_variation(df):
+def analyse_get_top_product_price_variation(df):
     # Normalize product names
     df['normalized_nom'] = df['nom'].apply(normalize_text)
-    df['normalized_description'] = df['description'].apply(normalize_text)
+    df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
     
     df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
+    #df['nom_and_description'] = df['normalized_nom']
     
     # Apply fuzzy matching to group similar product names
     unique_noms = df['nom_and_description'].unique()
@@ -66,7 +67,6 @@ def get_top_product_price_variation(df):
     # Find the product with the maximum count across all websites
     top_product = product_counts.groupby('grouped_nom').agg({'count': 'sum'}).idxmax().iloc[0]
 
-
     # Get the details of that top product across websites
     top_product_data = product_counts[product_counts['grouped_nom'] == top_product]
     
@@ -74,9 +74,11 @@ def get_top_product_price_variation(df):
     price_variations = df[df['grouped_nom'] == top_product].drop_duplicates(subset=['website'])[['website', 'prix']]
 
     return top_product, price_variations.sort_values(by='prix', ascending=True)
+```
 
 
-def plot_price_variations(price_variations, product_name):
+```python
+def visualisation_plot_price_variations(price_variations, product_name):
     # Visualize price variations by website
     plt.figure(figsize=(10, 6))
     plt.bar(price_variations['website'], price_variations['prix'], color='skyblue')
@@ -91,20 +93,22 @@ def plot_price_variations(price_variations, product_name):
 
 ```python
 # Analyze data
-def promotions_par_categorie(df):
+def analyse_promotions_par_categorie(df):
     # Filter products on promotion
     promotion_df = df[df['promotion'] != ""]
 
     # Count promotions by category
     promotions_par_categorie = promotion_df.groupby(['category', 'promotion'])['promotion'].size().reset_index(name="count")
 
-    # Sort by 'count' in descending order and get the top 5
+    # Sort by 'count' in descending order and get the top
     top_promotions = promotions_par_categorie.sort_values(by='count', ascending=False).head(10).sort_values(by='count', ascending=True)
 
     return top_promotions
+```
 
 
-def plot_promotions(promotions_par_categorie, title="Promotion Count by Category and Promotion Type", xlabel="Category", ylabel="Promotion Count"):
+```python
+def visualisation_plot_promotions(promotions_par_categorie, title="Promotion Count by Category and Promotion Type", xlabel="Category", ylabel="Promotion Count"):
     # Create a Seaborn barplot for better visual representation
     plt.figure(figsize=(12, 6))
     sns.barplot(data=promotions_par_categorie, 
@@ -125,7 +129,7 @@ def plot_promotions(promotions_par_categorie, title="Promotion Count by Category
 
 ```python
 # Function to group by 'nom', 'website', and 'date_scraped', and sort by count
-def group_by_nom_website_date(df):
+def analyse_group_by_nom_website_date(df):
     # Group by 'nom' and 'website' and calculate min, mean, max, and count of 'prix'
     avg_prices = df.groupby(["nom", "website"])["prix"].agg(["min", "mean", "max", "count"])
 
@@ -135,26 +139,36 @@ def group_by_nom_website_date(df):
     # Sort by 'count' in descending order to get the top products
     grouped_sorted = grouped.sort_values(by='count', ascending=False)
 
-    # Get the top 5 products with the most occurrences
+    # Get the top products with the most occurrences
     products_by_date = grouped_sorted.groupby('nom').head(1).sort_values(by='count', ascending=False).head(10)
 
     # Reset the index so 'nom' becomes a column again
     products_by_date = products_by_date.reset_index()
 
     return products_by_date
+```
 
 
-# Function to plot price variations by 'date_scraped' for the top 5 products
-def plot_price_variations_by_date(df, products_by_date):
-    # Filter the original dataframe to include only the top 5 products
-    filtered_df = df[df['nom'].isin(products_by_date['nom'])]
+```python
+# Function to plot price variations by 'date_scraped' for the top products
+def visualisation_plot_price_variations_by_date(df, products_by_date):
+    # Filter the original dataframe to include only the top products
+    filtered_df = df[df['nom'].isin(products_by_date['nom'])].copy()
+
+    # Replace NaN values in the 'promotion' column with 'No promo' using .loc
+    filtered_df.loc[:, 'promotion'] = filtered_df['promotion'].fillna("No promo")
 
     # Create the Seaborn plot showing price variation by date
     plt.figure(figsize=(12, 6))
     sns.lineplot(data=filtered_df, x='date_scraped', y='prix', hue='nom', marker='o')
 
+    # Add promotion names as annotations on the plot
+    for _, row in filtered_df.iterrows():
+        plt.text(row['date_scraped'], row['prix'], row['promotion'], 
+                 color='black', fontsize=9, ha='center', va='bottom')
+
     # Customize the plot
-    plt.title("Price Variation by Date for Top 5 Products")
+    plt.title("Price Variation by Date for Top Products")
     plt.xlabel("Date Scraped")
     plt.ylabel("Price (USD)")
     plt.xticks(rotation=45, ha="right")
@@ -165,7 +179,7 @@ def plot_price_variations_by_date(df, products_by_date):
 
 ```python
 # Analyze data
-def analyze_data_in_same_site_grouped_sites(df, nom=None, website=None):
+def analyse_data_in_same_site_grouped_sites(df, nom=None, website=None):
     # Group by 'nom' and 'website' to get the average prices and count
     avg_prices = df.groupby(["nom", "website"])["prix"].agg(["min", "mean", "max", "count"])
 
@@ -181,10 +195,12 @@ def analyze_data_in_same_site_grouped_sites(df, nom=None, website=None):
 
     # Return the result sorted by 'min' in ascending order
     return grouped_by_date.sort_values(by='min', ascending=True)
+```
 
 
+```python
 # Plot data
-def plot_data(avg_prices, nom="Average Prices by Product", xlabel="Product", ylabel="Price (USD)", x=None, y=None):
+def visualisation_plot_data(avg_prices, nom="Average Prices by Product", xlabel="Product", ylabel="Price (USD)", x=None, y=None):
     # Ensure the DataFrame is indexed properly for plotting
     avg_prices = avg_prices.reset_index()  # Reset index for clean plotting
     
@@ -207,33 +223,33 @@ if __name__ == "__main__":
 
     # Analyze data and visualize
     # Get the top product and price variations
-    top_product, price_variations = get_top_product_price_variation(df_cleaned)
+    top_product, price_variations = analyse_get_top_product_price_variation(df_cleaned)
     
     print(f"Top Product: {top_product}")
     print("Price variations by website:")
     print(price_variations)
     # Plot the price variations
-    plot_price_variations(price_variations, top_product)
+    visualisation_plot_price_variations(price_variations, top_product)
     
     
     print("\r\nAverage promotion par group:")
-    print(promotions_par_categorie(df_cleaned))
-    plot_promotions(promotions_par_categorie(df_cleaned), 
+    print(analyse_promotions_par_categorie(df_cleaned))
+    visualisation_plot_promotions(analyse_promotions_par_categorie(df_cleaned), 
         title="Promotion Count by Category and Promotion Type", 
         xlabel="Category", 
         ylabel="Promotion Count")
-
-
-    products_by_date = group_by_nom_website_date(df_cleaned)
-    print("\r\nTop 5 Products by Occurrence:")
+    
+    
+    products_by_date = analyse_group_by_nom_website_date(df_cleaned)
+    print("\r\nTop Products by Occurrence:")
     print(products_by_date)
-    # Plot price variations by date for the top 5 products
-    plot_price_variations_by_date(df_cleaned, products_by_date)
+    # Plot price variations by date for the top products
+    visualisation_plot_price_variations_by_date(df_cleaned, products_by_date)
     
     
     print("\r\nPrices by sites:")
-    print(analyze_data_in_same_site_grouped_sites(df_cleaned))
-    plot_data(analyze_data_in_same_site_grouped_sites(df_cleaned), "Prices by sites", "Product", "Price (USD)", "website", ["min", "mean", "max"])
+    print(analyse_data_in_same_site_grouped_sites(df_cleaned))
+    visualisation_plot_data(analyse_data_in_same_site_grouped_sites(df_cleaned), "Prices by sites", "Product", "Price (USD)", "website", ["min", "mean", "max"])
 ```
 
     Top Product: 1.8 cu. ft. smart over-the-range microwave nan
@@ -247,7 +263,7 @@ if __name__ == "__main__":
 
 
     
-![png](output_9_1.png)
+![png](output_13_1.png)
     
 
 
@@ -268,10 +284,11 @@ if __name__ == "__main__":
 
 
     
-![png](output_9_3.png)
+![png](output_13_3.png)
     
 
 
+    
     Top 5 Products by Occurrence:
                                                      nom       website      min  \
     0  Sharp Plasmacluster Ion Air Purifier with True...  sharpusa.com   349.99   
@@ -300,7 +317,7 @@ if __name__ == "__main__":
 
 
     
-![png](output_9_5.png)
+![png](output_13_5.png)
     
 
 
@@ -319,6 +336,6 @@ if __name__ == "__main__":
 
 
     
-![png](output_9_7.png)
+![png](output_13_7.png)
     
 

@@ -57,7 +57,27 @@ def modify_promotion_for_sharpusa(df):
 #)
 
 
-df['description'] = df['description'].apply(lambda x: "" if x == "Description not found" else x)
+#df['description'] = df['description'].apply(lambda x: "" if x == "Description not found" else x)
+
+df["description"] = df["description"].fillna("").astype(str).str.replace(r"specifications |specifications product ", "", regex=True)
+
+
+# Function to normalize text
+def normalize_text(text):
+    if isinstance(text, str):
+        text = text.lower()  # Convert to lowercase
+        # nom = re.sub(r'[^a-z\s]', '', text)  # Uncomment if needed for special character removal
+        return text
+    else:
+        # Convert non-string inputs to a string or handle them appropriately
+        return str(text) if text is not None else ""
+        
+df['normalized_nom'] = df['nom'].apply(normalize_text)
+df['normalized_description'] = df['nom'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
+
+
+#df['nom_and_description'] = df['nom']+" "+df['description']
+df = df.drop(columns=['nom_and_description'])
 
 # Save the modified DataFrame back to a CSV file
 df.to_csv('Electromenagerscleaned_data.csv', index=False)

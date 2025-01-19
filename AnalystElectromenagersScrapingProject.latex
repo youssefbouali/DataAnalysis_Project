@@ -1,0 +1,464 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\hypertarget{a15cdbb8-2313-4372-ba15-e31bcf7fbfc8}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
+\ImportTok{import}\NormalTok{ re}
+\ImportTok{from}\NormalTok{ rapidfuzz }\ImportTok{import}\NormalTok{ fuzz}
+\ImportTok{import}\NormalTok{ seaborn }\ImportTok{as}\NormalTok{ sns}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{3f20aca5-0ea2-4e1e-90c8-181cbe10b198}{}
+\hypertarget{import-libraries}{%
+\subsection{Import libraries}\label{import-libraries}}
+
+\leavevmode\vadjust pre{\hypertarget{c238e8b0-39ff-46fa-9a33-79d5af4d03b1}{}}%
+Libraries
+
+\hypertarget{1266435e-fade-4307-8b5d-b4b979e0a898}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to normalize text}
+\KeywordTok{def}\NormalTok{ normalize\_text(text):}
+    \ControlFlowTok{if} \BuiltInTok{isinstance}\NormalTok{(text, }\BuiltInTok{str}\NormalTok{):}
+\NormalTok{        text }\OperatorTok{=}\NormalTok{ text.lower()  }\CommentTok{\# Convert to lowercase}
+        \CommentTok{\# nom = re.sub(r\textquotesingle{}[\^{}a{-}z\textbackslash{}s]\textquotesingle{}, \textquotesingle{}\textquotesingle{}, text)  \# Uncomment if needed for special character removal}
+        \ControlFlowTok{return}\NormalTok{ text}
+    \ControlFlowTok{else}\NormalTok{:}
+        \CommentTok{\# Convert non{-}string inputs to a string or handle them appropriately}
+        \ControlFlowTok{return} \BuiltInTok{str}\NormalTok{(text) }\ControlFlowTok{if}\NormalTok{ text }\KeywordTok{is} \KeywordTok{not} \VariableTok{None} \ControlFlowTok{else} \StringTok{""}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{f1a3238c-c344-4dee-a5a0-84e93e515aca}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to find similar noms using RapidFuzz}
+\KeywordTok{def}\NormalTok{ find\_similar\_noms(nom, nom\_list, threshold}\OperatorTok{=}\DecValTok{75}\NormalTok{):}
+\NormalTok{    similar\_noms }\OperatorTok{=}\NormalTok{ []}
+    \ControlFlowTok{for}\NormalTok{ other\_nom }\KeywordTok{in}\NormalTok{ nom\_list:}
+        \CommentTok{\# Compute similarity score between nom and other nom}
+\NormalTok{        score }\OperatorTok{=}\NormalTok{ fuzz.ratio(nom, other\_nom)}
+        \ControlFlowTok{if}\NormalTok{ score }\OperatorTok{\textgreater{}=}\NormalTok{ threshold:}
+\NormalTok{            similar\_noms.append((nom, other\_nom, score))}
+    \ControlFlowTok{return}\NormalTok{ similar\_noms}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{229e8403-b89b-4a0f-8bd9-112707e977d5}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ analyse\_get\_top\_product\_price\_variation(df):}
+    \CommentTok{\# Normalize product names}
+\NormalTok{    df[}\StringTok{\textquotesingle{}normalized\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{].}\BuiltInTok{apply}\NormalTok{(normalize\_text)}
+\NormalTok{    df[}\StringTok{\textquotesingle{}normalized\_description\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}description\textquotesingle{}}\NormalTok{].}\BuiltInTok{apply}\NormalTok{(normalize\_text)}
+    
+\NormalTok{    df[}\StringTok{\textquotesingle{}nom\_and\_description\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}normalized\_nom\textquotesingle{}}\NormalTok{]}\OperatorTok{+}\StringTok{" "}\OperatorTok{+}\NormalTok{df[}\StringTok{\textquotesingle{}normalized\_description\textquotesingle{}}\NormalTok{]}
+    \CommentTok{\#df[\textquotesingle{}nom\_and\_description\textquotesingle{}] = df[\textquotesingle{}normalized\_nom\textquotesingle{}]}
+    
+    \CommentTok{\# Apply fuzzy matching to group similar product names}
+\NormalTok{    unique\_noms }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}nom\_and\_description\textquotesingle{}}\NormalTok{].unique()}
+\NormalTok{    nom\_groups }\OperatorTok{=}\NormalTok{ \{\}}
+
+    \ControlFlowTok{for}\NormalTok{ nom }\KeywordTok{in}\NormalTok{ unique\_noms:}
+\NormalTok{        group }\OperatorTok{=}\NormalTok{ find\_similar\_noms(nom, unique\_noms)}
+        \ControlFlowTok{for}\NormalTok{ \_, other\_nom, \_ }\KeywordTok{in}\NormalTok{ group:}
+\NormalTok{            nom\_groups[other\_nom] }\OperatorTok{=}\NormalTok{ nom  }\CommentTok{\# Group similar product names}
+
+    \CommentTok{\# Map the grouped noms back to the DataFrame}
+\NormalTok{    df[}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}nom\_and\_description\textquotesingle{}}\NormalTok{].}\BuiltInTok{map}\NormalTok{(}\KeywordTok{lambda}\NormalTok{ x: nom\_groups.get(x, x))}
+    
+    \CommentTok{\# Remove duplicates based on product name and website before counting occurrences}
+\NormalTok{    df\_unique }\OperatorTok{=}\NormalTok{ df.drop\_duplicates(subset}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}website\textquotesingle{}}\NormalTok{])}
+    
+    \CommentTok{\# Count the occurrences of each product by website}
+\NormalTok{    product\_counts }\OperatorTok{=}\NormalTok{ df\_unique.groupby([}\StringTok{"grouped\_nom"}\NormalTok{, }\StringTok{"website"}\NormalTok{]).size().reset\_index(name}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{)}
+    
+    \CommentTok{\# Find the product with the maximum count across all websites}
+\NormalTok{    top\_product }\OperatorTok{=}\NormalTok{ product\_counts.groupby(}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{).agg(\{}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}sum\textquotesingle{}}\NormalTok{\}).idxmax().iloc[}\DecValTok{0}\NormalTok{]}
+
+    \CommentTok{\# Get the details of that top product across websites}
+\NormalTok{    top\_product\_data }\OperatorTok{=}\NormalTok{ product\_counts[product\_counts[}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{==}\NormalTok{ top\_product]}
+    
+    \CommentTok{\# Extract price variations for that product across websites}
+\NormalTok{    price\_variations }\OperatorTok{=}\NormalTok{ df[df[}\StringTok{\textquotesingle{}grouped\_nom\textquotesingle{}}\NormalTok{] }\OperatorTok{==}\NormalTok{ top\_product].drop\_duplicates(subset}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}website\textquotesingle{}}\NormalTok{])[[}\StringTok{\textquotesingle{}website\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{]]}
+
+    \ControlFlowTok{return}\NormalTok{ top\_product, price\_variations.sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{57be588f-1703-47b9-bd46-df09746ba453}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ visualisation\_plot\_price\_variations(price\_variations, product\_name):}
+    \CommentTok{\# Visualize price variations by website}
+\NormalTok{    plt.figure(figsize}\OperatorTok{=}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{6}\NormalTok{))}
+\NormalTok{    plt.bar(price\_variations[}\StringTok{\textquotesingle{}website\textquotesingle{}}\NormalTok{], price\_variations[}\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{], color}\OperatorTok{=}\StringTok{\textquotesingle{}skyblue\textquotesingle{}}\NormalTok{)}
+\NormalTok{    plt.title(}\SpecialStringTok{f"Price Variations for }\SpecialCharTok{\{}\NormalTok{product\_name}\SpecialCharTok{\}}\SpecialStringTok{ Across Websites"}\NormalTok{)}
+\NormalTok{    plt.xlabel(}\StringTok{\textquotesingle{}Website\textquotesingle{}}\NormalTok{)}
+\NormalTok{    plt.ylabel(}\StringTok{\textquotesingle{}Price\textquotesingle{}}\NormalTok{)}
+\NormalTok{    plt.xticks(rotation}\OperatorTok{=}\DecValTok{45}\NormalTok{, ha}\OperatorTok{=}\StringTok{"right"}\NormalTok{)}
+\NormalTok{    plt.tight\_layout()}
+\NormalTok{    plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{bc227788-5b35-4fc1-8278-90639bee279b}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Analyze data}
+\KeywordTok{def}\NormalTok{ analyse\_promotions\_par\_categorie(df):}
+    \CommentTok{\# Filter products on promotion}
+\NormalTok{    promotion\_df }\OperatorTok{=}\NormalTok{ df[df[}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{] }\OperatorTok{!=} \StringTok{""}\NormalTok{]}
+
+    \CommentTok{\# Count promotions by category}
+\NormalTok{    promotions\_par\_categorie }\OperatorTok{=}\NormalTok{ promotion\_df.groupby([}\StringTok{\textquotesingle{}category\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{])[}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{].size().reset\_index(name}\OperatorTok{=}\StringTok{"count"}\NormalTok{)}
+
+    \CommentTok{\# Sort by \textquotesingle{}count\textquotesingle{} in descending order and get the top 5}
+\NormalTok{    top\_promotions }\OperatorTok{=}\NormalTok{ promotions\_par\_categorie.sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{False}\NormalTok{).head(}\DecValTok{10}\NormalTok{).sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+
+    \ControlFlowTok{return}\NormalTok{ top\_promotions}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{cda47ad1-94da-458d-b1e4-5f7143c5b9ea}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ visualisation\_plot\_promotions(promotions\_par\_categorie, title}\OperatorTok{=}\StringTok{"Promotion Count by Category and Promotion Type"}\NormalTok{, xlabel}\OperatorTok{=}\StringTok{"Category"}\NormalTok{, ylabel}\OperatorTok{=}\StringTok{"Promotion Count"}\NormalTok{):}
+    \CommentTok{\# Create a Seaborn barplot for better visual representation}
+\NormalTok{    plt.figure(figsize}\OperatorTok{=}\NormalTok{(}\DecValTok{12}\NormalTok{, }\DecValTok{6}\NormalTok{))}
+\NormalTok{    sns.barplot(data}\OperatorTok{=}\NormalTok{promotions\_par\_categorie, }
+\NormalTok{        x}\OperatorTok{=}\StringTok{\textquotesingle{}category\textquotesingle{}}\NormalTok{, }
+\NormalTok{        y}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, }
+\NormalTok{        hue}\OperatorTok{=}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{, }
+\NormalTok{        palette}\OperatorTok{=}\StringTok{"Set2"}\NormalTok{)}
+    
+    \CommentTok{\# Customize the plot}
+\NormalTok{    plt.title(title)}
+\NormalTok{    plt.xlabel(xlabel)}
+\NormalTok{    plt.ylabel(ylabel)}
+\NormalTok{    plt.xticks(rotation}\OperatorTok{=}\DecValTok{45}\NormalTok{, ha}\OperatorTok{=}\StringTok{"right"}\NormalTok{)}
+\NormalTok{    plt.tight\_layout()}
+\NormalTok{    plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{8861013f-5892-4101-b651-f50eececc488}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to group by \textquotesingle{}nom\textquotesingle{}, \textquotesingle{}website\textquotesingle{}, and \textquotesingle{}date\_scraped\textquotesingle{}, and sort by count}
+\KeywordTok{def}\NormalTok{ analyse\_group\_by\_nom\_website\_date(df):}
+    \CommentTok{\# Group by \textquotesingle{}nom\textquotesingle{} and \textquotesingle{}website\textquotesingle{} and calculate min, mean, max, and count of \textquotesingle{}prix\textquotesingle{}}
+\NormalTok{    avg\_prices }\OperatorTok{=}\NormalTok{ df.groupby([}\StringTok{"nom"}\NormalTok{, }\StringTok{"website"}\NormalTok{])[}\StringTok{"prix"}\NormalTok{].agg([}\StringTok{"min"}\NormalTok{, }\StringTok{"mean"}\NormalTok{, }\StringTok{"max"}\NormalTok{, }\StringTok{"count"}\NormalTok{])}
+
+    \CommentTok{\# Filter out rows where the min price is equal to the max price}
+\NormalTok{    grouped }\OperatorTok{=}\NormalTok{ avg\_prices[avg\_prices[}\StringTok{"min"}\NormalTok{] }\OperatorTok{!=}\NormalTok{ avg\_prices[}\StringTok{"max"}\NormalTok{]]}
+
+    \CommentTok{\# Sort by \textquotesingle{}count\textquotesingle{} in descending order to get the top products}
+\NormalTok{    grouped\_sorted }\OperatorTok{=}\NormalTok{ grouped.sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+
+    \CommentTok{\# Get the top 5 products with the most occurrences}
+\NormalTok{    products\_by\_date }\OperatorTok{=}\NormalTok{ grouped\_sorted.groupby(}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{).head(}\DecValTok{1}\NormalTok{).sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}count\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{False}\NormalTok{).head(}\DecValTok{10}\NormalTok{)}
+
+    \CommentTok{\# Reset the index so \textquotesingle{}nom\textquotesingle{} becomes a column again}
+\NormalTok{    products\_by\_date }\OperatorTok{=}\NormalTok{ products\_by\_date.reset\_index()}
+
+    \ControlFlowTok{return}\NormalTok{ products\_by\_date}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{546ba214-b06e-4b97-a1c0-a95e80376019}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Function to plot price variations by \textquotesingle{}date\_scraped\textquotesingle{} for the top 5 products}
+\KeywordTok{def}\NormalTok{ visualisation\_plot\_price\_variations\_by\_date(df, products\_by\_date):}
+    \CommentTok{\# Filter the original dataframe to include only the top 5 products}
+\NormalTok{    filtered\_df }\OperatorTok{=}\NormalTok{ df[df[}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{].isin(products\_by\_date[}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{])].copy()}
+
+    \CommentTok{\# Replace NaN values in the \textquotesingle{}promotion\textquotesingle{} column with \textquotesingle{}No promo\textquotesingle{} using .loc}
+\NormalTok{    filtered\_df.loc[:, }\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ filtered\_df[}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{].fillna(}\StringTok{"No promo"}\NormalTok{)}
+
+    \CommentTok{\# Create the Seaborn plot showing price variation by date}
+\NormalTok{    plt.figure(figsize}\OperatorTok{=}\NormalTok{(}\DecValTok{12}\NormalTok{, }\DecValTok{6}\NormalTok{))}
+\NormalTok{    sns.lineplot(data}\OperatorTok{=}\NormalTok{filtered\_df, x}\OperatorTok{=}\StringTok{\textquotesingle{}date\_scraped\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{, hue}\OperatorTok{=}\StringTok{\textquotesingle{}nom\textquotesingle{}}\NormalTok{, marker}\OperatorTok{=}\StringTok{\textquotesingle{}o\textquotesingle{}}\NormalTok{)}
+
+    \CommentTok{\# Add promotion names as annotations on the plot}
+    \ControlFlowTok{for}\NormalTok{ \_, row }\KeywordTok{in}\NormalTok{ filtered\_df.iterrows():}
+\NormalTok{        plt.text(row[}\StringTok{\textquotesingle{}date\_scraped\textquotesingle{}}\NormalTok{], row[}\StringTok{\textquotesingle{}prix\textquotesingle{}}\NormalTok{], row[}\StringTok{\textquotesingle{}promotion\textquotesingle{}}\NormalTok{], }
+\NormalTok{                 color}\OperatorTok{=}\StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{, fontsize}\OperatorTok{=}\DecValTok{9}\NormalTok{, ha}\OperatorTok{=}\StringTok{\textquotesingle{}center\textquotesingle{}}\NormalTok{, va}\OperatorTok{=}\StringTok{\textquotesingle{}bottom\textquotesingle{}}\NormalTok{)}
+
+    \CommentTok{\# Customize the plot}
+\NormalTok{    plt.title(}\StringTok{"Price Variation by Date for Top 5 Products"}\NormalTok{)}
+\NormalTok{    plt.xlabel(}\StringTok{"Date Scraped"}\NormalTok{)}
+\NormalTok{    plt.ylabel(}\StringTok{"Price (USD)"}\NormalTok{)}
+\NormalTok{    plt.xticks(rotation}\OperatorTok{=}\DecValTok{45}\NormalTok{, ha}\OperatorTok{=}\StringTok{"right"}\NormalTok{)}
+\NormalTok{    plt.tight\_layout()}
+\NormalTok{    plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{e8e15245-8b51-4a6c-b58c-0dd2d9500710}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Analyze data}
+\KeywordTok{def}\NormalTok{ analyse\_data\_in\_same\_site\_grouped\_sites(df, nom}\OperatorTok{=}\VariableTok{None}\NormalTok{, website}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+    \CommentTok{\# Group by \textquotesingle{}nom\textquotesingle{} and \textquotesingle{}website\textquotesingle{} to get the average prices and count}
+\NormalTok{    avg\_prices }\OperatorTok{=}\NormalTok{ df.groupby([}\StringTok{"nom"}\NormalTok{, }\StringTok{"website"}\NormalTok{])[}\StringTok{"prix"}\NormalTok{].agg([}\StringTok{"min"}\NormalTok{, }\StringTok{"mean"}\NormalTok{, }\StringTok{"max"}\NormalTok{, }\StringTok{"count"}\NormalTok{])}
+
+    \CommentTok{\# Filter out rows where min equals max}
+\NormalTok{    avg\_prices\_filtered }\OperatorTok{=}\NormalTok{ avg\_prices[avg\_prices[}\StringTok{"min"}\NormalTok{] }\OperatorTok{!=}\NormalTok{ avg\_prices[}\StringTok{"max"}\NormalTok{]]}
+
+    \CommentTok{\# Group by \textquotesingle{}website\textquotesingle{} and calculate mean of \textquotesingle{}min\textquotesingle{}, \textquotesingle{}mean\textquotesingle{}, and \textquotesingle{}max\textquotesingle{}}
+\NormalTok{    grouped\_by\_date }\OperatorTok{=}\NormalTok{ avg\_prices.groupby([}\StringTok{"website"}\NormalTok{]).agg(\{}
+        \StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{,}
+        \StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{,}
+        \StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}mean\textquotesingle{}}
+\NormalTok{    \}).reset\_index()}
+
+    \CommentTok{\# Return the result sorted by \textquotesingle{}min\textquotesingle{} in ascending order}
+    \ControlFlowTok{return}\NormalTok{ grouped\_by\_date.sort\_values(by}\OperatorTok{=}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, ascending}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{9271d49f-896b-4448-a52d-3789bbe8afde}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Plot data}
+\KeywordTok{def}\NormalTok{ visualisation\_plot\_data(avg\_prices, nom}\OperatorTok{=}\StringTok{"Average Prices by Product"}\NormalTok{, xlabel}\OperatorTok{=}\StringTok{"Product"}\NormalTok{, ylabel}\OperatorTok{=}\StringTok{"Price (USD)"}\NormalTok{, x}\OperatorTok{=}\VariableTok{None}\NormalTok{, y}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+    \CommentTok{\# Ensure the DataFrame is indexed properly for plotting}
+\NormalTok{    avg\_prices }\OperatorTok{=}\NormalTok{ avg\_prices.reset\_index()  }\CommentTok{\# Reset index for clean plotting}
+    
+    \CommentTok{\# Plot the data}
+\NormalTok{    avg\_prices.plot(kind}\OperatorTok{=}\StringTok{"bar"}\NormalTok{, title}\OperatorTok{=}\NormalTok{nom, xlabel}\OperatorTok{=}\NormalTok{xlabel, ylabel}\OperatorTok{=}\NormalTok{ylabel, x}\OperatorTok{=}\NormalTok{x, y}\OperatorTok{=}\NormalTok{y)}
+    
+    \CommentTok{\# Adjust layout for better display}
+\NormalTok{    plt.xticks(rotation}\OperatorTok{=}\DecValTok{45}\NormalTok{, ha}\OperatorTok{=}\StringTok{"right"}\NormalTok{)}
+\NormalTok{    plt.tight\_layout()}
+\NormalTok{    plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{fd147109-32b0-47ee-bbe5-ec4918089d61}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Main execution}
+\ControlFlowTok{if} \VariableTok{\_\_name\_\_} \OperatorTok{==} \StringTok{"\_\_main\_\_"}\NormalTok{:}
+\NormalTok{    old\_data }\OperatorTok{=}\NormalTok{ pd.read\_csv(}\StringTok{"Electromenagerscleaned\_data.csv"}\NormalTok{)  }\CommentTok{\# Read the existing data from the file}
+    \CommentTok{\# Concatenate the cleaned data to the old data}
+\NormalTok{    df\_cleaned }\OperatorTok{=}\NormalTok{ old\_data}
+
+    \CommentTok{\# Analyze data and visualize}
+    \CommentTok{\# Get the top product and price variations}
+\NormalTok{    top\_product, price\_variations }\OperatorTok{=}\NormalTok{ analyse\_get\_top\_product\_price\_variation(df\_cleaned)}
+    
+    \BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"Top Product: }\SpecialCharTok{\{}\NormalTok{top\_product}\SpecialCharTok{\}}\SpecialStringTok{"}\NormalTok{)}
+    \BuiltInTok{print}\NormalTok{(}\StringTok{"Price variations by website:"}\NormalTok{)}
+    \BuiltInTok{print}\NormalTok{(price\_variations)}
+    \CommentTok{\# Plot the price variations}
+\NormalTok{    visualisation\_plot\_price\_variations(price\_variations, top\_product)}
+    
+    
+    \BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}r\textbackslash{}n}\StringTok{Average promotion par group:"}\NormalTok{)}
+    \BuiltInTok{print}\NormalTok{(analyse\_promotions\_par\_categorie(df\_cleaned))}
+\NormalTok{    visualisation\_plot\_promotions(analyse\_promotions\_par\_categorie(df\_cleaned), }
+\NormalTok{        title}\OperatorTok{=}\StringTok{"Promotion Count by Category and Promotion Type"}\NormalTok{, }
+\NormalTok{        xlabel}\OperatorTok{=}\StringTok{"Category"}\NormalTok{, }
+\NormalTok{        ylabel}\OperatorTok{=}\StringTok{"Promotion Count"}\NormalTok{)}
+    
+    
+\NormalTok{    products\_by\_date }\OperatorTok{=}\NormalTok{ analyse\_group\_by\_nom\_website\_date(df\_cleaned)}
+    \BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}r\textbackslash{}n}\StringTok{Top 5 Products by Occurrence:"}\NormalTok{)}
+    \BuiltInTok{print}\NormalTok{(products\_by\_date)}
+    \CommentTok{\# Plot price variations by date for the top 5 products}
+\NormalTok{    visualisation\_plot\_price\_variations\_by\_date(df\_cleaned, products\_by\_date)}
+    
+    
+    \BuiltInTok{print}\NormalTok{(}\StringTok{"}\CharTok{\textbackslash{}r\textbackslash{}n}\StringTok{Prices by sites:"}\NormalTok{)}
+    \BuiltInTok{print}\NormalTok{(analyse\_data\_in\_same\_site\_grouped\_sites(df\_cleaned))}
+\NormalTok{    visualisation\_plot\_data(analyse\_data\_in\_same\_site\_grouped\_sites(df\_cleaned), }\StringTok{"Prices by sites"}\NormalTok{, }\StringTok{"Product"}\NormalTok{, }\StringTok{"Price (USD)"}\NormalTok{, }\StringTok{"website"}\NormalTok{, [}\StringTok{"min"}\NormalTok{, }\StringTok{"mean"}\NormalTok{, }\StringTok{"max"}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Top Product: 1.8 cu. ft. smart over-the-range microwave nan
+Price variations by website:
+          website    prix
+86    bestbuy.com  219.99
+1052  samsung.com  329.00
+1078       lg.com  399.00
+174    costco.com  949.99
+\end{verbatim}
+
+\includegraphics{vertopal_1be236ef6dfc4048b6fc6242aa9fc717/025f7b80712ef31e5f40ebc7907e27e89ac549bd.png}
+
+\begin{verbatim}
+
+Average promotion par group:
+              category                       promotion  count
+59               ovens  Lower Price In Cart ends Feb 8      8
+76       refrigerators                   On Sale Today      8
+90    washing-machines                   January Deal!     10
+89    washing-machines    Bosch: Free 5 Year Warranty!     10
+49     microwave-ovens                         $649.99     10
+33             laundry                   On Sale Today     14
+1   appliance-packages                   On Sale Today     15
+3   appliance-packages                 Sale ends Jan 8     22
+73       refrigerators                 January Savings     30
+4           appliances                     Flash Sale!    200
+\end{verbatim}
+
+\includegraphics{vertopal_1be236ef6dfc4048b6fc6242aa9fc717/bfa8d9f6036ecc2c11046d0436a628b35a8e47dc.png}
+
+\begin{verbatim}
+
+Top 5 Products by Occurrence:
+                                                 nom       website      min  \
+0  Sharp Plasmacluster Ion Air Purifier with True...  sharpusa.com   349.99   
+1   European Convection Built-In Single Wall Oven...  sharpusa.com  1299.99   
+2   European Convection Built-In Single Wall Oven...  sharpusa.com  1699.99   
+3  Sharp 24 in. Bottom-Freezer Counter-Depth Refr...  sharpusa.com   999.99   
+4  Sharp French 4-Door Counter-Depth Refrigerator...  sharpusa.com  1599.99   
+5  24 in.  European Convection Built-In Single Wa...  sharpusa.com  1299.99   
+6  Sharp French 4-Door Counter-Depth Refrigerator...  sharpusa.com  2599.99   
+7  24 in. Slide-In Smart 42 dB Dishwasher (SDW688...  sharpusa.com   749.99   
+8   European Convection Built-In Double Wall Oven...  sharpusa.com  2499.99   
+9      24 in. Slide-In  45 dB Dishwasher (SDW6757ES)  sharpusa.com   599.99   
+
+          mean      max  count  
+0   370.823333   399.99     12  
+1  1533.323333  1699.99     12  
+2  2049.990000  2299.99     12  
+3  1174.990000  1299.99     12  
+4  1658.323333  1699.99     12  
+5  1533.323333  1699.99     12  
+6  3008.323333  3299.99     12  
+7   779.156667   799.99     12  
+8  2908.323333  3199.99     12  
+9   620.990000   629.99     10  
+\end{verbatim}
+
+\includegraphics{vertopal_1be236ef6dfc4048b6fc6242aa9fc717/283d6a3459ff3245f2144b6794afb1f860499bef.png}
+
+\begin{verbatim}
+
+Prices by sites:
+                    website         mean          min          max
+0  applianceworldonline.com   384.196761   384.196761   384.196761
+6              sharpusa.com   713.060281   691.032211   728.716421
+2                costco.com   933.416244   930.455034   938.201678
+1               bestbuy.com  1023.385469  1020.142751  1028.388706
+3                    lg.com  1158.200000  1158.200000  1158.200000
+4               samsung.com  1300.458333  1294.625000  1303.375000
+5                 sears.com  1321.798105  1307.350596  1340.929614
+7          us-appliance.com  2259.777966  2243.622599  2275.933333
+\end{verbatim}
+
+\includegraphics{vertopal_1be236ef6dfc4048b6fc6242aa9fc717/555fdddf70bce76b424d647bf81fe8805879dcd0.png}
+
+\end{document}
