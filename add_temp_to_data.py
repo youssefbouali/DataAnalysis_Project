@@ -4,7 +4,7 @@ import re
 
 # Load the CSV data into a pandas DataFrame
 df = pd.read_csv('Electromenagerscleaned_data.csv')
-df2 = pd.read_csv('temp3Electromenagerscleaned_data.csv')
+df2 = pd.read_csv('temp2Electromenagerscleaned_data.csv')
 
 # Function to change the date when it matches the specific pattern
 def change_date_pattern(df, pattern_date, new_date):

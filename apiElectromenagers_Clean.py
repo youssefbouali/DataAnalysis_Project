@@ -23,13 +23,24 @@ def normalize_text(text):
         return str(text) if text is not None else ""
 
 # Function to find similar noms using RapidFuzz
+#def find_similar_noms(nom, nom_list, threshold=70):
+#    similar_noms = []
+#    for other_nom in nom_list:
+#        score = fuzz.ratio(nom, other_nom)
+#        if score >= threshold:
+#            similar_noms.append((nom, other_nom, score))
+#    return similar_noms
+
+# Function to find similar noms using RapidFuzz with token sort ratio
 def find_similar_noms(nom, nom_list, threshold=70):
     similar_noms = []
     for other_nom in nom_list:
-        score = fuzz.ratio(nom, other_nom)
+        # Compute similarity score using token sort ratio
+        score = fuzz.token_sort_ratio(nom, other_nom)
         if score >= threshold:
             similar_noms.append((nom, other_nom, score))
     return similar_noms
+
 
 # Function to find similar noms using difflib
 def find_similar_noms_difflib(nom, nom_list, threshold=0.7):
@@ -166,7 +177,7 @@ def visualisation_plot_price_variations_by_date(df, products_by_date):
     filtered_df = df[df['nom'].isin(products_by_date['nom'])].copy()
 
     # Replace NaN values in the 'promotion' column with 'No promo' using .loc
-    filtered_df.loc[:, 'promotion'] = filtered_df['promotion'].fillna("No promo")
+    filtered_df.loc[:, 'promotion'] = filtered_df['promotion'].fillna("")
 
     # Create the Seaborn plot showing price variation by date
     plt.figure(figsize=(12, 6))

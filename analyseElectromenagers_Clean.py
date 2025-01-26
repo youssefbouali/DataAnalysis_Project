@@ -4,7 +4,6 @@ import re
 from rapidfuzz import fuzz
 import seaborn as sns
 
-
 # Function to normalize text
 def normalize_text(text):
     if isinstance(text, str):
@@ -16,11 +15,21 @@ def normalize_text(text):
         return str(text) if text is not None else ""
 
 # Function to find similar noms using RapidFuzz
+#def find_similar_noms(nom, nom_list, threshold=75):
+#    similar_noms = []
+#    for other_nom in nom_list:
+#        # Compute similarity score between nom and other nom
+#        score = fuzz.ratio(nom, other_nom)
+#        if score >= threshold:
+#            similar_noms.append((nom, other_nom, score))
+#    return similar_noms
+
+# Function to find similar noms using RapidFuzz with token sort ratio
 def find_similar_noms(nom, nom_list, threshold=75):
     similar_noms = []
     for other_nom in nom_list:
-        # Compute similarity score between nom and other nom
-        score = fuzz.ratio(nom, other_nom)
+        # Compute similarity score using token sort ratio
+        score = fuzz.token_sort_ratio(nom, other_nom)
         if score >= threshold:
             similar_noms.append((nom, other_nom, score))
     return similar_noms
@@ -149,7 +158,7 @@ def analyse_promotions_par_categorie(df):
     # Count promotions by category
     promotions_par_categorie = promotion_df.groupby(['category', 'promotion'])['promotion'].size().reset_index(name="count")
 
-    # Sort by 'count' in descending order and get the top 5
+    # Sort by 'count' in descending order and get the top
     top_promotions = promotions_par_categorie.sort_values(by='count', ascending=False).head(10).sort_values(by='count', ascending=True)
 
     return top_promotions
@@ -185,7 +194,7 @@ def analyse_group_by_nom_website_date(df):
     # Sort by 'count' in descending order to get the top products
     grouped_sorted = grouped.sort_values(by='count', ascending=False)
 
-    # Get the top 5 products with the most occurrences
+    # Get the top products with the most occurrences
     products_by_date = grouped_sorted.groupby('nom').head(1).sort_values(by='count', ascending=False).head(10)
 
     # Reset the index so 'nom' becomes a column again
@@ -194,13 +203,13 @@ def analyse_group_by_nom_website_date(df):
     return products_by_date
 
 
-# Function to plot price variations by 'date_scraped' for the top 5 products
+# Function to plot price variations by 'date_scraped' for the top products
 def visualisation_plot_price_variations_by_date(df, products_by_date):
-    # Filter the original dataframe to include only the top 5 products
+    # Filter the original dataframe to include only the top products
     filtered_df = df[df['nom'].isin(products_by_date['nom'])].copy()
 
     # Replace NaN values in the 'promotion' column with 'No promo' using .loc
-    filtered_df.loc[:, 'promotion'] = filtered_df['promotion'].fillna("No promo")
+    filtered_df.loc[:, 'promotion'] = filtered_df['promotion'].fillna("")
 
     # Create the Seaborn plot showing price variation by date
     plt.figure(figsize=(12, 6))
@@ -334,9 +343,9 @@ if __name__ == "__main__":
     #plot_data(analyze_data_in_same_site(df_cleaned), "Average prices in same website by product", "Product", "Price (USD)", "nom", ["min", "max"])
     
     products_by_date = analyse_group_by_nom_website_date(df_cleaned)
-    print("\r\nTop 5 Products by Occurrence:")
+    print("\r\nTop Products by Occurrence:")
     print(products_by_date)
-    # Plot price variations by date for the top 5 products
+    # Plot price variations by date for the top products
     visualisation_plot_price_variations_by_date(df_cleaned, products_by_date)
     
     

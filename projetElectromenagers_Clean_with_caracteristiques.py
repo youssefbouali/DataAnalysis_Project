@@ -12,7 +12,7 @@ import requests
 from rapidfuzz import fuzz
 from urllib.parse import urljoin
 
-# Fonction pour normaliser le texte en le mettant en minuscule.
+# Function to normalize text
 def normalize_text(text):
     if isinstance(text, str):
         text = text.lower()  # Convert to lowercase
@@ -22,7 +22,7 @@ def normalize_text(text):
         # Convert non-string inputs to a string or handle them appropriately
         return str(text) if text is not None else ""
 
-# Fonction pour trouver des noms similaires à l'aide de RapidFuzz.
+# Function to find similar noms using RapidFuzz
 def find_similar_noms(nom, nom_list, threshold=95):
     similar_noms = []
     for other_nom in nom_list:
@@ -60,7 +60,7 @@ options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) Apple
 with open('platformes.json', 'r') as file:
     sites = json.load(file)
 
-# Fonction pour initialiser un pilote Selenium avec des options spécifiques.
+# Initialize the WebDriver with the options
 def initialize_driver():
     driver = webdriver.Chrome(options=options)
     return driver
@@ -81,7 +81,6 @@ date_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 currency_converter = CurrencyRates()
 
-# Fonction pour convertir un prix en USD.
 def convert_prix(the_prix, detected_currency="UNKNOWN"):
     # Convert prix to USD if necessary
     try:
@@ -123,7 +122,6 @@ def convert_prix(the_prix, detected_currency="UNKNOWN"):
         print(f"Currency detection or conversion error: {e}")
 
 
-# Fonction pour récupérer une description de produit avec Selenium et BeautifulSoup.
 async def get_description(driver, site):
     try:
         # Navigate to the product page
@@ -138,17 +136,184 @@ async def get_description(driver, site):
         description_element = soup.select_one(site["description"])
         description = description_element.get_text(separator=' ', strip=True) if description_element else ""
 
-        return description, description_element
+        return description
     except Exception as e:
         print(f"Error fetching description for {site['url']}: {e}")
         return "Error fetching description"
 
 
-# Fonction principale pour collecter les données via web scraping.
+
+
+
+def extract_caracteristiques(html, site_config):
+    # Parse the HTML content
+    soup = BeautifulSoup(html, 'html.parser')
+    
+    result = {}
+
+    # Loop through each site in the config
+    for section_name, section_config in site_config['sections'].items():
+        # Select the section based on sectionSelector
+        section = soup.select_one(section_config['sectionSelector'])
+        if not section:
+            continue
+
+        if section:
+            # For sites like BlueStar, get the section name (only if 'nameSelector' exists)
+            section_heading = None
+            if 'nameSelector' in section_config:
+                section_heading = section.select_one(section_config['nameSelector'])
+                section_heading = section_heading.get_text(strip=True) if section_heading else None
+
+            # Initialize result for this section
+            if section_heading:
+                if section_heading not in result:
+                    result[section_heading] = {}
+            else:
+                if section_name not in result:
+                    result[section_name] = {}
+
+            # Extract rows from the section
+            rows = section.select(section_config['rowsSelector'])
+            for row in rows:
+                if section_config['specNameSelector']:
+                    spec_name = row.select_one(section_config['specNameSelector'])
+                    spec_value = row.select_one(section_config['specValueSelector'])
+
+                    if spec_name and spec_value:
+                        spec_name = spec_name.get_text(strip=True)
+                        spec_value = spec_value.get_text(strip=True)
+
+                        # Handle <br> tags for certain sites
+                        if spec_value and '<br' in spec_value:
+                            spec_value = spec_value.replace('<br>', ', ').replace('<br/>', ', ').replace('<br />', ', ')
+
+                        if section_heading:
+                            result[section_heading][spec_name] = spec_value
+                        else:
+                            result[section_name][spec_name] = spec_value
+                else:
+                    # For sites with no specNameSelector, directly store the list items as features (strings)
+                    feature = row.get_text(strip=True)
+                    if feature:
+                        # Ensure result[section_name] is a list
+                        if section_name not in result:
+                            result[section_name] = []
+                        elif not isinstance(result[section_name], list):
+                            result[section_name] = [result[section_name]]  # Convert to list if it's a dict
+
+                        result[section_name].append(feature)
+
+            dimensions_text = section.get_text(strip=True)
+            if 'Approximate Dimensions' in dimensions_text:
+                # Use regex to find height and width
+                height_match = re.search(r'Height:\s*(\d+[\d/]*\s?[a-zA-Z]*)', dimensions_text)
+                width_match = re.search(r'Width:\s*(\d+[\d/]*\s?[a-zA-Z]*)', dimensions_text)
+
+                # If matches are found, store them in the result
+                if height_match:
+                    result['DIMENSIONS'] = result.get('DIMENSIONS', {})
+                    result['DIMENSIONS']['Height'] = height_match.group(1)
+                if width_match:
+                    result['DIMENSIONS'] = result.get('DIMENSIONS', {})
+                    result['DIMENSIONS']['Width'] = width_match.group(1)
+
+    return result
+
+
+
+# Normalization mapping for specification names
+normalized_names = {
+    'Height': [
+        'Product Height', 
+        'Height To Top Of Refrigerator (Without Hinges)', 
+        'Height To Top Of Door Hinge',
+        'Maximum Height', 
+        'Minimum Height'
+    ],
+    'Width': [
+        'Product Width',
+        'Width',
+        'Width :',
+        'Cutout Dimensions:',
+        'Shipping Width :',
+        'Shipping Depth :'
+    ],
+    'Depth': [
+        'Depth Without Handle', 
+        'Depth With Handle', 
+        'Depth with Door Closed :', 
+        'Shipping Depth :'
+    ],
+    'Finish': ['Finish', 'Fingerprint Resistant', 'Color Appearance'],
+    'Material': ['Tub Material', 'Handle Color'],
+    'Control Panel Location': ['Control Panel Location', 'Type of Control'],
+    'Noise Level': ['Noise Level'],
+    'Energy Rating': ['ENERGY STAR® Rated'],
+    'Voltage': ['Voltage', 'Voltage :'],
+    'Capacity': ['Total Place Settings', 'Freezer Capacity', 'Overall Capacity', 'Refrigerator Capacity'],
+    'Rack Features': ['Height Adjustable Upper Rack', 'Lower Rack'],
+    'Child Lock': ['Child Lock'],
+    'Water Consumption': ['Water Consumption Per Cycle'],
+    'Energy Consumption': ['Energy Consumption (kWh / Year)'],
+    'Cycle Options': ['Number of Wash Cycles', 'Number of Options'],
+    'Sprayers': ['Number of Sprayers'],
+    'Warranty': ['Parts', 'Labor'],
+    'Weight': ['Product Weight / Shipping Weight', 'Weight'],
+}
+
+def normalize_name(raw_name):
+    """Normalize the specification name based on the mapping."""
+    for normalized, aliases in normalized_names.items():
+        if raw_name in aliases:
+            return normalized
+    return raw_name  # Return as-is if no match is found
+
+def normalize_caracteristiques(characteristics):
+    """Normalize the specification dictionary keys across multiple sites."""
+    normalized_characteristics = {}
+    
+    for category, data in characteristics.items():
+        if isinstance(data, dict):
+            # Normalize specifications in this category
+            normalized_category = {}
+            for spec_name, spec_value in data.items():
+                normalized_name = normalize_name(spec_name)
+                
+                # If the normalized name already exists, append the new value to a list
+                if normalized_name in normalized_category:
+                    if not isinstance(normalized_category[normalized_name], list):
+                        normalized_category[normalized_name] = [normalized_category[normalized_name]]
+                    normalized_category[normalized_name].append(spec_value)
+                else:
+                    normalized_category[normalized_name] = spec_value
+            normalized_characteristics[category] = normalized_category
+        elif isinstance(data, list):
+            # Handle the list case, just store as-is
+            normalized_characteristics[category] = data
+        else:
+            normalized_characteristics[category] = data
+    
+    return normalized_characteristics
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# site category
 async def collect_data_from_scraping(driver, site, products=None, page_limit=2, max_products=30, current_page=1, total_products=0):
     try:
         driver.get(site["url"])
-    except Exception as e:
+    except WebDriverException as e:
         print(f"Error loading {site['url']}: {e}")
         return None
 
@@ -211,7 +376,6 @@ async def collect_data_from_scraping(driver, site, products=None, page_limit=2, 
     return products
 
 
-# Fonction pour traiter un produit individuel.
 async def process_product(driver, item, site):
     nom = item.select_one(site["nom_selector"])
     prix = item.select_one(site["prix_selector"])
@@ -237,8 +401,14 @@ async def process_product(driver, item, site):
                 product_url = urljoin(site["url"], product_url)  # Combine domain with path
 
         # Run description fetching concurrently
-        description, soup = await get_description(driver, {"url": product_url, "description": site["description"]})
-
+        description = await get_description(driver, {"url": product_url, "description": site["description"]})
+        
+        if site.get("sections"):
+        
+            caracteristiques = normalize_caracteristiques(extract_caracteristiques(item, site))
+        else :
+            caracteristiques = ""
+        
         product = {
                 "nom": nomt,
                 "prix": cleaned_prix,
@@ -249,13 +419,14 @@ async def process_product(driver, item, site):
                 "promotion": promotion_text,
                 "url": product_url,
                 "description": description,
-                "html": soup,
+                "caracteristiques": caracteristiques
+                
             }
         print("append product : ", nomt)
     return product
 
 
-# Fonction pour collecter des données via une API.
+# Function to collect data from API
 async def collect_data_from_api(site):
     response = await loop.run_in_executor(None, requests.get, site["url"])  # Asynchronous request
 
