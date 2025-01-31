@@ -37,10 +37,10 @@ def find_similar_noms(nom, nom_list, threshold=75):
 
 def analyse_get_top_product_price_variation(df):
     # Normalize product names
-    df['normalized_nom'] = df['nom'].apply(normalize_text)
-    df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
+    #df['normalized_nom'] = df['nom'].apply(normalize_text)
+    #df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
     
-    df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
+    #df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
     #df['nom_and_description'] = df['normalized_nom']
     
     # Apply fuzzy matching to group similar product names

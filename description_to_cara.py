@@ -4,7 +4,7 @@ import re
 import json
 
 # Load the CSV data
-df = pd.read_csv('temp2Electromenagerscleaned_data.csv')
+df = pd.read_csv('Electromenagerscleaned_data.csv')
 
 # Load site configurations
 with open('platformes.json', 'r') as file:
@@ -207,19 +207,20 @@ def get_site_config(website_name):
     return None
 
 
-# Apply the function to the DataFrame
-df['characteristics'] = df.apply(
+
+
+
+mask = df['date_scraped'] == "2025-01-31 02:35:21"
+
+# Update only the matching rows
+df.loc[mask, 'characteristics'] = df.loc[mask].apply(
     lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website']))) 
-    if isinstance(row['html'], str) and row['html'].strip() 
+    if isinstance(row['html'], str) and row['html'].strip()
     else {}, 
     axis=1
 )
 
-
-
-df['text_characteristics'] = df['characteristics'].apply(json_to_text)
-
-
+df.loc[mask, 'text_characteristics'] = df.loc[mask, 'characteristics'].apply(json_to_text)
 
 
 
@@ -250,8 +251,8 @@ df['text_characteristics'] = df['characteristics'].apply(json_to_text)
 
 
 # Save the resulting DataFrame to a new CSV
-df.to_csv('temp3Electromenagerscleaned_data.csv', index=False)
-df.to_excel("temp3Electromenagerscleaned_data.xlsx", index=False, engine="openpyxl")
+df.to_csv('Electromenagerscleaned_data.csv', index=False)
+df.to_excel("Electromenagerscleaned_data.xlsx", index=False, engine="openpyxl")
 
 
 

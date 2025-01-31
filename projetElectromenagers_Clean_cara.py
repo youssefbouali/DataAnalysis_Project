@@ -551,69 +551,73 @@ def clean_data(raw_data):
 
     df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(Matte Black|Copper|Slate|Brown|biscuit|Champagne|Tuscan stainless steel|Brushed Black|Brushed Navy|Carbon Graphite|Chrome|Forest Green|Graphite Steel|Ivory|Alpine White|Grey|Sapphire Blue|Specialty|Dark Steel|Essence White|Midnight Steel|Mirror|Satin Green|Silver Steel|Titanium|Beige & Bisque|Metallic|Red|Specialty|Black Slate|Black slate|Black Stainless|Multi-color|Black steel|Bronze|Nickel|Diamond Gray|Platinum Glass|Platinum|Graphite Steel|Graphite steel|Green|Orange|Yellow|Stainless steel look|Black stainless steel|Bisque|CleanSteel|Black Glass|Graphite|Slate|Matte Black|Matte black|Custom Panel Ready|Custom Panel Required|Custom Panel|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Stainless Steel|Stainless steel|Stainless Look|Matte Black with Brushed Stainless Steel Handles and Knobs|High Gloss White|White|Matte White|Matte white|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Fingerprint Resistant Black Stainless Steel|Fingerprint Resistant Stainless Steel)", "", regex=True)
     
-    df_cleaned = df.drop_duplicates(subset=["nom", "website", "date_scraped"], keep="first")
-    
     df['normalized_nom'] = df['nom'].apply(normalize_text)
     df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
     
-    df['nom_and_description'] = df['nom']+" "+df['description']
+    df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
     
-    # Continue with finding similar noms and further processing...
-    groups = []
-    seen = set()
+    df = df.drop_duplicates(subset=["normalized_nom", "website", "date_scraped"], keep="first")
+    
+    df_cleaned = df
+    try:
+        # Continue with finding similar noms and further processing...
+        groups = []
+        seen = set()
 
-    # To store the similar rows with their corresponding similarity ratio
-    similar_rows_info = []
+        # To store the similar rows with their corresponding similarity ratio
+        similar_rows_info = []
 
-    for idx, row in df.iterrows():
-        if idx in seen:
-            continue
-        nom = row["nom_and_description"]
-        matches = find_similar_noms(nom, df["nom_and_description"].tolist())
-        
-        if not matches:
-            continue
-        
-        match_indices = [
-            idx for idx, match in enumerate(df["nom_and_description"]) if (nom, match, fuzz.ratio(nom, match)) in matches
-        ]
-        
-        if match_indices:
-            groups.append(match_indices)
-            seen.update(match_indices)
+        for idx, row in df.iterrows():
+            if idx in seen:
+                continue
+            nom = row["nom_and_description"]
+            matches = find_similar_noms(nom, df["nom_and_description"].tolist())
             
-            # Store the similar rows and their ratios
-            for match_idx in match_indices:
-                similarity_ratio = fuzz.ratio(nom, df["nom_and_description"].iloc[match_idx])
-                similar_rows_info.append((df.iloc[match_idx], similarity_ratio))
+            if not matches:
+                continue
+            
+            match_indices = [
+                idx for idx, match in enumerate(df["nom_and_description"]) if (nom, match, fuzz.ratio(nom, match)) in matches
+            ]
+            
+            if match_indices:
+                groups.append(match_indices)
+                seen.update(match_indices)
+                
+                # Store the similar rows and their ratios
+                for match_idx in match_indices:
+                    similarity_ratio = fuzz.ratio(nom, df["nom_and_description"].iloc[match_idx])
+                    similar_rows_info.append((df.iloc[match_idx], similarity_ratio))
 
-    rows_to_keep = set()
-    for group in groups:
-        if group:
-            min_prix_index = df.loc[group, "prix"].idxmin()
-            rows_to_keep.add(min_prix_index)
+        rows_to_keep = set()
+        for group in groups:
+            if group:
+                min_prix_index = df.loc[group, "prix"].idxmin()
+                rows_to_keep.add(min_prix_index)
 
-    # Convert rows_to_keep to a list
-    rows_to_keep = list(rows_to_keep)
+        # Convert rows_to_keep to a list
+        rows_to_keep = list(rows_to_keep)
 
-    # Get the rows that were removed
-    rows_removed = set(df.index) - set(rows_to_keep)
+        # Get the rows that were removed
+        rows_removed = set(df.index) - set(rows_to_keep)
 
-    # Convert rows_removed to a list before using it as an indexer
-    rows_removed_list = list(rows_removed)
+        # Convert rows_removed to a list before using it as an indexer
+        rows_removed_list = list(rows_removed)
 
-    # Print the removed rows
-    print("Removed rows:")
-    print(df.loc[rows_removed_list])
+        # Print the removed rows
+        print("Removed rows:")
+        print(df.loc[rows_removed_list])
 
-    # Print the similar rows that were kept, along with their similarity ratios
-    #print("\nSimilar rows kept (with similarity ratio):")
-    #for row, ratio in similar_rows_info:
-    #    print(f"Row: {row.to_dict()} - Similarity Ratio: {ratio}%")
-    
-    # Use the list as the indexer
-    df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
-    df = df.drop(columns=['nom_and_description'])
+        # Print the similar rows that were kept, along with their similarity ratios
+        #print("\nSimilar rows kept (with similarity ratio):")
+        #for row, ratio in similar_rows_info:
+        #    print(f"Row: {row.to_dict()} - Similarity Ratio: {ratio}%")
+        
+        # Use the list as the indexer
+        df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
+    except KeyError as e:
+        print(f"Erreur : {e}")
+    #df = df.drop(columns=['nom_and_description'])
     
     return df_cleaned
 

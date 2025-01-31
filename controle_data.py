@@ -3,8 +3,8 @@ from datetime import datetime
 import re
 
 # Load the CSV data into a pandas DataFrame
-df = pd.read_csv('Electromenagerscleaned_data.csv')
-df2 = pd.read_csv('temp3Electromenagerscleaned_data.csv')
+df = pd.read_csv('temp2Electromenagerscleaned_data.csv')
+#df2 = pd.read_csv('temp3Electromenagerscleaned_data.csv')
 
 # Function to change the date when it matches the specific pattern
 def change_date_pattern(df, pattern_date, new_date):
@@ -46,7 +46,7 @@ def modify_promotion_for_sharpusa(df):
 #final_df = modify_promotion_for_sharpusa(df)
 
 
-final_df = pd.concat([df, df2], ignore_index=True)
+#final_df = pd.concat([df, df2], ignore_index=True)
 
 #df['nom'] = df.apply(
 #    lambda row: (
@@ -102,9 +102,15 @@ def normalize_text(text):
 #final_df = df
 
 
+#df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
+#df['normalized_nom']+" "+df['normalized_description']
+#df['normalized_nom'] = df['nom'].apply(normalize_text)
+#df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
+df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
+
 # Save the modified DataFrame back to a CSV file
-final_df.to_csv('Electromenagerscleaned_data.csv', index=False)
-final_df.to_excel("Electromenagerscleaned_data.xlsx", index=False, engine="openpyxl")  # Using openpyxl for Excel support
+df.to_csv('temp2Electromenagerscleaned_data.csv', index=False)
+df.to_excel("temp2Electromenagerscleaned_data.xlsx", index=False, engine="openpyxl")  # Using openpyxl for Excel support
 
 # Optionally, print the final modified DataFrame
-print(final_df)
+print(df)
