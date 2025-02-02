@@ -23,23 +23,23 @@ def normalize_text(text):
         return str(text) if text is not None else ""
 
 # Function to find similar noms using RapidFuzz
-#def find_similar_noms(nom, nom_list, threshold=70):
-#    similar_noms = []
-#    for other_nom in nom_list:
-#        score = fuzz.ratio(nom, other_nom)
-#        if score >= threshold:
-#            similar_noms.append((nom, other_nom, score))
-#    return similar_noms
-
-# Function to find similar noms using RapidFuzz with token sort ratio
 def find_similar_noms(nom, nom_list, threshold=70):
     similar_noms = []
     for other_nom in nom_list:
-        # Compute similarity score using token sort ratio
-        score = fuzz.token_sort_ratio(nom, other_nom)
+        score = fuzz.ratio(nom, other_nom)
         if score >= threshold:
             similar_noms.append((nom, other_nom, score))
     return similar_noms
+
+# Function to find similar noms using RapidFuzz with token sort ratio
+#def find_similar_noms(nom, nom_list, threshold=70):
+#    similar_noms = []
+#    for other_nom in nom_list:
+#        # Compute similarity score using token sort ratio
+#        score = fuzz.token_sort_ratio(nom, other_nom)
+#        if score >= threshold:
+#            similar_noms.append((nom, other_nom, score))
+#    return similar_noms
 
 
 # Function to find similar noms using difflib
@@ -65,10 +65,10 @@ def promotions_par_categorie(df):
 
 def analyse_get_top_product_price_variation(df):
     # Normalize product names
-    df['normalized_nom'] = df['nom'].apply(normalize_text)
-    df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
+    #df['normalized_nom'] = df['nom'].apply(normalize_text)
+    #df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
     
-    df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
+    #df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
     #df['nom_and_description'] = df['normalized_nom']
     
     # Apply fuzzy matching to group similar product names

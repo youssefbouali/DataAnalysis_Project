@@ -207,10 +207,7 @@ def get_site_config(website_name):
     return None
 
 
-
-
-
-mask = df['date_scraped'] == "2025-01-31 02:35:21"
+mask = df['date_scraped'] == "2025-02-02 22:03:30"
 
 # Update only the matching rows
 df.loc[mask, 'characteristics'] = df.loc[mask].apply(
@@ -221,7 +218,6 @@ df.loc[mask, 'characteristics'] = df.loc[mask].apply(
 )
 
 df.loc[mask, 'text_characteristics'] = df.loc[mask, 'characteristics'].apply(json_to_text)
-
 
 
 
@@ -259,4 +255,4 @@ df.to_excel("Electromenagerscleaned_data.xlsx", index=False, engine="openpyxl")
 
 
 # Inspect the results
-print(df[['website', 'html', 'characteristics']])
+print(df.loc[mask, ['website', 'html', 'characteristics']])

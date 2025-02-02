@@ -147,9 +147,313 @@ async def get_description(driver, site):
 
 
 
-def extract_characteristics(soup, site_config):
+
+
+# Fonction principale pour collecter les données via web scraping.
+async def collect_data_from_scraping(driver, site, products=None, page_limit=2, max_products=30, current_page=1, total_products=0):
+    try:
+        driver.get(site["url"])
+    except Exception as e:
+        print(f"Error loading {site['url']}: {e}")
+        return None
+
+    # Retrieve HTML content asynchronously
+    html_content = await asyncio.to_thread(lambda: driver.page_source)
+
+    print("Opened : ", site["url"])
+    soup = BeautifulSoup(html_content, "html.parser")
+
+    if products is None:
+        products = []
+
+    tasks = []
+    
+    for item in soup.select(site["product_selector"]):
+        if total_products >= max_products:
+            break  # Stop when max products are reached
+        tasks.append(process_product(driver, item, site))
+        total_products += 1
+    
+    # Run all product processing tasks concurrently
+    pts = await asyncio.gather(*tasks)
+    for product in pts:
+        products.append(product)
+            
+    #dftemp = pd.DataFrame(products)
+    #export_data(dftemp, "tempElectromenagerscleaned_data")
+
+    if site.get("next_page") and current_page <= page_limit:
+        print ("next_page : ", current_page+1)
+        next_page = soup.select_one(site["next_page"])
+        if next_page and 'href' in next_page.attrs:
+            next_page_url = next_page['href']
+            if next_page_url.startswith('/'):
+                next_page_url = urljoin(site["url"], next_page_url)  # Automatically combines domain with path
+            print(next_page_url)
+            site["url"] = next_page_url
+            current_page += 1  # Increment the page counter
+            await collect_data_from_scraping(driver, site, products, page_limit, max_products, current_page) #total_products if total in all pages
+
+
+    # Read old data and clean current data
+    if products:
+        try:
+            # Attempt to read the file
+            old_data = pd.read_csv("temp2Electromenagerscleaned_data.csv")
+        except FileNotFoundError:
+            # If the file doesn't exist, initialize as an empty DataFrame
+            old_data = pd.DataFrame()
+            
+        newproducts = pd.DataFrame(products)
+
+        data_now = pd.concat([old_data, newproducts], ignore_index=True)
+        try:
+            df_cleaned = clean_data(data_now)
+            export_data(df_cleaned, "temp2Electromenagerscleaned_data")
+            print("Appended site:", site["url"])  # Log the last processed site
+        except Exception as e:
+            print(f"Error during cleaning or exporting data for site {site['url']}: {e}")
+    else:
+        print("No products found for site:", site["url"])
+
+    return products
+
+
+# Fonction pour traiter un produit individuel.
+async def process_product(driver, item, site):
+    nom = item.select_one(site["nom_selector"])
+    prix = item.select_one(site["prix_selector"])
+    promotion = item.select_one(site["promotion_selector"]) if site.get("promotion_selector") else None
+    
+    product = {}
+
+    if nom and prix:
+        the_prix = prix.text.strip()
+        detected_currency = "UNKNOWN"
+        cleaned_prix = convert_prix(the_prix, detected_currency)
+
+        promotion_text = promotion.text.strip() if promotion else ""
+        nomt = nom.text.strip() if nom else None
+
+        #if site.get("nom_regex"):
+        #    nomt = nomt.str.extract(site["nom_regex"])
+
+        product_url = ""
+        if 'href' in nom.attrs:
+            product_url = nom['href']
+            if product_url.startswith('/'):
+                product_url = urljoin(site["url"], product_url)  # Combine domain with path
+
+        # Run description fetching concurrently
+        if site.get("description"):
+            description, soup = await get_description(driver, {"url": product_url, "description": site["description"]})
+        else:
+            description = None
+            soup = None
+        
+        #if site.get("sections"):
+        #
+        #    characteristics = normalize_characteristics(extract_characteristics(item, site))
+        #    
+        #    text_characteristics = json_to_text(characteristics)
+        #    
+        #else :
+        #    characteristics = ""
+        #    
+        #    text_characteristics = ""
+        
+        
+        
+        # Apply the function to the DataFrame
+        #df['characteristics'] = df.apply(
+        #    lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website']))) 
+        #    if isinstance(row['html'], str) and row['html'].strip() 
+        #    else {}, 
+        #    axis=1
+        #)
+        
+        #df['text_characteristics'] = df['characteristics'].apply(json_to_text)
+
+
+
+
+        product = {
+                "nom": nomt,
+                "prix": cleaned_prix,
+                "website": site["website"],
+                "source": site["url"],
+                "date_scraped": date_now,
+                "category": site["category"],
+                "promotion": promotion_text,
+                "url": product_url,
+                "description": description,
+                "html": soup,
+                #"characteristics": characteristics,
+                #"text_characteristics": text_characteristics
+            }
+        print("append product : ", nomt)
+        
+    return product
+
+
+# Fonction pour collecter des données via une API.
+async def collect_data_from_api(site):
+    response = await loop.run_in_executor(None, requests.get, site["url"])  # Asynchronous request
+
+    if response.status_code == 200:
+        data = response.json()
+        products = []
+        items = data.get(*site["selectors"]["product_key"].split('.'))
+
+        for item in items:
+            nom = item.get(site["selectors"]["nom_key"])
+            prix = item.get(site["selectors"]["price_key"])
+            category = item.get(site["selectors"]["category_key"])
+            promotion = item.get(site["selectors"]["promotion_key"])
+
+            if nom and prix:
+                cleaned_prix = convert_prix(prix)
+                products.append({
+                    "nom": nom,
+                    "prix": prix,
+                    "website": site["website"],
+                    "source": site["url"],
+                    "date_scraped": date_now,
+                    "category": category,
+                    "promotion": promotion
+                })
+                print ("append : ",nom)
+
+        return products
+    else:
+        print(f"API error: {response.status_code}")
+        return []
+
+
+# Function to collect all data concurrently
+async def collect_all_data():
+    data = []
+    driver = initialize_driver()
+    
+    # Running scraping tasks concurrently
+    tasks = []
+    for site in sites:
+        if site["type"] == "scraping":
+            result = await collect_data_from_scraping(driver, site)
+            if result:  # Check if result is not None or empty
+                data.extend(result)
+                print ("Add : ",site["url"])
+        elif site["type"] == "API":
+            result = await collect_data_from_api(site)
+            if result:  # Check if result is not None or empty
+                data.extend(result)
+    
+    driver.quit()  # Close the driver after all scraping is done
+    return data
+
+
+
+
+
+# Data cleaning function
+def clean_data(raw_data):
+    df = pd.DataFrame(raw_data)
+
+    if 'nom' not in df.columns:
+        print("Error: 'nom' column is missing!")
+        return df
+        
+    df = df.dropna(subset=["nom"])
+
+    df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(Matte Black|Copper|Slate|Brown|biscuit|Champagne|Tuscan stainless steel|Brushed Black|Brushed Navy|Carbon Graphite|Chrome|Forest Green|Graphite Steel|Ivory|Alpine White|Grey|Sapphire Blue|Specialty|Dark Steel|Essence White|Midnight Steel|Mirror|Satin Green|Silver Steel|Titanium|Beige & Bisque|Metallic|Red|Specialty|Black Slate|Black slate|Black Stainless|Multi-color|Black steel|Bronze|Nickel|Diamond Gray|Platinum Glass|Platinum|Graphite Steel|Graphite steel|Green|Orange|Yellow|Stainless steel look|Black stainless steel|Bisque|CleanSteel|Black Glass|Graphite|Slate|Matte Black|Matte black|Custom Panel Ready|Custom Panel Required|Custom Panel|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Stainless Steel|Stainless steel|Stainless Look|Matte Black with Brushed Stainless Steel Handles and Knobs|High Gloss White|White|Matte White|Matte white|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Fingerprint Resistant Black Stainless Steel|Fingerprint Resistant Stainless Steel)", "", regex=True)
+    
+    df['normalized_nom'] = df['nom'].apply(normalize_text)
+    df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
+    
+    df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
+    
+    df = df.drop_duplicates(subset=["normalized_nom", "website", "date_scraped"], keep="first")
+    
+    df_cleaned = df
+    try:
+        # Continue with finding similar noms and further processing...
+        groups = []
+        seen = set()
+
+        # To store the similar rows with their corresponding similarity ratio
+        similar_rows_info = []
+
+        for idx, row in df.iterrows():
+            if idx in seen:
+                continue
+            nom = row["nom_and_description"]
+            matches = find_similar_noms(nom, df["nom_and_description"].tolist())
+            
+            if not matches:
+                continue
+            
+            match_indices = [
+                idx for idx, match in enumerate(df["nom_and_description"]) if (nom, match, fuzz.ratio(nom, match)) in matches
+            ]
+            
+            if match_indices:
+                groups.append(match_indices)
+                seen.update(match_indices)
+                
+                # Store the similar rows and their ratios
+                for match_idx in match_indices:
+                    similarity_ratio = fuzz.ratio(nom, df["nom_and_description"].iloc[match_idx])
+                    similar_rows_info.append((df.iloc[match_idx], similarity_ratio))
+
+        rows_to_keep = set()
+        for group in groups:
+            if group:
+                min_prix_index = df.loc[group, "prix"].idxmin()
+                rows_to_keep.add(min_prix_index)
+
+        # Convert rows_to_keep to a list
+        rows_to_keep = list(rows_to_keep)
+
+        # Get the rows that were removed
+        rows_removed = set(df.index) - set(rows_to_keep)
+
+        # Convert rows_removed to a list before using it as an indexer
+        rows_removed_list = list(rows_removed)
+
+        # Print the removed rows
+        print("Removed rows:")
+        print(df.loc[rows_removed_list])
+
+        # Print the similar rows that were kept, along with their similarity ratios
+        #print("\nSimilar rows kept (with similarity ratio):")
+        #for row, ratio in similar_rows_info:
+        #    print(f"Row: {row.to_dict()} - Similarity Ratio: {ratio}%")
+        
+        # Use the list as the indexer
+        df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
+    except KeyError as e:
+        print(f"Erreur : {e}")
+    #df = df.drop(columns=['nom_and_description'])
+    
+    return df_cleaned
+
+
+
+
+# Export cleaned data
+def export_data(df, filename="Electromenagerscleaned_data"):
+    df.to_csv(filename+".csv", index=False)
+    df.to_excel(filename+".xlsx", index=False, engine="openpyxl")
+    print(f"Data exported to '{filename}'")
+
+
+
+
+
+
+def extract_characteristics(html, site_config):
     # Parse the HTML content
-    #soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, 'html.parser')
     
     result = {}
 
@@ -301,8 +605,6 @@ def normalize_characteristics(characteristics):
     return normalized_characteristics
 
 
-
-
 def sort_json_by_key(characteristics):
     """Sort the JSON dictionary by keys (a->z)."""
     if isinstance(characteristics, dict):
@@ -330,323 +632,15 @@ def json_to_text(data, parent_key=""):
     return result
 
 
-
-
-
-
-
-
-# Fonction principale pour collecter les données via web scraping.
-async def collect_data_from_scraping(driver, site, products=None, page_limit=2, max_products=30, current_page=1, total_products=0):
-    try:
-        driver.get(site["url"])
-    except Exception as e:
-        print(f"Error loading {site['url']}: {e}")
-        return None
-
-    # Retrieve HTML content asynchronously
-    html_content = await asyncio.to_thread(lambda: driver.page_source)
-
-    print("Opened : ", site["url"])
-    soup = BeautifulSoup(html_content, "html.parser")
-
-    if products is None:
-        products = []
-
-    tasks = []
-    
-    for item in soup.select(site["product_selector"]):
-        if total_products >= max_products:
-            break  # Stop when max products are reached
-        tasks.append(process_product(driver, item, site))
-        total_products += 1
-    
-    # Run all product processing tasks concurrently
-    pts = await asyncio.gather(*tasks)
-    for product in pts:
-        products.append(product)
-            
-    #dftemp = pd.DataFrame(products)
-    #export_data(dftemp, "tempElectromenagerscleaned_data")
-
-    if site.get("next_page") and current_page <= page_limit:
-        print ("next_page : ", current_page+1)
-        next_page = soup.select_one(site["next_page"])
-        if next_page and 'href' in next_page.attrs:
-            next_page_url = next_page['href']
-            if next_page_url.startswith('/'):
-                next_page_url = urljoin(site["url"], next_page_url)  # Automatically combines domain with path
-            print(next_page_url)
-            site["url"] = next_page_url
-            current_page += 1  # Increment the page counter
-            await collect_data_from_scraping(driver, site, products, page_limit, max_products, current_page) #total_products if total in all pages
-
-
-    # Read old data and clean current data
-    if products:
-        try:
-            # Attempt to read the file
-            old_data = pd.read_csv("temp2Electromenagerscleaned_data.csv")
-        except FileNotFoundError:
-            # If the file doesn't exist, initialize as an empty DataFrame
-            old_data = pd.DataFrame()
-            
-        newproducts = pd.DataFrame(products)
-
-        data_now = pd.concat([old_data, newproducts], ignore_index=True)
-        try:
-            df_cleaned = clean_data(data_now)
-            export_data(df_cleaned, "temp2Electromenagerscleaned_data")
-            print("Appended site:", site["url"])  # Log the last processed site
-        except Exception as e:
-            print(f"Error during cleaning or exporting data for site {site['url']}: {e}")
-    else:
-        print("No products found for site:", site["url"])
-
-    return products
-
-
-# Fonction pour traiter un produit individuel.
-async def process_product(driver, item, site):
-    nom = item.select_one(site["nom_selector"])
-    prix = item.select_one(site["prix_selector"])
-    promotion = item.select_one(site["promotion_selector"]) if site.get("promotion_selector") else None
-    
-    product = {}
-
-    if nom and prix:
-        the_prix = prix.text.strip()
-        detected_currency = "UNKNOWN"
-        cleaned_prix = convert_prix(the_prix, detected_currency)
-
-        promotion_text = promotion.text.strip() if promotion else ""
-        nomt = nom.text.strip() if nom else None
-
-        #if site.get("nom_regex"):
-        #    nomt = nomt.str.extract(site["nom_regex"])
-
-        product_url = ""
-        if 'href' in nom.attrs:
-            product_url = nom['href']
-            if product_url.startswith('/'):
-                product_url = urljoin(site["url"], product_url)  # Combine domain with path
-
-        # Run description fetching concurrently
-        if site.get("description"):
-            description, soup = await get_description(driver, {"url": product_url, "description": site["description"]})
-        else:
-            description = None
-            soup = None
-        
-        #if site.get("sections"):
-        #
-        #    characteristics = normalize_characteristics(extract_characteristics(item, site))
-        #    
-        #    text_characteristics = json_to_text(characteristics)
-        #    
-        #else :
-        #    characteristics = ""
-        #    
-        #    text_characteristics = ""
-        
-        
-        
-        # Apply the function to the DataFrame
-        #df['characteristics'] = df.apply(
-        #    lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website']))) 
-        #    if isinstance(row['html'], str) and row['html'].strip() 
-        #    else {}, 
-        #    axis=1
-        #)
-        
-        #df['text_characteristics'] = df['characteristics'].apply(json_to_text)
-
-
-
-
-        product = {
-                "nom": nomt,
-                "prix": cleaned_prix,
-                "website": site["website"],
-                "source": site["url"],
-                "date_scraped": date_now,
-                "category": site["category"],
-                "promotion": promotion_text,
-                "url": product_url,
-                "description": description,
-                "html": soup,
-                #"characteristics": characteristics,
-                #"text_characteristics": text_characteristics
-            }
-        print("append product : ", nomt)
-    return product
-
-
-# Fonction pour collecter des données via une API.
-async def collect_data_from_api(site):
-    response = await loop.run_in_executor(None, requests.get, site["url"])  # Asynchronous request
-
-    if response.status_code == 200:
-        data = response.json()
-        products = []
-        items = data.get(*site["selectors"]["product_key"].split('.'))
-
-        for item in items:
-            nom = item.get(site["selectors"]["nom_key"])
-            prix = item.get(site["selectors"]["price_key"])
-            category = item.get(site["selectors"]["category_key"])
-            promotion = item.get(site["selectors"]["promotion_key"])
-
-            if nom and prix:
-                cleaned_prix = convert_prix(prix)
-                products.append({
-                    "nom": nom,
-                    "prix": prix,
-                    "website": site["website"],
-                    "source": site["url"],
-                    "date_scraped": date_now,
-                    "category": category,
-                    "promotion": promotion
-                })
-                print ("append : ",nom)
-
-        return products
-    else:
-        print(f"API error: {response.status_code}")
-        return []
-
-
-# Function to collect all data concurrently
-async def collect_all_data():
-    data = []
-    driver = initialize_driver()
-    
-    # Running scraping tasks concurrently
-    tasks = []
+def get_site_config(website_name):
     for site in sites:
-        if site["type"] == "scraping":
-            result = await collect_data_from_scraping(driver, site)
-            if result:  # Check if result is not None or empty
-                data.extend(result)
-                print ("Add : ",site["url"])
-        elif site["type"] == "API":
-            result = await collect_data_from_api(site)
-            if result:  # Check if result is not None or empty
-                data.extend(result)
-    
-    driver.quit()  # Close the driver after all scraping is done
-    return data
-
-
-
-
-
-# Data cleaning function
-def clean_data(raw_data):
-    df = pd.DataFrame(raw_data)
-
-    if 'nom' not in df.columns:
-        print("Error: 'nom' column is missing!")
-        return df
-
-    df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(Matte Black|Copper|Slate|Brown|biscuit|Champagne|Tuscan stainless steel|Brushed Black|Brushed Navy|Carbon Graphite|Chrome|Forest Green|Graphite Steel|Ivory|Alpine White|Grey|Sapphire Blue|Specialty|Dark Steel|Essence White|Midnight Steel|Mirror|Satin Green|Silver Steel|Titanium|Beige & Bisque|Metallic|Red|Specialty|Black Slate|Black slate|Black Stainless|Multi-color|Black steel|Bronze|Nickel|Diamond Gray|Platinum Glass|Platinum|Graphite Steel|Graphite steel|Green|Orange|Yellow|Stainless steel look|Black stainless steel|Bisque|CleanSteel|Black Glass|Graphite|Slate|Matte Black|Matte black|Custom Panel Ready|Custom Panel Required|Custom Panel|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Stainless Steel|Stainless steel|Stainless Look|Matte Black with Brushed Stainless Steel Handles and Knobs|High Gloss White|White|Matte White|Matte white|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Fingerprint Resistant Black Stainless Steel|Fingerprint Resistant Stainless Steel)", "", regex=True)
-    
-    df['normalized_nom'] = df['nom'].apply(normalize_text)
-    df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
-    
-    df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
-    
-    df = df.drop_duplicates(subset=["normalized_nom", "website", "date_scraped"], keep="first")
-    
-    df_cleaned = df
-    try:
-        # Continue with finding similar noms and further processing...
-        groups = []
-        seen = set()
-
-        # To store the similar rows with their corresponding similarity ratio
-        similar_rows_info = []
-
-        for idx, row in df.iterrows():
-            if idx in seen:
-                continue
-            nom = row["nom_and_description"]
-            matches = find_similar_noms(nom, df["nom_and_description"].tolist())
-            
-            if not matches:
-                continue
-            
-            match_indices = [
-                idx for idx, match in enumerate(df["nom_and_description"]) if (nom, match, fuzz.ratio(nom, match)) in matches
-            ]
-            
-            if match_indices:
-                groups.append(match_indices)
-                seen.update(match_indices)
-                
-                # Store the similar rows and their ratios
-                for match_idx in match_indices:
-                    similarity_ratio = fuzz.ratio(nom, df["nom_and_description"].iloc[match_idx])
-                    similar_rows_info.append((df.iloc[match_idx], similarity_ratio))
-
-        rows_to_keep = set()
-        for group in groups:
-            if group:
-                min_prix_index = df.loc[group, "prix"].idxmin()
-                rows_to_keep.add(min_prix_index)
-
-        # Convert rows_to_keep to a list
-        rows_to_keep = list(rows_to_keep)
-
-        # Get the rows that were removed
-        rows_removed = set(df.index) - set(rows_to_keep)
-
-        # Convert rows_removed to a list before using it as an indexer
-        rows_removed_list = list(rows_removed)
-
-        # Print the removed rows
-        print("Removed rows:")
-        print(df.loc[rows_removed_list])
-
-        # Print the similar rows that were kept, along with their similarity ratios
-        #print("\nSimilar rows kept (with similarity ratio):")
-        #for row, ratio in similar_rows_info:
-        #    print(f"Row: {row.to_dict()} - Similarity Ratio: {ratio}%")
-        
-        # Use the list as the indexer
-        df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
-    except KeyError as e:
-        print(f"Erreur : {e}")
-    #df = df.drop(columns=['nom_and_description'])
-    
-    return df_cleaned
-
-
+        if site['website'] == website_name:
+            return site
+    return None
 
 
 # Export cleaned data
-def export_data(df, filename="Electromenagerscleaned_data"):
-    df.to_csv(filename+".csv", index=False)
-    df.to_excel(filename+".xlsx", index=False, engine="openpyxl")
-    print(f"Data exported to '{filename}'")
-
-
-# Main execution
-if __name__ == "__main__":
-    # Get the event loop
-    raw_data = asyncio.run(collect_all_data())
-
-    df_cleaned = clean_data(raw_data)
-
-
-
-    def get_site_config(website_name):
-        for site in sites:
-            if site['website'] == website_name:
-                return site
-        return None
-
-
+def extract_cara(df_cleaned):
     # Apply the function to the DataFrame
     df_cleaned['characteristics'] = df_cleaned.apply(
         lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website']))) 
@@ -655,17 +649,21 @@ if __name__ == "__main__":
         axis=1
     )
 
-
-
     df_cleaned['text_characteristics'] = df_cleaned['characteristics'].apply(json_to_text)
+    
+    return df_cleaned
 
 
+# Main execution
+if __name__ == "__main__":
+    # Get the event loop
+    raw_data = asyncio.run(collect_all_data())
 
+    df_cleaned = clean_data(raw_data)
+    
 
-
-
-
-
+    df_cleaned = extract_cara(df_cleaned)
+    
     # Create or update columns dynamically
     #for index, row in df.iterrows():
     #    characteristics = row['characteristics']
