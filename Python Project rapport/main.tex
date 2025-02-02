@@ -42,8 +42,11 @@
     captionpos=b,                  
     escapeinside={\%*}{*)}         
 }
-
 \setmainfont{Times New Roman}
+
+\renewcommand{\thechapter}{\Roman{chapter}}
+\usepackage[french]{babel}
+
 \setlength{\headheight}{15pt}
 \setstretch{1.20}
 
@@ -64,31 +67,35 @@ Centre d'excellence IT\\
 
 \vspace{3 cm}
 \begin{center}
+\LARGE{\textbf{Master d'Excellence Ingenierie Logicielle}}
+\end{center}
+\vspace{1 cm}
+\begin{center}
 \LARGE{\textbf{Rapport}}
 \end{center}
 
 \vspace{1.3 cm}
 \hrule
 \begin{center}
-\huge{\textbf{Rapport de Projet Data Mining et Analyse de données : Exploration et Analyse des Prix et Promotions des Produits Électroménagers}}
+\huge{\textbf{Projet Data Mining et Analyse de données : Exploration et Analyse des Prix et Promotions des Produits Électroménagers}}
 \end{center}
 \hrule
 
 \vspace{1.5 cm}
 \begin{center}
-\LARGE{\textbf{Réaliser par :}}
+\LARGE{\textbf{Réalisé par :}}
 \end{center}
 
 \vspace{0.1 cm}
 \begin{center}
-\Large{Bouali Youssef}
+\Large{Youssef BOUALI}
 \end{center}
 
 \vspace{1.9 cm}
 \hrule
 \begin{center}
-\Large{\textbf{Sous la direction de :} \ \ \  
-Prof. Rajae Bensoltane} 
+\Large{\textbf{Encadré par :} \ \ \  
+Prof. Rajae BENSOLTANE} 
 \end{center}
 
 	\hrule
@@ -98,7 +105,7 @@ Prof. Rajae Bensoltane}
 	\end{center}
 \end{titlepage}
 
-\pagenumbering{Roman} 
+%\pagenumbering{Roman} 
 %\pagestyle{styletoc}
 
 \begin{doublespace}
@@ -117,7 +124,7 @@ Prof. Rajae Bensoltane}
 Ce projet porte sur l'analyse des variations des prix et des promotions des produits électroménagers à travers plusieurs plateformes de commerce en ligne. L'objectif est de comparer les stratégies tarifaires et promotionnelles utilisées par les principales plateformes e-commerce dans le secteur de l'électroménager. En utilisant des techniques de \textit{web scraping}, les données ont été collectées sur des sites tels que BestBuy, LG, et Samsung. Ces informations ont été nettoyées, préparées et analysées pour identifier les tendances de prix, les périodes de promotions, ainsi que les effets de ces dernières sur les stratégies de prix. Les résultats obtenus sont présentés sous forme de graphiques permettant de visualiser les écarts de prix entre les plateformes, la fréquence des promotions, ainsi que l'évolution temporelle des prix. Cette analyse fournit des informations précieuses pour comprendre les pratiques tarifaires dans le secteur des produits électroménagers et pourrait aider les consommateurs à faire des choix plus éclairés lors de leurs achats en ligne.
 \end{abstract}
 
-\chapter{Introduction}
+\chapter{Introduction Générale}
 L’objectif de ce projet est d’analyser les variations de prix et de promotions pour des produits électroménagers similaires ou identiques sur différentes plateformes de commerce en ligne. En se concentrant spécifiquement sur les produits de cette catégorie, ce projet vise à comprendre les tendances tarifaires et les stratégies de promotion utilisées par les grandes plateformes e-commerce dans le secteur de l'électroménager.
 
 L'évolution des prix et des promotions dans le domaine des électroménagers est influencée par plusieurs facteurs, dont la saisonnalité, les événements de vente, et la concurrence. Ce projet propose d'analyser ces variables à travers des données collectées sur plusieurs sites populaires, afin d'identifier les meilleures offres et d'apporter une compréhension plus approfondie des pratiques tarifaires dans ce domaine spécifique.
@@ -166,13 +173,13 @@ Une fois les données collectées, elles seront nettoyées et préparées pour l
     \centering
     \includegraphics[width=0.3\linewidth]{fig/7.png}
     \caption{Exemple des variations inutiles}
-    \label{fig:enter-label}
+    \label{fig:variations}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics[width=0.3\linewidth]{fig/8.png}
     \caption{Exemple des variations inutiles dans le titre}
-    \label{fig:enter-label}
+    \label{fig:variations2}
 \end{figure}
 
 
@@ -273,7 +280,7 @@ L'interface de l'application est conçue pour offrir une expérience utilisateur
         \centering
         \includegraphics[width=1\linewidth]{fig/similar_products.png}
         \caption{Recherche de produit électroménager}
-        \label{fig:enter-label}
+        \label{fig:similar_products}
     \end{figure}
     
     \item \textbf{Affichage des promotions :} L'interface offre également une section dédiée aux promotions. L'utilisateur peut naviguer à travers différentes catégories de produits électroménagers pour consulter les offres spéciales. L'API fournit la liste des promotions disponibles, qui est ensuite affichée sous forme de list.
@@ -281,7 +288,7 @@ L'interface de l'application est conçue pour offrir une expérience utilisateur
         \centering
         \includegraphics[width=1\linewidth]{fig/top_promotions.png}
         \caption{Affichage des promotions}
-        \label{fig:enter-label}
+        \label{fig:promotions}
     \end{figure}
     
     \item \textbf{Affichage de prix entre plateformes :} Ce Affichage d'une graphique offre une vue claire des tendances des prix, permettant ainsi d'identifier les variations et d'assister dans la prise de décision stratégique pour l'achat de ce produit.
@@ -289,14 +296,43 @@ L'interface de l'application est conçue pour offrir une expérience utilisateur
         \centering
         \includegraphics[width=1\linewidth]{fig/product_by_sites.png}
         \caption{Affichage de prix entre plateformes}
-        \label{fig:enter-label}
+        \label{fig:plateformes}
     \end{figure}
     \item \textbf{Expérience utilisateur interactive :} Pour améliorer l'interaction, l'interface propose des éléments visuels comme des graphiques de comparaison des prix. Ces fonctionnalités sont alimentées par les données récupérées via l'API.
 \end{itemize}
 
 Cette interface rend l'accès aux résultats plus interactif et automatisé, permettant ainsi à l'utilisateur de bénéficier d'une expérience personnalisée et optimisée pour la recherche de produits et la consultation des offres.
 
-\chapter{Conclusion}
+\chapter{Difficultés Rencontrées}
+
+Dans ce projet, plusieurs défis ont été rencontrés lors de l'extraction et de l'analyse des données des produits électroménagers. Ces difficultés ont nécessité des ajustements dans la méthodologie utilisée, ainsi qu'une gestion minutieuse des différents aspects du processus de collecte des données. Voici un aperçu des principales difficultés rencontrées.
+
+\section{Problèmes liés au Web Scraping}
+
+Outre les difficultés liées à l'extraction des caractéristiques des produits, des problèmes ont également surgi lors du processus de web scraping proprement dit. Ces difficultés incluent :
+
+\begin{itemize}
+    \item \textbf{Blocage des IP et captchas :} Plusieurs plateformes ont mis en place des mécanismes de sécurité pour empêcher le scraping de leurs sites. Des techniques comme les captchas ont été utilisées pour empêcher l'accès automatisé aux pages des produits. Pour contourner cela, des outils comme \texttt{Selenium} ont été utilisés avec des paramètres spécifiques pour simuler des actions humaines.
+    \item \textbf{Limitations de la fréquence de scraping :} Certaines plateformes ont imposé des restrictions sur le nombre de requêtes pouvant être envoyées en une période donnée. Afin de ne pas surcharger les serveurs et éviter le blocage, des délais de pause ont été intégrés dans les scripts de scraping.
+\end{itemize}
+
+\section{Problèmes d'Extraction des Caractéristiques des Produits}
+
+Une des difficultés majeures a été l'extraction des caractéristiques des produits, qui variaient fortement d'une plateforme à l'autre. Certains produits étaient décrits de manière très détaillée, tandis que d'autres avaient des informations plus limitées ou mal formatées. Cela a eu un impact sur la normalisation et la comparaison des données. Les problèmes rencontrés incluent :
+
+\begin{itemize}
+    \item \textbf{Descriptions incohérentes des produits :} Certaines plateformes utilisaient des termes différents pour décrire des produits similaires. Par exemple, un même modèle de réfrigérateur pouvait être nommé différemment selon le site. Il a donc été nécessaire d’harmoniser ces noms pour garantir la cohérence des données.
+    \item \textbf{Caractéristiques manquantes ou incomplètes :} Plusieurs produits ne comportaient pas toutes les caractéristiques nécessaires pour une comparaison fiable (par exemple, la capacité du produit, les spécifications techniques). Cela a nécessité des techniques de recherche avancée ou même des estimations basées sur des informations similaires.
+    \item \textbf{Variabilité des formats de présentation des caractéristiques :} Certaines plateformes présentaient les informations sous forme de tableaux, d’autres les affichaient sous forme de listes ou de paragraphes. Cette variabilité a créé des difficultés lors de l'extraction et de la structuration des données. Il a fallu adapter les scripts de scraping pour extraire correctement ces informations.
+    \item \textbf{Caractères spéciaux et encodage :} Les pages des produits comportaient parfois des caractères spéciaux, ce qui compliquait l'extraction propre des informations. De plus, les différentes plateformes utilisaient divers encodages de caractères, nécessitant une normalisation et une conversion appropriée pour garantir l'intégrité des données.
+\end{itemize}
+
+\section{Conclusion sur les Difficultés Rencontrées}
+
+Bien que ce projet ait rencontré plusieurs défis techniques, ceux-ci ont été surmontés grâce à l'utilisation de bibliothèques et de méthodologies adaptées. Le processus collecte des données a été particulièrement complexe, mais les solutions mises en place ont permis de garantir la qualité et la cohérence des informations utilisées pour l'analyse. Ces difficultés ont permis d'acquérir une expérience précieuse dans la gestion des données non structurées et le scraping web, tout en renforçant la compréhension des défis liés à l'analyse des données provenant de sources multiples et hétérogènes.
+
+
+\chapter{Conclusion Générale}
 Ce projet a permis d’explorer et d'analyser les variations des prix et des promotions des produits électroménagers sur plusieurs plateformes de commerce en ligne. L'objectif principal était de comprendre les tendances tarifaires et les stratégies de promotion utilisées dans le secteur de l’électroménager, en mettant l'accent sur les pratiques tarifaires et les effets des promotions sur le prix des produits.
 
 L'analyse des prix a révélé des écarts significatifs entre les différentes plateformes, ce qui montre l'importance de comparer les offres pour obtenir le meilleur prix. Ces variations peuvent être influencées par plusieurs facteurs, tels que la saisonnalité, les politiques de prix des plateformes et les promotions temporaires. Le scraping des données a permis de collecter des informations actualisées et de garantir que l’analyse repose sur des données pertinentes et récentes.

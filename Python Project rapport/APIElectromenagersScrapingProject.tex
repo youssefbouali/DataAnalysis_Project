@@ -1,0 +1,1040 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{APIElectromenagersScrapingProject}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{flask} \PY{k+kn}{import} \PY{n}{Flask}\PY{p}{,} \PY{n}{jsonify}\PY{p}{,} \PY{n}{request}\PY{p}{,} \PY{n}{send\PYZus{}file}\PY{p}{,} \PY{n}{render\PYZus{}template\PYZus{}string}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{from} \PY{n+nn}{io} \PY{k+kn}{import} \PY{n}{BytesIO}
+\PY{k+kn}{from} \PY{n+nn}{rapidfuzz} \PY{k+kn}{import} \PY{n}{fuzz}
+\PY{k+kn}{import} \PY{n+nn}{seaborn} \PY{k}{as} \PY{n+nn}{sns}
+    
+\PY{k+kn}{from} \PY{n+nn}{difflib} \PY{k+kn}{import} \PY{n}{SequenceMatcher}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{flask\PYZus{}cors} \PY{k+kn}{import} \PY{n}{CORS}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{} Import CORS}
+
+\PY{n}{app} \PY{o}{=} \PY{n}{Flask}\PY{p}{(}\PY{n+nv+vm}{\PYZus{}\PYZus{}name\PYZus{}\PYZus{}}\PY{p}{)}
+\PY{n}{CORS}\PY{p}{(}\PY{n}{app}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<flask\_cors.extension.CORS at 0x179d1324320>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Function to normalize text}
+\PY{k}{def} \PY{n+nf}{normalize\PYZus{}text}\PY{p}{(}\PY{n}{text}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n+nb}{isinstance}\PY{p}{(}\PY{n}{text}\PY{p}{,} \PY{n+nb}{str}\PY{p}{)}\PY{p}{:}
+        \PY{n}{text} \PY{o}{=} \PY{n}{text}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Convert to lowercase}
+        \PY{c+c1}{\PYZsh{} nom = re.sub(r\PYZsq{}[\PYZca{}a\PYZhy{}z\PYZbs{}s]\PYZsq{}, \PYZsq{}\PYZsq{}, text)  \PYZsh{} Uncomment if needed for special character removal}
+        \PY{k}{return} \PY{n}{text}
+    \PY{k}{else}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Convert non\PYZhy{}string inputs to a string or handle them appropriately}
+        \PY{k}{return} \PY{n+nb}{str}\PY{p}{(}\PY{n}{text}\PY{p}{)} \PY{k}{if} \PY{n}{text} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Function to find similar noms using RapidFuzz}
+\PY{k}{def} \PY{n+nf}{find\PYZus{}similar\PYZus{}noms}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{nom\PYZus{}list}\PY{p}{,} \PY{n}{threshold}\PY{o}{=}\PY{l+m+mi}{70}\PY{p}{)}\PY{p}{:}
+    \PY{n}{similar\PYZus{}noms} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{other\PYZus{}nom} \PY{o+ow}{in} \PY{n}{nom\PYZus{}list}\PY{p}{:}
+        \PY{n}{score} \PY{o}{=} \PY{n}{fuzz}\PY{o}{.}\PY{n}{ratio}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{)}
+        \PY{k}{if} \PY{n}{score} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{threshold}\PY{p}{:}
+            \PY{n}{similar\PYZus{}noms}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{,} \PY{n}{score}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{similar\PYZus{}noms}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Function to find similar noms using difflib}
+\PY{k}{def} \PY{n+nf}{find\PYZus{}similar\PYZus{}noms\PYZus{}difflib}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{nom\PYZus{}list}\PY{p}{,} \PY{n}{threshold}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{)}\PY{p}{:}
+    \PY{n}{similar\PYZus{}noms} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{other\PYZus{}nom} \PY{o+ow}{in} \PY{n}{nom\PYZus{}list}\PY{p}{:}
+        \PY{n}{score} \PY{o}{=} \PY{n}{SequenceMatcher}\PY{p}{(}\PY{k+kc}{None}\PY{p}{,} \PY{n}{nom}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{)}\PY{o}{.}\PY{n}{ratio}\PY{p}{(}\PY{p}{)}
+        \PY{k}{if} \PY{n}{score} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{threshold}\PY{p}{:}
+            \PY{n}{similar\PYZus{}noms}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{,} \PY{n}{score}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{similar\PYZus{}noms}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Analyze promotions by category}
+\PY{k}{def} \PY{n+nf}{promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
+    \PY{n}{promotion\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{!=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+    \PY{n}{promotions} \PY{o}{=} \PY{p}{(}
+        \PY{n}{promotion\PYZus{}df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{category}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}
+        \PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{name}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{p}{)}
+    \PY{k}{return} \PY{n}{promotions}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{analyse\PYZus{}get\PYZus{}top\PYZus{}product\PYZus{}price\PYZus{}variation}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Normalize product names}
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{n}{normalize\PYZus{}text}\PY{p}{)}
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n}{normalize\PYZus{}text}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{k}{if} \PY{n}{pd}\PY{o}{.}\PY{n}{notna}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom\PYZus{}and\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{+}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ }\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{}df[\PYZsq{}nom\PYZus{}and\PYZus{}description\PYZsq{}] = df[\PYZsq{}normalized\PYZus{}nom\PYZsq{}]}
+    
+    \PY{c+c1}{\PYZsh{} Apply fuzzy matching to group similar product names}
+    \PY{n}{unique\PYZus{}noms} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom\PYZus{}and\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}
+    \PY{n}{nom\PYZus{}groups} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+
+    \PY{k}{for} \PY{n}{nom} \PY{o+ow}{in} \PY{n}{unique\PYZus{}noms}\PY{p}{:}
+        \PY{n}{group} \PY{o}{=} \PY{n}{find\PYZus{}similar\PYZus{}noms}\PY{p}{(}\PY{n}{nom}\PY{p}{,} \PY{n}{unique\PYZus{}noms}\PY{p}{)}
+        \PY{k}{for} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{other\PYZus{}nom}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n}{group}\PY{p}{:}
+            \PY{n}{nom\PYZus{}groups}\PY{p}{[}\PY{n}{other\PYZus{}nom}\PY{p}{]} \PY{o}{=} \PY{n}{nom}  \PY{c+c1}{\PYZsh{} Group similar product names}
+
+    \PY{c+c1}{\PYZsh{} Map the grouped noms back to the DataFrame}
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom\PYZus{}and\PYZus{}description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{map}\PY{p}{(}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n}{nom\PYZus{}groups}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{x}\PY{p}{)}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Remove duplicates based on product name and website before counting occurrences}
+    \PY{n}{df\PYZus{}unique} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{drop\PYZus{}duplicates}\PY{p}{(}\PY{n}{subset}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Count the occurrences of each product by website}
+    \PY{n}{product\PYZus{}counts} \PY{o}{=} \PY{n}{df\PYZus{}unique}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grouped\PYZus{}nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{name}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Find the product with the maximum count across all websites}
+    \PY{n}{top\PYZus{}product} \PY{o}{=} \PY{n}{product\PYZus{}counts}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sum}\PY{l+s+s1}{\PYZsq{}}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{o}{.}\PY{n}{idxmax}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Get the details of that top product across websites}
+    \PY{n}{top\PYZus{}product\PYZus{}data} \PY{o}{=} \PY{n}{product\PYZus{}counts}\PY{p}{[}\PY{n}{product\PYZus{}counts}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{top\PYZus{}product}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} Extract price variations for that product across websites}
+    \PY{n}{price\PYZus{}variations} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grouped\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{top\PYZus{}product}\PY{p}{]}\PY{o}{.}\PY{n}{drop\PYZus{}duplicates}\PY{p}{(}\PY{n}{subset}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+
+    \PY{k}{return} \PY{n}{top\PYZus{}product}\PY{p}{,} \PY{n}{price\PYZus{}variations}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{visualisation\PYZus{}plot\PYZus{}price\PYZus{}variations}\PY{p}{(}\PY{n}{price\PYZus{}variations}\PY{p}{,} \PY{n}{product\PYZus{}name}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Visualize price variations by website}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{price\PYZus{}variations}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{price\PYZus{}variations}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{skyblue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price Variations for }\PY{l+s+si}{\PYZob{}}\PY{n}{product\PYZus{}name}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ Across Websites}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Website}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}plt.xticks(rotation=45, ha=\PYZdq{}right\PYZdq{})}
+
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream}\PY{o}{.}\PY{n}{seek}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{return} \PY{n}{img\PYZus{}stream}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Analyze data}
+\PY{k}{def} \PY{n+nf}{analyse\PYZus{}promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Filter products on promotion}
+    \PY{n}{promotion\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{!=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Count promotions by category}
+    \PY{n}{promotions\PYZus{}par\PYZus{}categorie} \PY{o}{=} \PY{n}{promotion\PYZus{}df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{category}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{n}{name}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Sort by \PYZsq{}count\PYZsq{} in descending order and get the top}
+    \PY{n}{top\PYZus{}promotions} \PY{o}{=} \PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{top\PYZus{}promotions}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{visualisation\PYZus{}plot\PYZus{}promotions}\PY{p}{(}\PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Promotion Count by Category and Promotion Type}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xlabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Category}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ylabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Promotion Count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Create a Seaborn barplot for better visual representation}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{sns}\PY{o}{.}\PY{n}{barplot}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{p}{,} 
+        \PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{category}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+        \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+        \PY{n}{hue}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+        \PY{n}{palette}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Set2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Customize the plot}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{n}{title}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{n}{xlabel}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{n}{ylabel}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{rotation}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{right}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream}\PY{o}{.}\PY{n}{seek}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{return} \PY{n}{img\PYZus{}stream}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Function to group by \PYZsq{}nom\PYZsq{}, \PYZsq{}website\PYZsq{}, and \PYZsq{}date\PYZus{}scraped\PYZsq{}, and sort by count}
+\PY{k}{def} \PY{n+nf}{analyse\PYZus{}group\PYZus{}by\PYZus{}nom\PYZus{}website\PYZus{}date}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Group by \PYZsq{}nom\PYZsq{} and \PYZsq{}website\PYZsq{} and calculate min, mean, max, and count of \PYZsq{}prix\PYZsq{}}
+    \PY{n}{avg\PYZus{}prices} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Filter out rows where the min price is equal to the max price}
+    \PY{n}{grouped} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{!=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Sort by \PYZsq{}count\PYZsq{} in descending order to get the top products}
+    \PY{n}{grouped\PYZus{}sorted} \PY{o}{=} \PY{n}{grouped}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Get the top products with the most occurrences}
+    \PY{n}{products\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{grouped\PYZus{}sorted}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{count}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Reset the index so \PYZsq{}nom\PYZsq{} becomes a column again}
+    \PY{n}{products\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{products\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{products\PYZus{}by\PYZus{}date}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Function to plot price variations by \PYZsq{}date\PYZus{}scraped\PYZsq{} for the top products}
+\PY{k}{def} \PY{n+nf}{visualisation\PYZus{}plot\PYZus{}price\PYZus{}variations\PYZus{}by\PYZus{}date}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{products\PYZus{}by\PYZus{}date}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Filter the original dataframe to include only the top products}
+    \PY{n}{filtered\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{n}{products\PYZus{}by\PYZus{}date}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Replace NaN values in the \PYZsq{}promotion\PYZsq{} column with \PYZsq{}No promo\PYZsq{} using .loc}
+    \PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{filtered\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{fillna}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{No promo}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Create the Seaborn plot showing price variation by date}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{sns}\PY{o}{.}\PY{n}{lineplot}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{filtered\PYZus{}df}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{date\PYZus{}scraped}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{hue}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Add promotion names as annotations on the plot}
+    \PY{k}{for} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{row} \PY{o+ow}{in} \PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{iterrows}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{text}\PY{p}{(}\PY{n}{row}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{date\PYZus{}scraped}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{row}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{prix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{row}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{promotion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} 
+                 \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{9}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{center}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{va}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bottom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Customize the plot}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price Variation by Date for Top Products}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Date Scraped}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price (USD)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{rotation}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{right}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream}\PY{o}{.}\PY{n}{seek}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{return} \PY{n}{img\PYZus{}stream}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Analyze data}
+\PY{k}{def} \PY{n+nf}{analyse\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{nom}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{website}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Group by \PYZsq{}nom\PYZsq{} and \PYZsq{}website\PYZsq{} to get the average prices and count}
+    \PY{n}{avg\PYZus{}prices} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Filter out rows where min equals max}
+    \PY{n}{avg\PYZus{}prices\PYZus{}filtered} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{!=} \PY{n}{avg\PYZus{}prices}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Group by \PYZsq{}website\PYZsq{} and calculate mean of \PYZsq{}min\PYZsq{}, \PYZsq{}mean\PYZsq{}, and \PYZsq{}max\PYZsq{}}
+    \PY{n}{grouped\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{min}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean}\PY{l+s+s1}{\PYZsq{}}
+    \PY{p}{\PYZcb{}}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Return the result sorted by \PYZsq{}min\PYZsq{} in ascending order}
+    \PY{k}{return} \PY{n}{grouped\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{min}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Plot data}
+\PY{k}{def} \PY{n+nf}{visualisation\PYZus{}plot\PYZus{}data}\PY{p}{(}\PY{n}{avg\PYZus{}prices}\PY{p}{,} \PY{n}{nom}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Average Prices by Product}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xlabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Product}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ylabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price (USD)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Ensure the DataFrame is indexed properly for plotting}
+    \PY{n}{avg\PYZus{}prices} \PY{o}{=} \PY{n}{avg\PYZus{}prices}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Reset index for clean plotting}
+    
+    \PY{c+c1}{\PYZsh{} Plot the data}
+    \PY{n}{avg\PYZus{}prices}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bar}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{n}{nom}\PY{p}{,} \PY{n}{xlabel}\PY{o}{=}\PY{n}{xlabel}\PY{p}{,} \PY{n}{ylabel}\PY{o}{=}\PY{n}{ylabel}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{n}{y}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Adjust layout for better display}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{rotation}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{,} \PY{n}{ha}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{right}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream}\PY{o}{.}\PY{n}{seek}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{return} \PY{n}{img\PYZus{}stream}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/search\PYZus{}similar\PYZus{}products}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{search\PYZus{}similar\PYZus{}products}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Parse input JSON}
+    \PY{n}{product\PYZus{}name} \PY{o}{=} \PY{n}{request}\PY{o}{.}\PY{n}{args}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{product\PYZus{}name}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}
+
+    \PY{k}{if} \PY{o+ow}{not} \PY{n}{product\PYZus{}name}\PY{p}{:}
+        \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{error}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Product name is required}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{400}
+
+    \PY{c+c1}{\PYZsh{} Load dataset}
+    \PY{k}{try}\PY{p}{:}
+        \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{except} \PY{n+ne}{FileNotFoundError}\PY{p}{:}
+        \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{error}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Dataset not found}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{500}
+
+    \PY{c+c1}{\PYZsh{} Normalize noms in the dataset}
+    \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{n}{normalize\PYZus{}text}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Find similar noms using difflib}
+    \PY{n}{similar\PYZus{}noms} \PY{o}{=} \PY{n}{find\PYZus{}similar\PYZus{}noms\PYZus{}difflib}\PY{p}{(}\PY{n}{product\PYZus{}name}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+
+    \PY{k}{if} \PY{o+ow}{not} \PY{n}{similar\PYZus{}noms}\PY{p}{:}
+        \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{message}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{No similar products found}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{404}
+
+    \PY{c+c1}{\PYZsh{} Filter the dataframe for matching noms}
+    \PY{n}{matching\PYZus{}noms} \PY{o}{=} \PY{p}{[}\PY{n}{nom}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{for} \PY{n}{nom} \PY{o+ow}{in} \PY{n}{similar\PYZus{}noms}\PY{p}{]}
+    \PY{n}{filtered\PYZus{}df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{normalized\PYZus{}nom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{n}{matching\PYZus{}noms}\PY{p}{)}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Group results by nom and website, preserving original indexes}
+    \PY{n}{grouped\PYZus{}results} \PY{o}{=} \PY{p}{(}
+        \PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+        \PY{o}{.}\PY{n}{agg}\PY{p}{(}
+            \PY{n}{mean\PYZus{}price}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
+            \PY{n}{min\PYZus{}price}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
+            \PY{n}{max\PYZus{}price}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
+            \PY{n}{count}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{prix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
+            \PY{n}{original\PYZus{}indexes}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{normalized\PYZus{}nom}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{p}{(}\PY{n}{filtered\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{x}\PY{o}{.}\PY{n}{index}\PY{p}{]}\PY{o}{.}\PY{n}{index} \PY{o}{+} \PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+        \PY{p}{)}
+    \PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min\PYZus{}price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Convert results to dictionary}
+    \PY{n}{result\PYZus{}data} \PY{o}{=} \PY{n}{grouped\PYZus{}results}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}return jsonify(\PYZob{}}
+    \PY{c+c1}{\PYZsh{}    \PYZdq{}input\PYZus{}product\PYZdq{}: product\PYZus{}name,}
+    \PY{c+c1}{\PYZsh{}    \PYZdq{}similar\PYZus{}products\PYZdq{}: result\PYZus{}data}
+    \PY{c+c1}{\PYZsh{}\PYZcb{})}
+
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{n}{result\PYZus{}data}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/all\PYZus{}promotions\PYZus{}par\PYZus{}categorie}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{analyze\PYZus{}promotions}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{analysis\PYZus{}results} \PY{o}{=} \PY{n}{promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{n}{analysis\PYZus{}results}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/analyse\PYZus{}top\PYZus{}product}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{api\PYZus{}analyse\PYZus{}top\PYZus{}product}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{top\PYZus{}product}\PY{p}{,} \PY{n}{price\PYZus{}variations} \PY{o}{=} \PY{n}{analyse\PYZus{}get\PYZus{}top\PYZus{}product\PYZus{}price\PYZus{}variation}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{top\PYZus{}product}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{top\PYZus{}product}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{price\PYZus{}variations}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{price\PYZus{}variations}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}analyse\PYZus{}top\PYZus{}product}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}analyse\PYZus{}top\PYZus{}product}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{top\PYZus{}product}\PY{p}{,} \PY{n}{price\PYZus{}variations} \PY{o}{=} \PY{n}{analyse\PYZus{}get\PYZus{}top\PYZus{}product\PYZus{}price\PYZus{}variation}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{visualisation\PYZus{}plot\PYZus{}price\PYZus{}variations}\PY{p}{(}\PY{n}{price\PYZus{}variations}\PY{p}{,} \PY{n}{top\PYZus{}product}\PY{p}{)}
+    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/analyse\PYZus{}promotions}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{api\PYZus{}analyse\PYZus{}promotions}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{top\PYZus{}promotions} \PY{o}{=} \PY{n}{analyse\PYZus{}promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{top\PYZus{}promotions}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{top\PYZus{}promotions}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}analyse\PYZus{}promotions}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}analyse\PYZus{}promotions}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{visualisation\PYZus{}plot\PYZus{}promotions}\PY{p}{(}\PY{n}{analyse\PYZus{}promotions\PYZus{}par\PYZus{}categorie}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{,} 
+        \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Promotion Count by Category and Promotion Type}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+        \PY{n}{xlabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Category}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+        \PY{n}{ylabel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Promotion Count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/products\PYZus{}by\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{products\PYZus{}by\PYZus{}date}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{products\PYZus{}by\PYZus{}date} \PY{o}{=} \PY{n}{analyse\PYZus{}group\PYZus{}by\PYZus{}nom\PYZus{}website\PYZus{}date}\PY{p}{(}\PY{n}{df\PYZus{}cleaned}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{products\PYZus{}by\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{products\PYZus{}by\PYZus{}date}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}products\PYZus{}by\PYZus{}date}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}products\PYZus{}by\PYZus{}date}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{visualisation\PYZus{}plot\PYZus{}price\PYZus{}variations\PYZus{}by\PYZus{}date}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{analyse\PYZus{}group\PYZus{}by\PYZus{}nom\PYZus{}website\PYZus{}date}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{site\PYZus{}grouped\PYZus{}sites} \PY{o}{=} \PY{n}{analyse\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+    \PY{k}{return} \PY{n}{jsonify}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{site\PYZus{}grouped\PYZus{}sites}\PY{o}{.}\PY{n}{to\PYZus{}dict}\PY{p}{(}\PY{n}{orient}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{records}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/plot\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{methods}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{GET}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Electromenagerscleaned\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{img\PYZus{}stream} \PY{o}{=} \PY{n}{visualisation\PYZus{}plot\PYZus{}data}\PY{p}{(}\PY{n}{analyse\PYZus{}data\PYZus{}in\PYZus{}same\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Prices by sites}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Product}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Price (USD)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{website}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+    \PY{k}{return} \PY{n}{send\PYZus{}file}\PY{p}{(}\PY{n}{img\PYZus{}stream}\PY{p}{,} \PY{n}{mimetype}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{image/png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@app}\PY{o}{.}\PY{n}{route}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{home}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{render\PYZus{}template\PYZus{}string}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+s2}{        \PYZlt{}!DOCTYPE html\PYZgt{}}
+\PY{l+s+s2}{        \PYZlt{}html lang=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{en}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}}
+\PY{l+s+s2}{        \PYZlt{}head\PYZgt{}}
+\PY{l+s+s2}{            \PYZlt{}meta charset=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{UTF\PYZhy{}8}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}}
+\PY{l+s+s2}{            \PYZlt{}meta name=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{viewport}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ content=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{width=device\PYZhy{}width, initial\PYZhy{}scale=1.0}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}}
+\PY{l+s+s2}{            \PYZlt{}title\PYZgt{}Data Analysis Web App\PYZlt{}/title\PYZgt{}}
+\PY{l+s+s2}{            \PYZlt{}style\PYZgt{}}
+\PY{l+s+s2}{                body }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ font\PYZhy{}family: Arial, sans\PYZhy{}serif; \PYZcb{}}
+\PY{l+s+s2}{                .container }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ width: 80}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{; margin: 0 auto; padding: 20px; \PYZcb{}}
+\PY{l+s+s2}{                .button }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ margin: 10px 0; padding: 10px 20px; background\PYZhy{}color: \PYZsh{}4CAF50; color: white; border: none; cursor: pointer; \PYZcb{}}
+\PY{l+s+s2}{                .results }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ margin\PYZhy{}top: 20px; \PYZcb{}}
+\PY{l+s+s2}{                pre }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ background\PYZhy{}color: \PYZsh{}f4f4f4; padding: 10px; \PYZcb{}}
+\PY{l+s+s2}{                .plot }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ margin\PYZhy{}top: 20px; text\PYZhy{}align: center; \PYZcb{}}
+\PY{l+s+s2}{                \PYZsh{}loader }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ display: none; \PYZcb{}}
+\PY{l+s+s2}{                .result\PYZhy{}item }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ margin: 10px 0; padding: 10px; border: 1px solid \PYZsh{}ddd; background\PYZhy{}color: \PYZsh{}f9f9f9; \PYZcb{}}
+\PY{l+s+s2}{                .result\PYZhy{}item h3 }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ margin: 0; \PYZcb{}}
+\PY{l+s+s2}{                .result\PYZhy{}item .key }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ font\PYZhy{}weight: bold; \PYZcb{}}
+\PY{l+s+s2}{                .result\PYZhy{}item .value }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ margin\PYZhy{}left: 10px; \PYZcb{}}
+\PY{l+s+s2}{                .search\PYZhy{}bar }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{ margin\PYZhy{}right: 10px; \PYZcb{}}
+\PY{l+s+s2}{            \PYZlt{}/style\PYZgt{}}
+\PY{l+s+s2}{        \PYZlt{}/head\PYZgt{}}
+\PY{l+s+s2}{        \PYZlt{}body\PYZgt{}}
+
+\PY{l+s+s2}{            \PYZlt{}div class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{container}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}h1\PYZgt{}Products Analysis Web App\PYZlt{}/h1\PYZgt{}}
+
+\PY{l+s+s2}{                \PYZlt{}!\PYZhy{}\PYZhy{} Search Bar and Button \PYZhy{}\PYZhy{}\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}input type=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{text}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ id=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{searchInput}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{search\PYZhy{}bar}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ placeholder=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Search Similar Products}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{searchSimilarProducts()}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Search Similar Products\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{analyse\PYZus{}promotions}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Promotions by Category\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{analyse\PYZus{}top\PYZus{}product}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Product by Different Sites\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Products in Same Site by Date\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{getData(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Analyze Prices by All Sites\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                }
+\PY{l+s+s2}{                \PYZlt{}br /\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}analyse\PYZus{}promotions}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Visualize Promotions by Category\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}analyse\PYZus{}top\PYZus{}product}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Visualize Product by Different Sites\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}products\PYZus{}by\PYZus{}date}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Visualize Products in Same Site by Date\PYZlt{}/button\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}button class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{button}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ onclick=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{generatePlot(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{plot\PYZus{}site\PYZus{}grouped\PYZus{}sites}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Visualize Prices by All Sites\PYZlt{}/button\PYZgt{}}
+
+\PY{l+s+s2}{                \PYZlt{}div id=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loader}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}Loading...\PYZlt{}/div\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}div class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{plot}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ id=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{plotContainer}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZlt{}/div\PYZgt{}}
+
+\PY{l+s+s2}{                \PYZlt{}div class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{results}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}}
+\PY{l+s+s2}{                    \PYZlt{}h2\PYZgt{}Results\PYZlt{}/h2\PYZgt{}}
+\PY{l+s+s2}{                    \PYZlt{}div id=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZlt{}/div\PYZgt{}}
+\PY{l+s+s2}{                \PYZlt{}/div\PYZgt{}}
+
+\PY{l+s+s2}{            \PYZlt{}/div\PYZgt{}}
+
+\PY{l+s+s2}{            \PYZlt{}script\PYZgt{}}
+\PY{l+s+s2}{                const apiBaseUrl = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{http://localhost:5000/}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;  // Assuming your Flask server is running locally}
+
+\PY{l+s+s2}{                // Function to show loader}
+\PY{l+s+s2}{                function showLoader() }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                    document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{loader}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).style.display = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{block}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                \PYZcb{}}
+
+\PY{l+s+s2}{                // Function to hide loader}
+\PY{l+s+s2}{                function hideLoader() }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                    document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{loader}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).style.display = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{none}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                \PYZcb{}}
+
+\PY{l+s+s2}{                // Function to call Flask API and display results}
+\PY{l+s+s2}{                function getData(endpoint) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                    showLoader();  // Show loader before the request}
+
+\PY{l+s+s2}{                    fetch(apiBaseUrl + endpoint)}
+\PY{l+s+s2}{                        .then(response =\PYZgt{} response.json())}
+\PY{l+s+s2}{                        .then(data =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            hideLoader();  // Hide loader once data is fetched}
+\PY{l+s+s2}{                            displayData(data);  // Function to display data in divs}
+\PY{l+s+s2}{                        \PYZcb{})}
+\PY{l+s+s2}{                        .catch(error =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            hideLoader();  // Hide loader in case of an error}
+\PY{l+s+s2}{                            document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).innerHTML = `Error: \PYZdl{}}\PY{l+s+si}{\PYZob{}error\PYZcb{}}\PY{l+s+s2}{`;}
+\PY{l+s+s2}{                        \PYZcb{});}
+\PY{l+s+s2}{                \PYZcb{}}
+
+\PY{l+s+s2}{                // Function to handle Search Similar Products request with search query}
+\PY{l+s+s2}{                function searchSimilarProducts() }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                    const query = document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{searchInput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).value;  // Get the search query}
+
+\PY{l+s+s2}{                    if (query) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                        showLoader();  // Show loader before the request}
+
+\PY{l+s+s2}{                        fetch(apiBaseUrl + }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{search\PYZus{}similar\PYZus{}products?product\PYZus{}name=}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ + encodeURIComponent(query))}
+\PY{l+s+s2}{                            .then(response =\PYZgt{} response.json())}
+\PY{l+s+s2}{                            .then(data =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                                hideLoader();  // Hide loader once data is fetched}
+\PY{l+s+s2}{                                displayData(data);  // Function to display data in divs}
+\PY{l+s+s2}{                            \PYZcb{})}
+\PY{l+s+s2}{                            .catch(error =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                                hideLoader();  // Hide loader in case of an error}
+\PY{l+s+s2}{                                document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).innerHTML = `Error: \PYZdl{}}\PY{l+s+si}{\PYZob{}error\PYZcb{}}\PY{l+s+s2}{`;}
+\PY{l+s+s2}{                            \PYZcb{});}
+\PY{l+s+s2}{                    \PYZcb{} else }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                        alert(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{Please enter a search term.}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                    \PYZcb{}}
+\PY{l+s+s2}{                \PYZcb{}}
+
+\PY{l+s+s2}{                // Function to display JSON data in divs}
+\PY{l+s+s2}{                function displayData(data) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                    const resultDiv = document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                    resultDiv.innerHTML = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;  // Clear previous results}
+
+\PY{l+s+s2}{                    // Recursive function to display data as divs}
+\PY{l+s+s2}{                    function createDivs(item, parentDiv) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                        if (Array.isArray(item)) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            item.forEach((subItem, index) =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                                const div = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                                div.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{result\PYZhy{}item}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                                div.innerHTML = `\PYZlt{}h3\PYZgt{}Item \PYZdl{}}\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{index + 1\PYZcb{}:\PYZlt{}/h3\PYZgt{}`;}
+\PY{l+s+s2}{                                createDivs(subItem, div); // Recursively handle array elements}
+\PY{l+s+s2}{                                parentDiv.appendChild(div);}
+\PY{l+s+s2}{                            \PYZcb{});}
+\PY{l+s+s2}{                        \PYZcb{} else if (typeof item === }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{object}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ \PYZam{}\PYZam{} item !== null) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            Object.keys(item).forEach(key =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                                const div = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                                div.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{key\PYZhy{}value\PYZhy{}pair}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                                div.innerHTML = `\PYZlt{}span class=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{key}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZgt{}\PYZdl{}}\PY{l+s+si}{\PYZob{}key\PYZcb{}}\PY{l+s+s2}{:\PYZlt{}/span\PYZgt{}`;}
+\PY{l+s+s2}{                                const valueDiv = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                                valueDiv.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{value}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                                }
+\PY{l+s+s2}{                                // Recursively handle nested objects or arrays}
+\PY{l+s+s2}{                                createDivs(item[key], valueDiv);}
+\PY{l+s+s2}{                                }
+\PY{l+s+s2}{                                div.appendChild(valueDiv);}
+\PY{l+s+s2}{                                parentDiv.appendChild(div);}
+\PY{l+s+s2}{                            \PYZcb{});}
+\PY{l+s+s2}{                        \PYZcb{} else }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            const div = document.createElement(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{div}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{);}
+\PY{l+s+s2}{                            div.className = }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{value}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{;}
+\PY{l+s+s2}{                            div.innerHTML = `\PYZdl{}}\PY{l+s+si}{\PYZob{}item\PYZcb{}}\PY{l+s+s2}{`; // Display the value if it}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{s a simple data type}
+\PY{l+s+s2}{                            parentDiv.appendChild(div);}
+\PY{l+s+s2}{                        \PYZcb{}}
+\PY{l+s+s2}{                    \PYZcb{}}
+
+\PY{l+s+s2}{                    // Call the recursive function on the data}
+\PY{l+s+s2}{                    createDivs(data, resultDiv);}
+\PY{l+s+s2}{                \PYZcb{}}
+
+
+\PY{l+s+s2}{                // Function to generate plot}
+\PY{l+s+s2}{                function generatePlot(endpoint) }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                }
+\PY{l+s+s2}{                    showLoader();  // Show loader before the request}
+
+\PY{l+s+s2}{                    fetch(apiBaseUrl + endpoint)}
+\PY{l+s+s2}{                        .then(response =\PYZgt{} response.blob())}
+\PY{l+s+s2}{                        .then(imageBlob =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            hideLoader();  // Hide loader once the plot is generated}
+\PY{l+s+s2}{                            const imageUrl = URL.createObjectURL(imageBlob);}
+\PY{l+s+s2}{                            document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).innerHTML = `\PYZlt{}img src=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}}\PY{l+s+si}{\PYZob{}imageUrl\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ alt=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Generated Plot}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ /\PYZgt{}`;}
+\PY{l+s+s2}{                        \PYZcb{})}
+\PY{l+s+s2}{                        .catch(error =\PYZgt{} }\PY{l+s+s2}{\PYZob{}}
+\PY{l+s+s2}{                            hideLoader();  // Hide loader in case of an error}
+\PY{l+s+s2}{                            document.getElementById(}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{resultOutput}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{).innerHTML = `Error generating plot: \PYZdl{}}\PY{l+s+si}{\PYZob{}error\PYZcb{}}\PY{l+s+s2}{`;}
+\PY{l+s+s2}{                        \PYZcb{});}
+\PY{l+s+s2}{                        }
+\PY{l+s+s2}{                        }
+\PY{l+s+s2}{                \PYZcb{}}
+\PY{l+s+s2}{            \PYZlt{}/script\PYZgt{}}
+
+\PY{l+s+s2}{        \PYZlt{}/body\PYZgt{}}
+\PY{l+s+s2}{        \PYZlt{}/html\PYZgt{}}
+\PY{l+s+s2}{    }\PY{l+s+s2}{\PYZdq{}\PYZdq{}\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{if} \PY{n+nv+vm}{\PYZus{}\PYZus{}name\PYZus{}\PYZus{}} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZus{}\PYZus{}main\PYZus{}\PYZus{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{}app.run(debug=True)}
+    \PY{n}{app}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{n}{use\PYZus{}reloader}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+ * Serving Flask app '\_\_main\_\_'
+ * Debug mode: off
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+WARNING: This is a development server. Do not use it in a production deployment.
+Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+127.0.0.1 - - [19/Jan/2025 00:48:40] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2025 00:48:47] "GET /analyse\_promotions HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2025 00:49:00] "GET /plot\_products\_by\_date HTTP/1.1" 200 -
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_21_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
