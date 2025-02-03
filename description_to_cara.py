@@ -207,7 +207,7 @@ def get_site_config(website_name):
     return None
 
 
-mask = df['date_scraped'] == "2025-02-02 22:03:30"
+mask = df['date_scraped'] == "2025-02-03 21:53:30"
 
 # Update only the matching rows
 df.loc[mask, 'characteristics'] = df.loc[mask].apply(
