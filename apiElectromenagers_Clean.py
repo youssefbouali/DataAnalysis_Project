@@ -107,7 +107,7 @@ def visualisation_plot_price_variations(price_variations, product_name):
     plt.bar(price_variations['website'], price_variations['prix'], color='skyblue')
     plt.title(f"Price Variations for {product_name} Across Websites")
     plt.xlabel('Website')
-    plt.ylabel('Price')
+    plt.ylabel('Price (USD)')
     #plt.xticks(rotation=45, ha="right")
 
     img_stream = BytesIO()
@@ -179,6 +179,12 @@ def visualisation_plot_price_variations_by_date(df, products_by_date):
     # Replace NaN values in the 'promotion' column with 'No promo' using .loc
     filtered_df.loc[:, 'promotion'] = filtered_df['promotion'].fillna("")
 
+    # Convert 'date_scraped' to datetime if not already
+    filtered_df['date_scraped'] = pd.to_datetime(filtered_df['date_scraped'])
+
+    # Remove minutes and seconds from the date
+    filtered_df['date_scraped'] = filtered_df['date_scraped'].dt.date
+
     # Create the Seaborn plot showing price variation by date
     plt.figure(figsize=(12, 6))
     sns.lineplot(data=filtered_df, x='date_scraped', y='prix', hue='nom', marker='o')
@@ -209,14 +215,14 @@ def analyse_data_in_same_site_grouped_sites(df, nom=None, website=None):
     avg_prices_filtered = avg_prices[avg_prices["min"] != avg_prices["max"]]
 
     # Group by 'website' and calculate mean of 'min', 'mean', and 'max'
-    grouped_by_date = avg_prices.groupby(["website"]).agg({
+    grouped_by_date = avg_prices_filtered.groupby(["website"]).agg({
+        'min': 'min',
         'mean': 'mean',
-        'min': 'mean',
-        'max': 'mean'
+        'max': 'max'
     }).reset_index()
 
     # Return the result sorted by 'min' in ascending order
-    return grouped_by_date.sort_values(by='min', ascending=True)
+    return grouped_by_date.sort_values(by='mean', ascending=True)
 
 
 # Plot data

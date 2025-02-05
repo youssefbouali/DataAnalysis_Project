@@ -1,4 +1,4 @@
-\documentclass[a4paper, 12pt, twoside]{report}
+\documentclass[a4paper, 12pt, oneside]{report}
 \usepackage[margin=1in]{geometry}
 \usepackage[table]{xcolor}
 \usepackage{amsmath}
@@ -23,6 +23,9 @@
 \usepackage{fontspec}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{natbib}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
 \lstset{
     language=Python,
     basicstyle=\ttfamily\small,   
@@ -108,26 +111,50 @@ Prof. Rajae BENSOLTANE}
 %\pagenumbering{Roman} 
 %\pagestyle{styletoc}
 
-\begin{doublespace}
-\renewcommand*{\contentsname}{Table des matières}
-\tableofcontents
-\renewcommand*{\listfigurename}{Liste des figures}
-\clearpage
-\addcontentsline{toc}{chapter}{Liste des figures}
-\listoffigures
-\end{doublespace}
-
-\pagenumbering{arabic}
-%\pagestyle{stylenor}
-
 \begin{abstract}
 Ce projet porte sur l'analyse des variations des prix et des promotions des produits électroménagers à travers plusieurs plateformes de commerce en ligne. L'objectif est de comparer les stratégies tarifaires et promotionnelles utilisées par les principales plateformes e-commerce dans le secteur de l'électroménager. En utilisant des techniques de \textit{web scraping}, les données ont été collectées sur des sites tels que BestBuy, LG, et Samsung. Ces informations ont été nettoyées, préparées et analysées pour identifier les tendances de prix, les périodes de promotions, ainsi que les effets de ces dernières sur les stratégies de prix. Les résultats obtenus sont présentés sous forme de graphiques permettant de visualiser les écarts de prix entre les plateformes, la fréquence des promotions, ainsi que l'évolution temporelle des prix. Cette analyse fournit des informations précieuses pour comprendre les pratiques tarifaires dans le secteur des produits électroménagers et pourrait aider les consommateurs à faire des choix plus éclairés lors de leurs achats en ligne.
 \end{abstract}
 
-\chapter{Introduction Générale}
-L’objectif de ce projet est d’analyser les variations de prix et de promotions pour des produits électroménagers similaires ou identiques sur différentes plateformes de commerce en ligne. En se concentrant spécifiquement sur les produits de cette catégorie, ce projet vise à comprendre les tendances tarifaires et les stratégies de promotion utilisées par les grandes plateformes e-commerce dans le secteur de l'électroménager.
+%\thispagestyle{empty}
+\renewcommand*{\contentsname}{Table des matières}
+\begin{doublespace}
+%\clearpage
+\tableofcontents
+%\cleardoublepage
+\end{doublespace}
+\cleardoublepage
 
-L'évolution des prix et des promotions dans le domaine des électroménagers est influencée par plusieurs facteurs, dont la saisonnalité, les événements de vente, et la concurrence. Ce projet propose d'analyser ces variables à travers des données collectées sur plusieurs sites populaires, afin d'identifier les meilleures offres et d'apporter une compréhension plus approfondie des pratiques tarifaires dans ce domaine spécifique.
+\phantomsection
+\addcontentsline{toc}{chapter}{Liste des figures}
+\renewcommand*{\listfigurename}{Liste des figures}
+%\clearpage
+\listoffigures
+
+%\pagenumbering{arabic}
+
+%\pagestyle{stylenor}
+
+\chapter{Introduction Générale}
+L'évolution des prix et des promotions dans le secteur des électroménagers est influencée par des facteurs multiples tels que la saisonnalité, les événements de vente et la concurrence. Ce projet se propose d’analyser ces éléments à partir des données collectées sur plusieurs plateformes de commerce en ligne populaires. L'objectif est d’identifier les meilleures offres et de mieux comprendre les stratégies tarifaires dans ce domaine spécifique.
+
+\bigskip
+
+Ce projet vise à étudier les variations des prix et des promotions pour des produits électroménagers similaires ou identiques sur différentes plateformes de vente en ligne. En se concentrant sur cette catégorie de produits, l'analyse cherchera à comprendre les tendances tarifaires et les stratégies promotionnelles adoptées par les grandes plateformes e-commerce dans le secteur des électroménagers.
+
+\bigskip
+
+À travers cette étude, il sera possible d’identifier les meilleures offres disponibles en ligne et d’approfondir la compréhension des dynamiques tarifaires, tout en offrant des recommandations utiles aux consommateurs pour prendre des décisions d’achat éclairées. Les résultats obtenus pourraient également fournir des pistes pour améliorer leurs stratégies de pricing et de promotions, en fonction des tendances observées sur les différentes plateformes.
+
+
+\chapter{Problématique}
+Dans le secteur de l’électroménager, les consommateurs sont confrontés à une grande variété de prix et de promotions qui diffèrent selon les plateformes de commerce en ligne. Ces différences peuvent rendre difficile la prise de décision lors de l'achat d'un produit. Il devient ainsi essentiel de comprendre comment les plateformes e-commerce déterminent leurs stratégies tarifaires et leurs promotions pour les produits électroménagers.
+
+\begin{quote}
+    \textit{L'objectif est d'analyser ces dynamiques afin de fournir aux consommateurs des informations utiles et à jour, facilitant ainsi leurs choix, et offrant aux entreprises des pistes d'amélioration pour leurs stratégies commerciales.}
+\end{quote}
+
+
+\chapter{Méthodologie}
 
 \section{Objectif}
 L'objectif principal du projet est de :
@@ -137,31 +164,26 @@ L'objectif principal du projet est de :
     \item Comparer les prix moyens et les offres promotionnelles des produits électroménagers à travers plusieurs plateformes populaires.
 \end{itemize}
 
-\chapter{Méthodologie}
-
-\section{Problématique}
-Dans le secteur de l’électroménager, les consommateurs sont confrontés à une grande variété de prix et de promotions qui diffèrent selon les plateformes de commerce en ligne. Ces différences peuvent rendre difficile la prise de décision lors de l'achat d'un produit. Il devient ainsi essentiel de comprendre comment les plateformes e-commerce déterminent leurs stratégies tarifaires et leurs promotions pour les produits électroménagers. 
-
-\begin{quote}
-    \textit{L'objectif est d'analyser ces dynamiques afin de fournir aux consommateurs des informations utiles et à jour, facilitant ainsi leurs choix, et offrant aux entreprises des pistes d'amélioration pour leurs stratégies commerciales.}
-\end{quote}
-
-
 \section{Collecte des données}
 Pour cette analyse, les données seront collectées de plusieurs plateformes populaires qui vendent des produits électroménagers, telles que applianceworldonline.com, sharpusa.com, costo.com, bestbuy.com, lg.com, samsung.com, sears.com et us-appliance.com. En raison de la disponibilité limitée des APIs ou de l'existence d'APIs payantes, la collecte des données sera effectuée principalement à travers une autre méthode :
 
 \begin{itemize}
     \item \textbf{Web scraping} : Comme les plateformes e-commerce ne fournissent pas d'APIs gratuites ou disponibles pour l'extraction des données, le scraping des pages des produits sera utilisé pour extraire directement les informations nécessaires. Cette méthode permettra de récupérer des données telles que les prix, les promotions et les spécifications des produits. Le scraping sera effectué en conformité avec les lois sur la protection des données et les conditions d'utilisation des sites web. Pour améliorer la rapidité et l'efficacité, plusieurs techniques ont été utilisées :
     \begin{itemize}
-        \item \textbf{Selenium} : Utilisation de Selenium avec des paramètres spécifiques pour désactiver le chargement des images et la gestion des notifications, ce qui permet d'accélérer le processus de collecte des données.
-        \item \textbf{RapidFuzz} : Cette bibliothèque a été utilisée comme alternative à FuzzyWuzzy pour une correspondance rapide des chaînes de caractères, ce qui améliore la performance du processus de scraping.
-        \item \textbf{Utilisation des threads} : Des threads ont été implémentés pour paralléliser le processus de scraping, réduisant ainsi le temps de collecte des informations sur les produits.
-        \item \textbf{Conversion des devises} : Une fonctionnalité a été intégrée pour convertir les prix des produits en devises locales (par exemple, de l’euro au dollar américain), afin d’uniformiser les données pour les comparaisons.
-        \item \textbf{Cron job sur Ubuntu Server} : Pour automatiser le processus de scraping à intervalles réguliers, un cron job a été configuré sur un serveur Ubuntu. Ce cron job exécute le script de scraping à une heure précise chaque jour, garantissant ainsi que les données extraites sont régulièrement mises à jour.
+        \item \textbf{Selenium} : \textit{Selenium} est un outil d'automatisation de navigateurs web qui permet d'interagir avec des pages web de manière programmée. Il est couramment utilisé pour automatiser des tests sur des applications web ou pour effectuer du web scraping, notamment pour les sites dynamiques.\cite{SeleniumSource}. Utiliser Selenium avec des paramètres spécifiques pour désactiver le chargement des images et la gestion des notifications permet d'accélérer le processus de collecte des données.
+    
+    \item \textbf{RapidFuzz} : \textit{RapidFuzz} est une bibliothèque Python permettant de réaliser des correspondances rapides de chaînes de caractères pour une correspondance approximative. Elle est plus rapide que FuzzyWuzzy et est couramment utilisée dans des processus de scraping où des comparaisons de texte sont nécessaires pour déterminer des correspondances.\cite{RapidfuzzSource}. Cette bibliothèque a été utilisée comme alternative à FuzzyWuzzy pour une correspondance rapide des chaînes de caractères, ce qui améliore la performance du processus de scraping.
+    
+    \item \textbf{Threads (Utilisation des threads)} : Un \textit{thread} est une unité d'exécution d'un processus. L'implémentation des threads permet de paralléliser les tâches, ce qui réduit le temps nécessaire pour exécuter plusieurs tâches simultanément. Des threads ont été implémentés pour paralléliser le processus de scraping, réduisant ainsi le temps de collecte des informations sur les produits.
+    
+    \item \textbf{Conversion des devises} : La \textit{conversion des devises} consiste à ajuster les prix des produits ou services d'une monnaie à une autre (par exemple, de l'euro au dollar américain). Une fonctionnalité a été intégrée pour convertir les prix des produits en devises locales (par exemple, de l'euro au dollar américain), afin d’uniformiser les données pour les comparaisons.
+    
+    \item \textbf{Cron job sur Ubuntu Server} : Un \textit{cron job} est une tâche planifiée qui est exécutée automatiquement à des intervalles réguliers sur un serveur Linux, comme Ubuntu. Il est utilisé pour automatiser des processus tels que le scraping à des horaires précis, garantissant que les données extraites sont mises à jour régulièrement.\cite{CronjobSource}. Pour automatiser le processus de scraping à intervalles réguliers, un cron job a été configuré sur un serveur Ubuntu. Ce cron job exécute le script de scraping à une heure précise chaque jour, garantissant ainsi que les données extraites sont régulièrement mises à jour.
         \begin{itemize}
+
             \item \texttt{crontab -e} : Ouvre l'éditeur pour ajouter ou modifier les tâches cron.
             \item Exemple de configuration : 
-            \begin{verbatim} 5 20 * * * /usr/bin/python3 /scraping/projetElectromenagers.py
+            \begin{verbatim} {Minute} {Heure} * * * /usr/bin/python3 /scraping/projetElectromenagers.py
             \end{verbatim}
             Cette ligne exécute le script \texttt{projetElectromenagers.py} tous les jours.
         \end{itemize}
@@ -220,7 +242,7 @@ Les résultats de l’analyse seront présentés sous forme de graphiques.
 
 \section{Visualisation et résultats}
 \subsection{Écarts de prix des produits entre plateformes}
-L'analyse des données extraites de la première image montre les variations de prix pour un micro-ondes intelligent de 1,8 pied cube (Over-the-Range Microwave) sur différents sites web. Les écarts de prix mettent en évidence une fluctuation notable, bien que les valeurs exactes ne soient pas entièrement lisibles. Il est à noter que \textbf{Costco.com} apparaît comme la plateforme la plus chère pour ce produit. Ce type de graphique permet d'identifier les tendances de prix et d'aider à la prise de décision pour l'achat de ce produit.
+L'analyse des données extraites de la première graph montre les variations de prix pour le plus fréquent \textbf{Price Variations for lg 2.1 cu. ft. wi-fi enabled over-the-range microwave oven with easyclean Across Websites} sur différents sites web. Les écarts de prix mettent en évidence une fluctuation notable, bien que les valeurs exactes ne soient pas entièrement lisibles. Il est à noter que \textbf{Costco.com} apparaît comme la plateforme la plus chère pour ce produit. Ce type de graphique permet d'identifier les tendances de prix et d'aider à la prise de décision pour l'achat de ce produit.
 
 \begin{figure}[H]
     \centering
@@ -230,10 +252,10 @@ L'analyse des données extraites de la première image montre les variations de 
 \end{figure}
 
 \subsection{Fréquence des promotions par catégorie}
-L'analyse des données extraites de la deuxième image révèle une distribution des promotions par catégorie et type. Quelques types de promotions notables incluent :
+L'analyse des données extraites de la deuxième graph révèle une distribution des promotions par catégorie et type. Quelques types de promotions notables incluent :
 \begin{itemize}
     \item \textit{Appliances : Flash Sale!} (Une vente à durée limitée, où des produits sont proposés à des prix réduits pendant une période restreinte.),
-    \item \textit{Appliance-packages : Jaunary Savings} (Des promotions ou des réductions spéciales offertes en janvier, souvent utilisées pour encourager les achats après les fêtes de fin d'année).
+    \item \textit{refrigerators : Jaunary Savings} (Des promotions ou des réductions spéciales offertes en janvier, souvent utilisées pour encourager les achats après les fêtes de fin d'année).
 \end{itemize}
 
 Un histogramme illustre les fréquences des promotions, permettant d'identifier les catégories avec les promotions les plus fréquentes.
@@ -245,8 +267,8 @@ Un histogramme illustre les fréquences des promotions, permettant d'identifier 
     \label{fig:output3}
 \end{figure}
 
-\subsection{Analyse temporelle des prix et promotions}
-L'évolution des promotions et des prix dans le temps pour des produits spécifiques peut être observée à travers les graphiques obtenus. Bien que les données extraites ici soient limitées, une analyse détaillée des tendances temporelles permettrait de mieux comprendre les stratégies marketing des plateformes de vente.
+\subsection{Analyse temporelle des prix et promotions}Écarts de prix moyens entre plateformes
+L'évolution des promotions et des prix dans le temps pour des produits les plus fréquents peut être observée à travers les graphiques obtenus. Bien que les données extraites ici soient limitées, une analyse détaillée des tendances temporelles permettrait de mieux comprendre les stratégies marketing des plateformes de vente.
 
 \begin{figure}[H]
     \centering
@@ -266,7 +288,7 @@ Cette section analyse les différences de prix moyens entre les différentes pla
 \end{figure}
 
 Ces visualisations permettront de rendre l’analyse plus compréhensible et de tirer des conclusions sur les stratégies tarifaires dans le secteur de l’électroménager.
-
+Il est à noter que \textbf{Samsung.com} propose les prix les plus bas, tandis \textbf{que US-Appliance.com} affiche les tarifs les plus élevés.
 
 
 \chapter{Développement de l’API}
@@ -352,6 +374,8 @@ Le nettoyage et la préparation des données ont également joué un rôle cruci
 
 En termes de visualisation, l’utilisation d’histogrammes et de diagrammes en barres a facilité la compréhension des résultats et a permis de visualiser les différences de prix et la fréquence des promotions par catégorie de produit. Ces graphiques ont non seulement permis d'identifier des tendances importantes, mais aussi de fournir une base solide pour des analyses futures.
 
+\newpage
+
 \section*{Perspectives}
 
 Les résultats obtenus ouvrent la voie à plusieurs améliorations possibles et à de nouvelles explorations. Tout d'abord, l'intégration de données provenant d'autres sources, comme des avis clients ou des informations sur la qualité des produits, pourrait enrichir l'analyse et offrir une vue d'ensemble plus complète des facteurs influençant les décisions d'achat des consommateurs. De plus, la mise en place d'un modèle de prévision basé sur des techniques d'apprentissage automatique permettrait d'anticiper les évolutions des prix et des promotions.
@@ -359,5 +383,12 @@ Les résultats obtenus ouvrent la voie à plusieurs améliorations possibles et 
 Enfin, le processus de collecte de données pourrait être étendu à d'autres catégories de produits pour fournir une analyse encore plus détaillée des pratiques tarifaires dans le secteur du commerce en ligne. L'application de méthodes avancées de nettoyage des données et de gestion des informations massives (Big Data) pourrait améliorer la précision des analyses futures.
 
 En conclusion, ce projet a fourni des insights précieux sur les stratégies tarifaires dans le domaine des produits électroménagers, tout en mettant en évidence l'importance de la collecte et du nettoyage des données dans l’analyse des tendances économiques. Les résultats obtenus peuvent aider les consommateurs à prendre des décisions d'achat éclairées et offrir aux plateformes de commerce en ligne des informations utiles pour optimiser leurs stratégies commerciales.
+
+\newpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliographie}
+\bibliography{References}  % référence à un fichier .bib
+%\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 
 \end{document}

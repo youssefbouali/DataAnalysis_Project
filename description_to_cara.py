@@ -200,50 +200,50 @@ def json_to_text(data, parent_key=""):
     return result
 
 
-def get_site_config(website_name):
-    for site in sites:
-        if site['website'] == website_name:
-            return site
-    return None
-
-
-mask = df['date_scraped'] == "2025-02-03 21:53:30"
-
+#def get_site_config(website_name):
+#    for site in sites:
+#        if site['website'] == website_name:
+#            return site
+#    return None
+#
+#
+#mask = df['date_scraped'] == "2025-02-03 21:53:30"
+#
 # Update only the matching rows
-df.loc[mask, 'characteristics'] = df.loc[mask].apply(
-    lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website']))) 
-    if isinstance(row['html'], str) and row['html'].strip()
-    else {}, 
-    axis=1
-)
-
-df.loc[mask, 'text_characteristics'] = df.loc[mask, 'characteristics'].apply(json_to_text)
+#df.loc[mask, 'characteristics'] = df.loc[mask].apply(
+#    lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website']))) 
+#    if isinstance(row['html'], str) and row['html'].strip()
+#    else {}, 
+#    axis=1
+#)
+#
+#df.loc[mask, 'text_characteristics'] = df.loc[mask, 'characteristics'].apply(json_to_text)
 
 
 
 
 
 # Create or update columns dynamically
-#for index, row in df.iterrows():
-#    characteristics = row['characteristics']
-#    if not isinstance(characteristics, dict):
-#        continue
-#    
-#    for category, data in characteristics.items():
-#        if isinstance(data, dict):  # For nested dictionaries
-#            for spec_name, spec_value in data.items():
-#                column_name = f"charac_{spec_name}"
-#                if column_name in df.columns:
-#                    df.at[index, column_name] = spec_value
-#                else:
-#                    df[column_name] = None  # Initialize the column if it doesn't exist
-#                    df.at[index, column_name] = spec_value
-#        else:  # For simple values or lists
-#            if category in df.columns:
-#                df.at[index, category] = data
-#            else:
-#                df[category] = None  # Initialize the column if it doesn't exist
-#                df.at[index, category] = data
+for index, row in df.iterrows():
+    characteristics = row['characteristics']
+    if not isinstance(characteristics, dict):
+        continue
+    
+    for category, data in characteristics.items():
+        if isinstance(data, dict):  # For nested dictionaries
+            for spec_name, spec_value in data.items():
+                column_name = f"charac_{spec_name}"
+                if column_name in df.columns:
+                    df.at[index, column_name] = spec_value
+                else:
+                    df[column_name] = None  # Initialize the column if it doesn't exist
+                    df.at[index, column_name] = spec_value
+        else:  # For simple values or lists
+            if category in df.columns:
+                df.at[index, category] = data
+            else:
+                df[category] = None  # Initialize the column if it doesn't exist
+                df.at[index, category] = data
 
 
 # Save the resulting DataFrame to a new CSV
