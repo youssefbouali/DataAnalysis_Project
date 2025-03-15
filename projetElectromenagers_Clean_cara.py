@@ -367,6 +367,24 @@ def clean_data(raw_data):
 
     df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(Matte Black|Copper|Slate|Brown|biscuit|Champagne|Tuscan stainless steel|Brushed Black|Brushed Navy|Carbon Graphite|Chrome|Forest Green|Graphite Steel|Ivory|Alpine White|Grey|Sapphire Blue|Specialty|Dark Steel|Essence White|Midnight Steel|Mirror|Satin Green|Silver Steel|Titanium|Beige & Bisque|Metallic|Red|Specialty|Black Slate|Black slate|Black Stainless|Multi-color|Black steel|Bronze|Nickel|Diamond Gray|Platinum Glass|Platinum|Graphite Steel|Graphite steel|Green|Orange|Yellow|Stainless steel look|Black stainless steel|Bisque|CleanSteel|Black Glass|Graphite|Slate|Matte Black|Matte black|Custom Panel Ready|Custom Panel Required|Custom Panel|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Stainless Steel|Stainless steel|Stainless Look|Matte Black with Brushed Stainless Steel Handles and Knobs|High Gloss White|White|Matte White|Matte white|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Fingerprint Resistant Black Stainless Steel|Fingerprint Resistant Stainless Steel)", "", regex=True)
     
+    # Normalize different forms of appliance names
+    df["nom"] = re.sub(r"\b(frigo|réfrigérateur|frigidaire)\b", "réfrigérateur", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(congélateur|freezer)\b", "congélateur", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(lave[- ]?vaisselle|machine à vaisselle)\b", "lave-vaisselle", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(lave[- ]?linge|machine à laver|lessiveuse)\b", "lave-linge", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(sèche[- ]?linge|sécheuse)\b", "sèche-linge", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(micro[- ]?ondes|four à micro[- ]?ondes)\b", "micro-ondes", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(plaque de cuisson|table de cuisson|cuisinière)\b", "plaque de cuisson", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(four électrique|four à gaz|four encastrable)\b", "four", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(hotte aspirante|hotte de cuisine|hotte)\b", "hotte", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(four à pain|machine à pain)\b", "machine à pain", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(robot de cuisine|mixer|blender|mixeur)\b", "robot de cuisine", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(cafetiere|machine à café)\b", "machine à café", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = re.sub(r"\b(bouilloire électrique|bouilloire)\b", "bouilloire", df["nom"], flags=re.IGNORECASE)
+    
+    # Remove extra spaces
+    df["nom"] = re.sub(r"\s+", " ", df["nom"]).strip()
+    
     df['normalized_nom'] = df['nom'].apply(normalize_text)
     df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
     
