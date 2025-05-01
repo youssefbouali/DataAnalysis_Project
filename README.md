@@ -1,5 +1,5 @@
-# DataMining_Project
-DataMining_Project
+# DataAnalysis_Project
+DataAnalysis_Project
 
 ![output_13_5](https://github.com/user-attachments/assets/bd7949df-52d7-478a-81fd-9a18ca62fb13)
 ![output_13_3](https://github.com/user-attachments/assets/a082e705-3d35-4634-a697-a75c24a90d95)
