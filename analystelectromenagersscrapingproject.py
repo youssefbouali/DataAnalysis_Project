@@ -1,17 +1,20 @@
-```python
+"""
+## Analyse des données de produits récupérées par scraping : visualisation des variations de prix
+
+Importation des bibliothèques nécessaires
+"""
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
 from rapidfuzz import fuzz
 import seaborn as sns
-```
 
-## Import libraries
+"""Cette section importe les bibliothèques nécessaires pour la manipulation de données (pandas), la visualisation (matplotlib, seaborn), le traitement de texte avec des expressions régulières (re) et le calcul de similarité de texte (rapidfuzz).
 
-Libraries
+Fonction : Normalisation du texte
+"""
 
-
-```python
 # Function to normalize text
 def normalize_text(text):
     if isinstance(text, str):
@@ -21,10 +24,12 @@ def normalize_text(text):
     else:
         # Convert non-string inputs to a string or handle them appropriately
         return str(text) if text is not None else ""
-```
 
+"""Cette fonction standardise le texte en le transformant en minuscules et, si besoin, en supprimant les caractères spéciaux (optionnellement via une ligne commentée).
 
-```python
+Fonction : Recherche de noms similaires avec RapidFuzz
+"""
+
 # Function to find similar noms using RapidFuzz
 def find_similar_noms(nom, nom_list, threshold=75):
     similar_noms = []
@@ -34,18 +39,20 @@ def find_similar_noms(nom, nom_list, threshold=75):
         if score >= threshold:
             similar_noms.append((nom, other_nom, score))
     return similar_noms
-```
 
+"""Cette fonction utilise RapidFuzz pour comparer un nom donné avec une liste de noms en utilisant le token_sort_ratio. Elle retourne une liste de noms similaires dépassant un seuil de similarité spécifié.
 
-```python
+Analyse : Variation des prix pour le produit le plus populaire
+"""
+
 def analyse_get_top_product_price_variation(df):
     # Normalize product names
-    df['normalized_nom'] = df['nom'].apply(normalize_text)
-    df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
-    
-    df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
+    #df['normalized_nom'] = df['nom'].apply(normalize_text)
+    #df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
+
+    #df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
     #df['nom_and_description'] = df['normalized_nom']
-    
+
     # Apply fuzzy matching to group similar product names
     unique_noms = df['nom_and_description'].unique()
     nom_groups = {}
@@ -57,41 +64,49 @@ def analyse_get_top_product_price_variation(df):
 
     # Map the grouped noms back to the DataFrame
     df['grouped_nom'] = df['nom_and_description'].map(lambda x: nom_groups.get(x, x))
-    
+
     # Remove duplicates based on product name and website before counting occurrences
     df_unique = df.drop_duplicates(subset=['grouped_nom', 'website'])
-    
+
     # Count the occurrences of each product by website
     product_counts = df_unique.groupby(["grouped_nom", "website"]).size().reset_index(name='count')
-    
+
     # Find the product with the maximum count across all websites
     top_product = product_counts.groupby('grouped_nom').agg({'count': 'sum'}).idxmax().iloc[0]
 
     # Get the details of that top product across websites
     top_product_data = product_counts[product_counts['grouped_nom'] == top_product]
-    
+
     # Extract price variations for that product across websites
     price_variations = df[df['grouped_nom'] == top_product].drop_duplicates(subset=['website'])[['website', 'prix']]
 
     return top_product, price_variations.sort_values(by='prix', ascending=True)
-```
 
+"""Cette fonction :
+Normalise les noms et descriptions des produits.
+Utilise la similarité textuelle pour regrouper des produits similaires.
+Identifie le produit le plus fréquemment répertorié sur les sites web.
+Retourne les variations de prix pour ce produit parmi les différents sites.
 
-```python
+Visualisation : Variations de prix par site
+"""
+
 def visualisation_plot_price_variations(price_variations, product_name):
     # Visualize price variations by website
     plt.figure(figsize=(10, 6))
     plt.bar(price_variations['website'], price_variations['prix'], color='skyblue')
     plt.title(f"Price Variations for {product_name} Across Websites")
     plt.xlabel('Website')
-    plt.ylabel('Price')
+    plt.ylabel('Price (USD)')
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     plt.show()
-```
 
+"""Crée un graphique à barres montrant les variations de prix pour un produit donné sur différents sites.
 
-```python
+Analyse : Promotions par catégorie
+"""
+
 # Analyze data
 def analyse_promotions_par_categorie(df):
     # Filter products on promotion
@@ -104,19 +119,21 @@ def analyse_promotions_par_categorie(df):
     top_promotions = promotions_par_categorie.sort_values(by='count', ascending=False).head(10).sort_values(by='count', ascending=True)
 
     return top_promotions
-```
 
+"""Cette fonction identifie et compte les promotions appliquées à différents produits selon leurs catégories. Elle retourne les meilleures catégories avec des promotions, triées par fréquence.
 
-```python
+Visualisation : Promotions par catégorie
+"""
+
 def visualisation_plot_promotions(promotions_par_categorie, title="Promotion Count by Category and Promotion Type", xlabel="Category", ylabel="Promotion Count"):
     # Create a Seaborn barplot for better visual representation
     plt.figure(figsize=(12, 6))
-    sns.barplot(data=promotions_par_categorie, 
-        x='category', 
-        y='count', 
-        hue='promotion', 
+    sns.barplot(data=promotions_par_categorie,
+        x='category',
+        y='count',
+        hue='promotion',
         palette="Set2")
-    
+
     # Customize the plot
     plt.title(title)
     plt.xlabel(xlabel)
@@ -124,10 +141,12 @@ def visualisation_plot_promotions(promotions_par_categorie, title="Promotion Cou
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     plt.show()
-```
 
+"""Crée un graphique en barres illustrant les promotions par catégorie et leur fréquence, avec des options de personnalisation pour le titre et les axes.
 
-```python
+Analyse : Groupement par nom, site et date
+"""
+
 # Function to group by 'nom', 'website', and 'date_scraped', and sort by count
 def analyse_group_by_nom_website_date(df):
     # Group by 'nom' and 'website' and calculate min, mean, max, and count of 'prix'
@@ -146,17 +165,28 @@ def analyse_group_by_nom_website_date(df):
     products_by_date = products_by_date.reset_index()
 
     return products_by_date
-```
 
+"""Cette fonction :
+Groupe les produits par nom, site et date d'extraction.
+Analyse les variations de prix sur les sites.
+Identifie les produits les plus fréquemment répertoriés.
 
-```python
+Visualisation : Variations de prix par date
+"""
+
 # Function to plot price variations by 'date_scraped' for the top products
 def visualisation_plot_price_variations_by_date(df, products_by_date):
     # Filter the original dataframe to include only the top products
     filtered_df = df[df['nom'].isin(products_by_date['nom'])].copy()
 
     # Replace NaN values in the 'promotion' column with 'No promo' using .loc
-    filtered_df.loc[:, 'promotion'] = filtered_df['promotion'].fillna("No promo")
+    filtered_df.loc[:, 'promotion'] = filtered_df['promotion'].fillna("")
+
+    # Convert 'date_scraped' to datetime if not already
+    filtered_df['date_scraped'] = pd.to_datetime(filtered_df['date_scraped'])
+
+    # Remove minutes and seconds from the date
+    filtered_df['date_scraped'] = filtered_df['date_scraped'].dt.date
 
     # Create the Seaborn plot showing price variation by date
     plt.figure(figsize=(12, 6))
@@ -164,7 +194,7 @@ def visualisation_plot_price_variations_by_date(df, products_by_date):
 
     # Add promotion names as annotations on the plot
     for _, row in filtered_df.iterrows():
-        plt.text(row['date_scraped'], row['prix'], row['promotion'], 
+        plt.text(row['date_scraped'], row['prix'], row['promotion'],
                  color='black', fontsize=9, ha='center', va='bottom')
 
     # Customize the plot
@@ -174,10 +204,9 @@ def visualisation_plot_price_variations_by_date(df, products_by_date):
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     plt.show()
-```
 
+"""Affiche les variations de prix des produits sur une période donnée avec des annotations indiquant les promotions appliquées."""
 
-```python
 # Analyze data
 def analyse_data_in_same_site_grouped_sites(df, nom=None, website=None):
     # Group by 'nom' and 'website' to get the average prices and count
@@ -188,33 +217,31 @@ def analyse_data_in_same_site_grouped_sites(df, nom=None, website=None):
 
     # Group by 'website' and calculate mean of 'min', 'mean', and 'max'
     grouped_by_date = avg_prices.groupby(["website"]).agg({
+        'min': 'min',
         'mean': 'mean',
-        'min': 'mean',
-        'max': 'mean'
+        'max': 'max'
     }).reset_index()
 
     # Return the result sorted by 'min' in ascending order
-    return grouped_by_date.sort_values(by='min', ascending=True)
-```
+    return grouped_by_date.sort_values(by='mean', ascending=True)
 
+"""Cette fonction **`visualisation_plot_data`** génère un graphique des prix moyens par produit, permettant de visualiser les variations de prix à l'aide de labels personnalisables pour l'axe des abscisses et l'axe des ordonnées."""
 
-```python
 # Plot data
 def visualisation_plot_data(avg_prices, nom="Average Prices by Product", xlabel="Product", ylabel="Price (USD)", x=None, y=None):
     # Ensure the DataFrame is indexed properly for plotting
     avg_prices = avg_prices.reset_index()  # Reset index for clean plotting
-    
+
     # Plot the data
     avg_prices.plot(kind="bar", title=nom, xlabel=xlabel, ylabel=ylabel, x=x, y=y)
-    
+
     # Adjust layout for better display
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     plt.show()
-```
 
+"""Exécution principale : Chargement des données, et analyse des variations de prix des produits"""
 
-```python
 # Main execution
 if __name__ == "__main__":
     old_data = pd.read_csv("Electromenagerscleaned_data.csv")  # Read the existing data from the file
@@ -224,118 +251,29 @@ if __name__ == "__main__":
     # Analyze data and visualize
     # Get the top product and price variations
     top_product, price_variations = analyse_get_top_product_price_variation(df_cleaned)
-    
+
     print(f"Top Product: {top_product}")
     print("Price variations by website:")
     print(price_variations)
     # Plot the price variations
     visualisation_plot_price_variations(price_variations, top_product)
-    
-    
+
+
     print("\r\nAverage promotion par group:")
     print(analyse_promotions_par_categorie(df_cleaned))
-    visualisation_plot_promotions(analyse_promotions_par_categorie(df_cleaned), 
-        title="Promotion Count by Category and Promotion Type", 
-        xlabel="Category", 
+    visualisation_plot_promotions(analyse_promotions_par_categorie(df_cleaned),
+        title="Promotion Count by Category and Promotion Type",
+        xlabel="Category",
         ylabel="Promotion Count")
-    
-    
+
+
     products_by_date = analyse_group_by_nom_website_date(df_cleaned)
     print("\r\nTop Products by Occurrence:")
     print(products_by_date)
     # Plot price variations by date for the top products
     visualisation_plot_price_variations_by_date(df_cleaned, products_by_date)
-    
-    
+
+
     print("\r\nPrices by sites:")
     print(analyse_data_in_same_site_grouped_sites(df_cleaned))
     visualisation_plot_data(analyse_data_in_same_site_grouped_sites(df_cleaned), "Prices by sites", "Product", "Price (USD)", "website", ["min", "mean", "max"])
-```
-
-    Top Product: 1.8 cu. ft. smart over-the-range microwave nan
-    Price variations by website:
-              website    prix
-    86    bestbuy.com  219.99
-    1052  samsung.com  329.00
-    1078       lg.com  399.00
-    174    costco.com  949.99
-    
-
-
-    
-![png](output_13_1.png)
-    
-
-
-    
-    Average promotion par group:
-                  category                       promotion  count
-    59               ovens  Lower Price In Cart ends Feb 8      8
-    76       refrigerators                   On Sale Today      8
-    90    washing-machines                   January Deal!     10
-    89    washing-machines    Bosch: Free 5 Year Warranty!     10
-    49     microwave-ovens                         $649.99     10
-    33             laundry                   On Sale Today     14
-    1   appliance-packages                   On Sale Today     15
-    3   appliance-packages                 Sale ends Jan 8     22
-    73       refrigerators                 January Savings     30
-    4           appliances                     Flash Sale!    200
-    
-
-
-    
-![png](output_13_3.png)
-    
-
-
-    
-    Top 5 Products by Occurrence:
-                                                     nom       website      min  \
-    0  Sharp Plasmacluster Ion Air Purifier with True...  sharpusa.com   349.99   
-    1   European Convection Built-In Single Wall Oven...  sharpusa.com  1299.99   
-    2   European Convection Built-In Single Wall Oven...  sharpusa.com  1699.99   
-    3  Sharp 24 in. Bottom-Freezer Counter-Depth Refr...  sharpusa.com   999.99   
-    4  Sharp French 4-Door Counter-Depth Refrigerator...  sharpusa.com  1599.99   
-    5  24 in.  European Convection Built-In Single Wa...  sharpusa.com  1299.99   
-    6  Sharp French 4-Door Counter-Depth Refrigerator...  sharpusa.com  2599.99   
-    7  24 in. Slide-In Smart 42 dB Dishwasher (SDW688...  sharpusa.com   749.99   
-    8   European Convection Built-In Double Wall Oven...  sharpusa.com  2499.99   
-    9      24 in. Slide-In  45 dB Dishwasher (SDW6757ES)  sharpusa.com   599.99   
-    
-              mean      max  count  
-    0   370.823333   399.99     12  
-    1  1533.323333  1699.99     12  
-    2  2049.990000  2299.99     12  
-    3  1174.990000  1299.99     12  
-    4  1658.323333  1699.99     12  
-    5  1533.323333  1699.99     12  
-    6  3008.323333  3299.99     12  
-    7   779.156667   799.99     12  
-    8  2908.323333  3199.99     12  
-    9   620.990000   629.99     10  
-    
-
-
-    
-![png](output_13_5.png)
-    
-
-
-    
-    Prices by sites:
-                        website         mean          min          max
-    0  applianceworldonline.com   384.196761   384.196761   384.196761
-    6              sharpusa.com   713.060281   691.032211   728.716421
-    2                costco.com   933.416244   930.455034   938.201678
-    1               bestbuy.com  1023.385469  1020.142751  1028.388706
-    3                    lg.com  1158.200000  1158.200000  1158.200000
-    4               samsung.com  1300.458333  1294.625000  1303.375000
-    5                 sears.com  1321.798105  1307.350596  1340.929614
-    7          us-appliance.com  2259.777966  2243.622599  2275.933333
-    
-
-
-    
-![png](output_13_7.png)
-    
-

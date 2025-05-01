@@ -1,3 +1,9 @@
+"""
+## Scrapping des données de produits : Scrapping, nettoyage et traitement
+
+Importation des bibliothèques nécessaires
+"""
+
 import asyncio
 import json
 from datetime import datetime
@@ -12,7 +18,11 @@ import requests
 from rapidfuzz import fuzz
 from urllib.parse import urljoin
 
-# Fonction pour normaliser le texte en le mettant en minuscule.
+"""Normalise une chaîne de caractères en la convertissant en minuscule.
+Si le texte n'est pas une chaîne, il est converti en chaîne ou retourné vide.
+"""
+
+# Function to normalize text
 def normalize_text(text):
     if isinstance(text, str):
         text = text.lower()  # Convert to lowercase
@@ -22,7 +32,11 @@ def normalize_text(text):
         # Convert non-string inputs to a string or handle them appropriately
         return str(text) if text is not None else ""
 
-# Fonction pour trouver des noms similaires à l'aide de RapidFuzz.
+"""Compare un nom à une liste de noms et retourne ceux qui ont une similarité supérieure à un seuil.
+Utilise l'algorithme RapidFuzz pour calculer le score de similarité.
+"""
+
+# Function to find similar noms using RapidFuzz
 def find_similar_noms(nom, nom_list, threshold=95):
     similar_noms = []
     for other_nom in nom_list:
@@ -30,6 +44,11 @@ def find_similar_noms(nom, nom_list, threshold=95):
         if score >= threshold:
             similar_noms.append((nom, other_nom, score))
     return similar_noms
+
+"""Ce code configure les options de cache et d'exécution pour le navigateur en mode headless avec Selenium :  
+**`options.add_argument`** : Définit divers paramètres pour améliorer les performances et la sécurité, tels que le mode sans tête, la stratégie de chargement des pages, et la désactivation de certaines extensions et de l'accélération matérielle GPU.
+Les préférences de contenu sont ajustées pour bloquer les images, les styles, les polices et autres éléments, afin d'optimiser le processus de scraping.
+"""
 
 # Configure caching options
 options = Options()
@@ -56,14 +75,26 @@ options.add_experimental_option("prefs", {
 })
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
 
+"""Ce code charge les données de fichier JSON **'platformes.json'** :  
+**`json.load`** : Lit le contenu du fichier et le charge dans une variable **`sites`** sous forme de dictionnaire Python.
+"""
 
 with open('platformes.json', 'r') as file:
     sites = json.load(file)
 
-# Fonction pour initialiser un pilote Selenium avec des options spécifiques.
+"""Initialise le WebDriver de Selenium avec des options configurées pour améliorer les performances
+    et éviter la détection des bots.
+"""
+
+# Initialize the WebDriver with the options
 def initialize_driver():
     driver = webdriver.Chrome(options=options)
     return driver
+
+"""Ce code définit les en-têtes HTTP pour simuler un navigateur réel et éviter la détection de robots lors de l'envoi de requêtes HTTP :  
+**`headers`** : Contient les informations de l'agent utilisateur, la langue, le type d'encodage, le référent, et d'autres paramètres pour imiter une requête légitime.
+**`date_now`** : Obtient la date et l'heure actuelles sous le format 'YYYY-MM-DD HH:MM:SS' pour un usage ultérieur dans les requêtes ou l'enregistrement de données.
+"""
 
 # Headers to mimic a real browser and avoid bot detection
 headers = {
@@ -79,9 +110,11 @@ headers = {
 
 date_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-currency_converter = CurrencyRates()
+"""Convertit un prix donné en USD à partir d'une chaîne de caractères contenant une devise détectée.
+    Si aucune devise n'est détectée, une tentative de conversion est effectuée à partir des symboles trouvés.
+"""
 
-# Fonction pour convertir un prix en USD.
+currency_converter = CurrencyRates()
 def convert_prix(the_prix, detected_currency="UNKNOWN"):
     # Convert prix to USD if necessary
     try:
@@ -116,14 +149,16 @@ def convert_prix(the_prix, detected_currency="UNKNOWN"):
         if detected_currency == "EUR":
             cleaned_prix = currency_converter.convert("EUR", "USD", cleaned_prix)
             print(f"Converted prix: {cleaned_prix} USD")
-        
+
         return cleaned_prix
-        
+
     except Exception as e:
         print(f"Currency detection or conversion error: {e}")
 
+"""Récupère la description d'un produit à partir de la page web d'un site donné,
+    en utilisant le sélecteur CSS fourni.
+"""
 
-# Fonction pour récupérer une description de produit avec Selenium et BeautifulSoup.
 async def get_description(driver, site):
     try:
         # Navigate to the product page
@@ -143,13 +178,19 @@ async def get_description(driver, site):
         print(f"Error fetching description for {site['url']}: {e}")
         return "", None
 
+"""Collecte les données de produits à partir d'un site web en utilisant les sélecteurs CSS définis.
+    Peut parcourir plusieurs pages si un sélecteur de page suivante est disponible.
 
+Ce code définit une fonction asynchrone `collect_data_from_scraping` qui récupère des données de produits à partir d'un site web donné :
+**`driver.get(site["url"])`** : Charge l'URL du site spécifié pour commencer le processus de scraping.
+**`soup.select(site["product_selector"])`** : Utilise BeautifulSoup pour extraire les produits en fonction d'un sélecteur CSS défini dans le dictionnaire du site.
+**`process_product(driver, item, site)`** : Lance une tâche asynchrone pour traiter chaque produit, récupérant des informations supplémentaires si nécessaire.
+**`next_page`** : Si une page suivante existe, elle est récupérée et traitée pour continuer le scraping.
+**`export_data` et `clean_data`** : Nettoie et exporte les données extraites dans un fichier CSV après chaque extraction de page.
+**`products`** : Le produit est ajouté à la liste et renvoyé une fois l'ensemble du scraping terminé.
+"""
 
-
-
-
-
-# Fonction principale pour collecter les données via web scraping.
+# site category
 async def collect_data_from_scraping(driver, site, products=None, page_limit=2, max_products=30, current_page=1, total_products=0):
     try:
         driver.get(site["url"])
@@ -167,18 +208,18 @@ async def collect_data_from_scraping(driver, site, products=None, page_limit=2, 
         products = []
 
     tasks = []
-    
+
     for item in soup.select(site["product_selector"]):
         if total_products >= max_products:
             break  # Stop when max products are reached
         tasks.append(process_product(driver, item, site))
         total_products += 1
-    
+
     # Run all product processing tasks concurrently
     pts = await asyncio.gather(*tasks)
     for product in pts:
         products.append(product)
-            
+
     #dftemp = pd.DataFrame(products)
     #export_data(dftemp, "tempElectromenagerscleaned_data")
 
@@ -195,18 +236,19 @@ async def collect_data_from_scraping(driver, site, products=None, page_limit=2, 
             await collect_data_from_scraping(driver, site, products, page_limit, max_products, current_page) #total_products if total in all pages
 
 
-    # Read old data and clean current data
     if products:
+        # Read old data and clean current data
         try:
             # Attempt to read the file
             old_data = pd.read_csv("temp2Electromenagerscleaned_data.csv")
         except FileNotFoundError:
             # If the file doesn't exist, initialize as an empty DataFrame
             old_data = pd.DataFrame()
-            
+
         newproducts = pd.DataFrame(products)
 
         data_now = pd.concat([old_data, newproducts], ignore_index=True)
+        df_cleaned = clean_data(data_now)
         try:
             df_cleaned = clean_data(data_now)
             export_data(df_cleaned, "temp2Electromenagerscleaned_data")
@@ -218,13 +260,15 @@ async def collect_data_from_scraping(driver, site, products=None, page_limit=2, 
 
     return products
 
+"""Extrait les informations d'un produit (nom, prix, promotion, etc.) à partir des sélecteurs définis,
+    et récupère sa description si possible.
+"""
 
-# Fonction pour traiter un produit individuel.
 async def process_product(driver, item, site):
     nom = item.select_one(site["nom_selector"])
     prix = item.select_one(site["prix_selector"])
     promotion = item.select_one(site["promotion_selector"]) if site.get("promotion_selector") else None
-    
+
     product = {}
 
     if nom and prix:
@@ -250,32 +294,6 @@ async def process_product(driver, item, site):
         else:
             description = None
             soup = None
-        
-        #if site.get("sections"):
-        #
-        #    characteristics = normalize_characteristics(extract_characteristics(item, site))
-        #    
-        #    text_characteristics = json_to_text(characteristics)
-        #    
-        #else :
-        #    characteristics = ""
-        #    
-        #    text_characteristics = ""
-        
-        
-        
-        # Apply the function to the DataFrame
-        #df['characteristics'] = df.apply(
-        #    lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website']))) 
-        #    if isinstance(row['html'], str) and row['html'].strip() 
-        #    else {}, 
-        #    axis=1
-        #)
-        
-        #df['text_characteristics'] = df['characteristics'].apply(json_to_text)
-
-
-
 
         product = {
                 "nom": nomt,
@@ -288,15 +306,16 @@ async def process_product(driver, item, site):
                 "url": product_url,
                 "description": description,
                 "html": soup,
-                #"characteristics": characteristics,
-                #"text_characteristics": text_characteristics
             }
         print("append product : ", nomt)
-        
+
     return product
 
+"""Collecte les données de produits à partir d'une API, en effectuant une requête GET
+    et en extrayant les données selon les clés fournies dans la configuration.
+"""
 
-# Fonction pour collecter des données via une API.
+# Function to collect data from API
 async def collect_data_from_api(site):
     response = await loop.run_in_executor(None, requests.get, site["url"])  # Asynchronous request
 
@@ -329,12 +348,13 @@ async def collect_data_from_api(site):
         print(f"API error: {response.status_code}")
         return []
 
+"""Fonction pour collecter toutes les données de manière concurrente depuis plusieurs sources (scraping et API)"""
 
 # Function to collect all data concurrently
 async def collect_all_data():
     data = []
     driver = initialize_driver()
-    
+
     # Running scraping tasks concurrently
     tasks = []
     for site in sites:
@@ -347,13 +367,11 @@ async def collect_all_data():
             result = await collect_data_from_api(site)
             if result:  # Check if result is not None or empty
                 data.extend(result)
-    
+
     driver.quit()  # Close the driver after all scraping is done
     return data
 
-
-
-
+"""Fonction de nettoyage des données : Cette fonction prend les données brutes, les nettoie en supprimant les valeurs manquantes et les doublons, normalise les noms et les descriptions des produits, et effectue un regroupement basé sur la similarité des noms pour garder les lignes ayant les prix les plus bas."""
 
 # Data cleaning function
 def clean_data(raw_data):
@@ -362,36 +380,36 @@ def clean_data(raw_data):
     if 'nom' not in df.columns:
         print("Error: 'nom' column is missing!")
         return df
-        
+
     df = df.dropna(subset=["nom"])
 
     df["nom"] = df["nom"].astype(str).str.replace(r"[,-]$|\(\)$|(?: - |, )?(Matte Black|Copper|Slate|Brown|biscuit|Champagne|Tuscan stainless steel|Brushed Black|Brushed Navy|Carbon Graphite|Chrome|Forest Green|Graphite Steel|Ivory|Alpine White|Grey|Sapphire Blue|Specialty|Dark Steel|Essence White|Midnight Steel|Mirror|Satin Green|Silver Steel|Titanium|Beige & Bisque|Metallic|Red|Specialty|Black Slate|Black slate|Black Stainless|Multi-color|Black steel|Bronze|Nickel|Diamond Gray|Platinum Glass|Platinum|Graphite Steel|Graphite steel|Green|Orange|Yellow|Stainless steel look|Black stainless steel|Bisque|CleanSteel|Black Glass|Graphite|Slate|Matte Black|Matte black|Custom Panel Ready|Custom Panel Required|Custom Panel|Stainless Steel|SmudgeProof Stainless Steel|Smudge Proof Stainless Steel|White Glass|PrintShield Black Stainless Steel|Stainless Steel with Brushed Stainless Steel Handles|Stainless Steel|Stainless steel|Stainless Look|Matte Black with Brushed Stainless Steel Handles and Knobs|High Gloss White|White|Matte White|Matte white|Starlight|Space|Black|Blue|Gold|Gray|Green|Purple|Pink|Silver|Fingerprint Resistant Black Stainless Steel|Fingerprint Resistant Stainless Steel)", "", regex=True)
     
-    # Normalize different forms of appliance names
-    df["nom"] = re.sub(r"\b(frigo|réfrigérateur|frigidaire)\b", "réfrigérateur", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(congélateur|freezer)\b", "congélateur", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(lave[- ]?vaisselle|machine à vaisselle)\b", "lave-vaisselle", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(lave[- ]?linge|machine à laver|lessiveuse)\b", "lave-linge", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(sèche[- ]?linge|sécheuse)\b", "sèche-linge", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(micro[- ]?ondes|four à micro[- ]?ondes)\b", "micro-ondes", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(plaque de cuisson|table de cuisson|cuisinière)\b", "plaque de cuisson", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(four électrique|four à gaz|four encastrable)\b", "four", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(hotte aspirante|hotte de cuisine|hotte)\b", "hotte", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(four à pain|machine à pain)\b", "machine à pain", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(robot de cuisine|mixer|blender|mixeur)\b", "robot de cuisine", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(cafetiere|machine à café)\b", "machine à café", df["nom"], flags=re.IGNORECASE)
-    df["nom"] = re.sub(r"\b(bouilloire électrique|bouilloire)\b", "bouilloire", df["nom"], flags=re.IGNORECASE)
+    df["nom"] = df["nom"].str.replace(r"\b(frigo|réfrigérateur|frigidaire)\b", "réfrigérateur", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(congélateur|freezer)\b", "congélateur", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(lave[- ]?vaisselle|machine à vaisselle)\b", "lave-vaisselle", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(lave[- ]?linge|machine à laver|lessiveuse)\b", "lave-linge", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(sèche[- ]?linge|sécheuse)\b", "sèche-linge", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(micro[- ]?ondes|four à micro[- ]?ondes)\b", "micro-ondes", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(plaque de cuisson|table de cuisson|cuisinière)\b", "plaque de cuisson", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(four électrique|four à gaz|four encastrable)\b", "four", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(hotte aspirante|hotte de cuisine|hotte)\b", "hotte", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(four à pain|machine à pain)\b", "machine à pain", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(robot de cuisine|mixer|blender|mixeur)\b", "robot de cuisine", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(cafetiere|machine à café)\b", "machine à café", regex=True, case=False)
+    df["nom"] = df["nom"].str.replace(r"\b(bouilloire électrique|bouilloire)\b", "bouilloire", regex=True, case=False)
+
     
     # Remove extra spaces
-    df["nom"] = re.sub(r"\s+", " ", df["nom"]).strip()
-    
+    df["nom"] = df["nom"].str.replace(r"\s+", " ", regex=True).str.strip()
+
     df['normalized_nom'] = df['nom'].apply(normalize_text)
     df['normalized_description'] = df['description'].apply(lambda x: normalize_text(x) if pd.notna(x) else "")
-    
+
     df['nom_and_description'] = df['normalized_nom']+" "+df['normalized_description']
-    
+
     df = df.drop_duplicates(subset=["normalized_nom", "website", "date_scraped"], keep="first")
-    
+
     df_cleaned = df
     try:
         # Continue with finding similar noms and further processing...
@@ -406,18 +424,18 @@ def clean_data(raw_data):
                 continue
             nom = row["nom_and_description"]
             matches = find_similar_noms(nom, df["nom_and_description"].tolist())
-            
+
             if not matches:
                 continue
-            
+
             match_indices = [
                 idx for idx, match in enumerate(df["nom_and_description"]) if (nom, match, fuzz.ratio(nom, match)) in matches
             ]
-            
+
             if match_indices:
                 groups.append(match_indices)
                 seen.update(match_indices)
-                
+
                 # Store the similar rows and their ratios
                 for match_idx in match_indices:
                     similarity_ratio = fuzz.ratio(nom, df["nom_and_description"].iloc[match_idx])
@@ -446,17 +464,16 @@ def clean_data(raw_data):
         #print("\nSimilar rows kept (with similarity ratio):")
         #for row, ratio in similar_rows_info:
         #    print(f"Row: {row.to_dict()} - Similarity Ratio: {ratio}%")
-        
+
         # Use the list as the indexer
         df_cleaned = df.loc[rows_to_keep].reset_index(drop=True)
     except KeyError as e:
         print(f"Erreur : {e}")
     #df = df.drop(columns=['nom_and_description'])
-    
+
     return df_cleaned
 
-
-
+"""La fonction d'exportation de données."""
 
 # Export cleaned data
 def export_data(df, filename="Electromenagerscleaned_data"):
@@ -464,15 +481,17 @@ def export_data(df, filename="Electromenagerscleaned_data"):
     df.to_excel(filename+".xlsx", index=False, engine="openpyxl")
     print(f"Data exported to '{filename}'")
 
-
-
-
-
+"""Cette fonction extrait les caractéristiques spécifiques d'un produit à partir du contenu HTML d'une page web de produit
+en utilisant BeautifulSoup. Elle parcourt différentes sections de la page définies dans la configuration du site,
+et récupère des informations telles que la hauteur, la largeur, le poids, et d'autres spécifications liées au produit.
+Ensuite, elle normalise ces caractéristiques pour qu'elles suivent une structure commune, ce qui permet de comparer facilement
+les produits provenant de différents sites. La fonction renvoie un dictionnaire contenant ces caractéristiques normalisées.
+"""
 
 def extract_characteristics(html, site_config):
     # Parse the HTML content
     soup = BeautifulSoup(html, 'html.parser')
-    
+
     result = {}
 
     # Loop through each site in the config
@@ -549,10 +568,10 @@ def extract_characteristics(html, site_config):
 # Define the normalization mapping
 normalized_names = {
     'Height': [
-        'Product Height', 
-        'Height To Top Of Refrigerator (Without Hinges)', 
+        'Product Height',
+        'Height To Top Of Refrigerator (Without Hinges)',
         'Height To Top Of Door Hinge',
-        'Maximum Height', 
+        'Maximum Height',
         'Minimum Height'
     ],
     'Width': [
@@ -564,9 +583,9 @@ normalized_names = {
         'Shipping Depth :'
     ],
     'Depth': [
-        'Depth Without Handle', 
-        'Depth With Handle', 
-        'Depth with Door Closed :', 
+        'Depth Without Handle',
+        'Depth With Handle',
+        'Depth with Door Closed :',
         'Shipping Depth :'
     ],
     'Finish': ['Finish', 'Fingerprint Resistant', 'Color Appearance'],
@@ -598,14 +617,14 @@ def normalize_name(raw_name):
 def normalize_characteristics(characteristics):
     """Normalize the specification dictionary keys across multiple sites."""
     normalized_characteristics = {}
-    
+
     for category, data in characteristics.items():
         if isinstance(data, dict):
             # Normalize specifications in this category
             normalized_category = {}
             for spec_name, spec_value in data.items():
                 normalized_name = normalize_name(spec_name)
-                
+
                 # If the normalized name already exists, append the new value to a list
                 if normalized_name in normalized_category:
                     if not isinstance(normalized_category[normalized_name], list):
@@ -619,7 +638,7 @@ def normalize_characteristics(characteristics):
             normalized_characteristics[category] = data
         else:
             normalized_characteristics[category] = data
-    
+
     return normalized_characteristics
 
 
@@ -635,18 +654,18 @@ def sort_json_by_key(characteristics):
 def json_to_text(data, parent_key=""):
     data = sort_json_by_key(data)
     result = ""
-    
+
     for key, value in data.items():
         # Construct the full key path if there's a parent key
         full_key = f"{key}" if parent_key else key
-        
+
         if isinstance(value, dict):
             # If the value is a dictionary, recurse with the updated key
             result += json_to_text(value, full_key)
         else:
             # Append the key-value pair to the result
             result += f"{full_key}: {value}, "
-    
+
     return result
 
 
@@ -661,33 +680,36 @@ def get_site_config(website_name):
 def extract_cara(df_cleaned):
     # Apply the function to the DataFrame
     df_cleaned['characteristics'] = df_cleaned.apply(
-        lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website']))) 
-        if isinstance(row['html'], str) and row['html'].strip() 
-        else {}, 
+        lambda row: normalize_characteristics(extract_characteristics(row['html'], get_site_config(row['website'])))
+        if isinstance(row['html'], str) and row['html'].strip()
+        else {},
         axis=1
     )
 
     df_cleaned['text_characteristics'] = df_cleaned['characteristics'].apply(json_to_text)
-    
+
     return df_cleaned
 
+"""Exécution principale : Scrapping, nettoyage et traitement"""
 
 # Main execution
 if __name__ == "__main__":
     # Get the event loop
-    raw_data = asyncio.run(collect_all_data())
+    raw_data = asyncio.run(collect_all_data())   #not working with jupyter
+    #raw_data = await collect_all_data()
+
 
     df_cleaned = clean_data(raw_data)
-    
+
 
     df_cleaned = extract_cara(df_cleaned)
-    
+
     # Create or update columns dynamically
     #for index, row in df.iterrows():
     #    characteristics = row['characteristics']
     #    if not isinstance(characteristics, dict):
     #        continue
-    #    
+    #
     #    for category, data in characteristics.items():
     #        if isinstance(data, dict):  # For nested dictionaries
     #            for spec_name, spec_value in data.items():
@@ -705,17 +727,11 @@ if __name__ == "__main__":
     #                df.at[index, category] = data
 
 
-    # Save the resulting DataFrame to a new CSV
-    #df.to_csv('test_characteristics.csv', index=False)
-    #df.to_excel("test_characteristics.xlsx", index=False, engine="openpyxl")
-
-
     try:
         old_data = pd.read_csv("Electromenagerscleaned_data.csv")
         data_now = pd.concat([old_data, df_cleaned], ignore_index=True)
     except FileNotFoundError:
         data_now = df_cleaned
-
 
     export_data(data_now)
     print("\r\nEnd..")
